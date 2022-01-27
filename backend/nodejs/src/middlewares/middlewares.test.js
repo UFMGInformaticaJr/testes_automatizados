@@ -1,5 +1,4 @@
 const express = require('express');
-const request = require('supertest');
 
 describe('testing middlewares', () => {
   let app;
@@ -12,21 +11,6 @@ describe('testing middlewares', () => {
 
   describe('testing object-filter', () => {
     const {requestFilter} = require('./object-filter');
-    it('should return the filtered object (using supertest)', async () => {
-      app.get('/', requestFilter('body', ['a', 'b', 'd']), (req, res) => {
-        res.json(req.body);
-      });
-
-      const {body, status} = await request(app)
-        .get('/')
-        .set('Content-Type', 'application/json')
-        .send('{"a":1,"b":5,"c":3,"d":7}');
-
-      // Tranforma ambos em string pra facilitar a comparação
-      expect(JSON.stringify(body)).toEqual(JSON.stringify({a: 1, b: 5, d: 7}));
-
-      expect(status).toEqual(200);
-    });
 
     it('should return the filtered object', () => {
       const mockedNext = jest.fn();
@@ -45,25 +29,6 @@ describe('testing middlewares', () => {
   describe('testing error-handler', () => {
     const errorHandler = require('./error-handler');
     const {NotAuthorizedError} = require('../errors/index');
-
-    it('should return the status 401 (using supertest)', async () => {
-      app.get(
-        '/',
-        (req, res, next) => {
-          next(new NotAuthorizedError('Teste'));
-        },
-        errorHandler
-      );
-
-      const {body, status} = await request(app)
-        .get('/')
-        .set('Content-Type', 'application/json')
-        .send();
-
-      expect(JSON.stringify(body)).toEqual(JSON.stringify({error: 'Teste'}));
-
-      expect(status).toEqual(401);
-    });
 
     it('should return the status 401', () => {
       /*

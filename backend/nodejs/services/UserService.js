@@ -1,3 +1,4 @@
+const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const NotAuthorizedError = require('../errors/index');
 
@@ -7,35 +8,35 @@ class UserService {
 
     user.password = await bcrypt.hash(user.password, saltRounds);
 
-    await User.create(user);
+    User.create(user);
   }
 
-  async getAllUsers() {
-    return await User.findAll({raw: true, attributes:
+  getAllUsers() {
+    return User.findAll({raw: true, attributes:
       {
         exclude: ['password', 'createdAt', 'updatedAt'],
       },
     });
   }
 
-  async getUserById(id) {
-    const user = await User.findByPk(id, {raw: true, attributes:
+  getUserById(id) {
+    const user = User.findByPk(id, {raw: true, attributes:
       {
         exclude: ['password', 'createdAt', 'updatedAt'],
       },
     });
     if (!user) {
-      throw new QueryError(`Nao foi encontrado um usuario com o ID: ${id}`);
+      throw new NotAuthorizedError(`Nao foi encontrado um usuario com o ID: ${id}`);
     }
 
     return user;
   }
 
-  async updateUser(id, reqUserId, reqUserRole, body) {
-    const user = await User.findByPk(id);
+  updateUser(id, reqUserId, reqUserRole, body) {
+    const user = User.findByPk(id);
 
     if (!user) {
-      throw new QueryError(`Nao foi encontrado um usuario com o ID: ${id}`);
+      throw new NotAuthorizedError(`Nao foi encontrado um usuario com o ID: ${id}`);
     }
 
     const isAdmin = reqUserRole === 'admin';
@@ -53,27 +54,27 @@ class UserService {
     }
   }
 
-  async deleteUser(id, reqUserId) {
-    const user = await User.findByPk(id);
+  deleteUser(id, reqUserId) {
+    const user = User.findByPk(id);
 
     if (!user) {
-      throw new QueryError(`Nao foi encontrado um usuario com o ID: ${id}`);
+      throw new NotAuthorizedError(`Nao foi encontrado um usuario com o ID: ${id}`);
     }
 
     if (id == reqUserId) {
       throw new NotAuthorizedError('Você não tem permissão para se deletar!');
     }
-    await user.destroy();
+    user.destroy();
   }
 
-  async getCurrentUser(id) {
-    const user = await User.findByPk(id, {attributes:
+  getCurrentUser(id) {
+    const user = User.findByPk(id, {attributes:
       {
         exclude: ['password', 'createdAt', 'updatedAt'],
       },
     });
     if (!user) {
-      throw new QueryError(`Nao foi encontrado um usuario com o ID: ${id}`);
+      throw new NotAuthorizedError(`Nao foi encontrado um usuario com o ID: ${id}`);
     }
     return user;
   }

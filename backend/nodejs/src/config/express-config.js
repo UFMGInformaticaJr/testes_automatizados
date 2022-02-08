@@ -14,8 +14,8 @@ app.use(express.urlencoded({
 
 app.use(express.json());
 
-const serviceRouter = require('../services/Service');
-app.use('/service', serviceRouter);
+const router = require('../controllers/Controller');
+app.use('/service', router);
 
 
 module.exports = app;

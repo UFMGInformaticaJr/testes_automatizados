@@ -1,72 +1,48 @@
-const router = require('express').Router();
-
-router.get('/calculaRaizQuadrada/:numero', function (req, res) {
-    const numero = req.params.numero;
+class Service {
+  calculaRaizQuadrada = (numero) => {
     const numeroFloat = parseFloat(numero);
-    try {
-        if (numeroFloat > 0 && typeof(numeroFloat) == "number") {
-            const raizQuadrada = Math.sqrt(numeroFloat);
-            console.log(raizQuadrada);
-            res.end();
-        }
-        else {
-            throw new TypeError;
-        }
-    } catch (error) {
-        console.log(error + ": Valor Inválido");
-        res.end();
-    };
-});
+    if (numeroFloat > 0 && typeof numeroFloat == 'number') {
+      const raizQuadrada = Math.sqrt(numeroFloat);
+      console.log(raizQuadrada);
+    } else {
+      throw new TypeError();
+    }
+  };
 
-router.get('/retornaDivisores/:numero', function (req, res) {
-    const numero = req.params.numero;
+  retornaDivisores = (numero) => {
     const numeroInt = parseInt(numero);
-    try {
-        if (numeroInt > 0 && typeof(numeroInt) == "number") {
-            let lista = [];
-            let divisor = 1;
-            while (divisor <= Math.ceil(numeroInt/2)) {
-                if (numeroInt % divisor == 0) {
-                    lista.push(divisor);
-                }
-                divisor++;
-            }
-            lista.push(numeroInt);
-            console.log(lista);
-            res.end();
+    if (numeroInt > 0 && typeof numeroInt == 'number') {
+      let lista = [];
+      let divisor = 1;
+      while (divisor <= Math.ceil(numeroInt / 2)) {
+        if (numeroInt % divisor == 0) {
+          lista.push(divisor);
         }
-        else {
-            throw new TypeError;
-        }
-    } catch (error) {
-        console.log(error + ": Valor Inválido");
-        res.end();
-    };
-});
+        divisor++;
+      }
+      lista.push(numeroInt);
+      console.log(lista);
+    } else {
+      throw new TypeError();
+    }
+  };
 
-router.get('/retornaVogais/:string', function (req, res) {
-    const string = req.params.string;
-    try {
-        if (typeof(string) == "string") {
-            const stringMinuscula = string.toLocaleLowerCase();
-            const vogais = ['a', 'e', 'i', 'o', 'u'];
-            let listaVogais = [];
-            for (let i = 0; i < stringMinuscula.length; i++) {
-                const letra = stringMinuscula[i];
-                if (vogais.includes(letra)) {
-                    listaVogais.push(letra);
-                }
-            }
-            console.log(listaVogais);
-            res.end();
+  retornaVogais = (string) => {
+    if (typeof string == 'string') {
+      const stringMinuscula = string.toLocaleLowerCase();
+      const vogais = ['a', 'e', 'i', 'o', 'u'];
+      let listaVogais = [];
+      for (let i = 0; i < stringMinuscula.length; i++) {
+        const letra = stringMinuscula[i];
+        if (vogais.includes(letra)) {
+          listaVogais.push(letra);
         }
-        else {
-            throw new TypeError;
-        }
-    } catch (error) {
-        console.log(error + ": Valor Inválido");
-        res.end();
-    };
-});
+      }
+      console.log(listaVogais);
+    } else {
+      throw new TypeError();
+    }
+  };
+}
 
-module.exports = router;
+module.exports = new Service();

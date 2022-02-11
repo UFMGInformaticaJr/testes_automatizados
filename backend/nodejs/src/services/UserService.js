@@ -1,42 +1,50 @@
-const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const NotAuthorizedError = require('../errors/index');
+const User = require('../models/User');
 
 class UserService {
-  async createUser(user) {
+  async createUser(userObj) {
     const saltRounds = 10;
 
-    user.password = await bcrypt.hash(user.password, saltRounds);
-
-    User.create(user);
+    // Possivelmente abstrair também o bcrypt
+    const password = await bcrypt.hash(user.password, saltRounds);
+    
+    const user = new User(userObj.id, userObj.name, password);
+    await user.create();
   }
 
-  getAllUsers() {
-    return User.findAll({raw: true, attributes:
-      {
+  async getAllUsers() {
+    return await User.findAll({
+      raw: true,
+      attributes: {
         exclude: ['password', 'createdAt', 'updatedAt'],
       },
     });
   }
 
-  getUserById(id) {
-    const user = User.findByPk(id, {raw: true, attributes:
-      {
+  async getUserById(id) {
+    const user = await User.findByPk(id, {
+      raw: true,
+      attributes: {
         exclude: ['password', 'createdAt', 'updatedAt'],
       },
     });
     if (!user) {
-      throw new NotAuthorizedError(`Nao foi encontrado um usuario com o ID: ${id}`);
+      throw new NotAuthorizedError(
+        `Nao foi encontrado um usuario com o ID: ${id}`
+      );
     }
 
     return user;
   }
 
-  updateUser(id, reqUserId, reqUserRole, body) {
-    const user = User.findByPk(id);
+  async updateUser(id, reqUserId, reqUserRole, body) {
+    const user = await User.findByPk(id);
 
     if (!user) {
-      throw new NotAuthorizedError(`Nao foi encontrado um usuario com o ID: ${id}`);
+      throw new NotAuthorizedError(
+        `Nao foi encontrado um usuario com o ID: ${id}`
+      );
     }
 
     const isAdmin = reqUserRole === 'admin';
@@ -45,38 +53,44 @@ class UserService {
     if (isAdmin || isUpdatedUser) {
       if (!isAdmin && body.role) {
         throw new NotAuthorizedError(
-          'Você não tem permissão para mudar seu papel de usuário');
+          'Você não tem permissão para mudar seu papel de usuário'
+        );
       }
       await user.update(body);
     } else {
       throw new NotAuthorizedError(
-        'Você não tem permissão para atualizar esse usuário');
+        'Você não tem permissão para atualizar esse usuário'
+      );
     }
   }
 
-  deleteUser(id, reqUserId) {
-    const user = User.findByPk(id);
+  async deleteUser(id, reqUserId) {
+    const user = await User.findByPk(id);
 
     if (!user) {
-      throw new NotAuthorizedError(`Nao foi encontrado um usuario com o ID: ${id}`);
+      throw new NotAuthorizedError(
+        `Nao foi encontrado um usuario com o ID: ${id}`
+      );
     }
 
     if (id == reqUserId) {
       throw new NotAuthorizedError('Você não tem permissão para se deletar!');
     }
-    user.destroy();
+    await user.delete();
   }
 
-  getCurrentUser(id) {
-    const user = User.findByPk(id, {attributes:
-      {
+  async getCurrentUser(id) {
+    const user = await User.findByPk(id, {
+      attributes: {
         exclude: ['password', 'createdAt', 'updatedAt'],
       },
     });
     if (!user) {
-      throw new NotAuthorizedError(`Nao foi encontrado um usuario com o ID: ${id}`);
+      throw new NotAuthorizedError(
+        `Nao foi encontrado um usuario com o ID: ${id}`
+      );
     }
     return user;
   }
 }
-module.exports = new UserService;
+module.exports = new UserService();

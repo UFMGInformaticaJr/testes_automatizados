@@ -1,17 +1,22 @@
-const { findByPk, findAll } = require("../models/User");
+const User = require('../models/User');
 
 class Service {
-  calculaRaizQuadrada = (numero) => {
+  /**
+   * Retorna um float 
+   */
+  calculaRaizQuadrada (numero) {
     const numeroFloat = parseFloat(numero);
     if (numeroFloat > 0 && typeof numeroFloat == 'number') {
       const raizQuadrada = Math.sqrt(numeroFloat);
-      console.log(raizQuadrada);
     } else {
       throw new TypeError();
     }
   };
 
-  retornaDivisores = (numero) => {
+  /**
+   * Retorna lista de números inteiros 
+   */
+  retornaDivisores (numero) {
     const numeroInt = parseInt(numero);
     if (numeroInt > 0 && typeof numeroInt == 'number') {
       let lista = [];
@@ -23,13 +28,15 @@ class Service {
         divisor++;
       }
       lista.push(numeroInt);
-      console.log(lista);
     } else {
       throw new TypeError();
     }
   };
 
-  retornaVogais = (string) => {
+  /**
+   * Retornar lista de strings
+   */
+   retornaVogais (string) {
     if (typeof string == 'string') {
       const stringMinuscula = string.toLocaleLowerCase();
       const vogais = ['a', 'e', 'i', 'o', 'u'];
@@ -40,32 +47,34 @@ class Service {
           listaVogais.push(letra);
         }
       }
-      console.log(listaVogais);
     } else {
       throw new TypeError();
     }
   };
 
-  senhaFraca = (userId) => {
-    const user = findByPk(userId);
+  /**
+   * Retorna booleano
+   */
+  async senhaFraca (userId) {
+    const user = await User.findByPk(userId);
     let senhaFraca = false;
-    if (user && typeof(user.password) == 'string') {
+    if (user && typeof user.password == 'string') {
       if (user.password.length < 8) {
         senhaFraca = true;
-      }
-      else {
+      } else {
         senhaFraca = false;
       }
-      console.log(senhaFraca);
       return senhaFraca;
-    }
-    else{
+    } else {
       throw new TypeError();
     }
   };
 
-  retornaUsuariosComSenhaFraca = () => {
-    const users = findAll();
+  /**
+   * Retorna uma lista de objetos baseada em resultado de outra função
+   */
+  async retornaUsuariosComSenhaFraca () {
+    const users = await User.findAll();
     let usuariosComSenhaFraca = [];
     for (let i = 0; i < users.length; i++) {
       const user = users[i];
@@ -73,10 +82,16 @@ class Service {
         usuariosComSenhaFraca.push(user.id);
       }
     }
-    console.log(usuariosComSenhaFraca);
     return usuariosComSenhaFraca;
-  }
+  };
 
+  /** 
+   * Chama outras funções mas não retorna nada
+   */ 
+  async noReturn () {
+    const user = await User.findByPk(1);
+    await user.delete();
+  };
 }
 
 module.exports = new Service();

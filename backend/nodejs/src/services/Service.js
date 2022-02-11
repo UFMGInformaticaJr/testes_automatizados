@@ -1,3 +1,5 @@
+const { findByPk, findAll } = require("../models/User");
+
 class Service {
   calculaRaizQuadrada = (numero) => {
     const numeroFloat = parseFloat(numero);
@@ -43,6 +45,38 @@ class Service {
       throw new TypeError();
     }
   };
+
+  senhaFraca = (userId) => {
+    const user = findByPk(userId);
+    let senhaFraca = false;
+    if (user && typeof(user.password) == 'string') {
+      if (user.password.length < 8) {
+        senhaFraca = true;
+      }
+      else {
+        senhaFraca = false;
+      }
+      console.log(senhaFraca);
+      return senhaFraca;
+    }
+    else{
+      throw new TypeError();
+    }
+  };
+
+  retornaUsuariosComSenhaFraca = () => {
+    const users = findAll();
+    let usuariosComSenhaFraca = [];
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      if (this.senhaFraca(user.id)) {
+        usuariosComSenhaFraca.push(user.id);
+      }
+    }
+    console.log(usuariosComSenhaFraca);
+    return usuariosComSenhaFraca;
+  }
+
 }
 
 module.exports = new Service();

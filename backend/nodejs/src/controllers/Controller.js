@@ -35,4 +35,35 @@ router.get('/retornaVogais/:string', function (req, res) {
   }
 });
 
+router.get('/senhaFraca/:id', function (req, res) {
+  try {
+    const userId = req.params.id;
+    Service.senhaFraca(userId);
+    res.end();
+  } catch (error) {
+    console.log(error);
+    res.end();
+  }
+});
+
+router.get('/getAllUsers/', function (req, res) {
+  try {
+    Service.getAllUsers();
+    res.end();
+  } catch (error) {
+    console.log(error);
+    res.end();
+  }
+});
+
+router.get('/retornaUsuariosComSenhaFraca/', function (req, res) {
+  try {
+    Service.retornaUsuariosComSenhaFraca();
+    res.end();
+  } catch (error) {
+    console.log(error);
+    res.end();
+  }
+});
+
 module.exports = router;

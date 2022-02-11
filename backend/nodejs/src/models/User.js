@@ -8,20 +8,18 @@ const User = {
     },
 
     findAll(conditions) {
-        return [
+        return ([
             {
                 id: 1,
                 name: 'jorge',
                 password: 'abcd',
-                destroy()
             },
             {
                 id: 2,
                 name: 'maria',
                 password: '1234',
-                destroy()
             }
-        ];
+        ]);
     },
 
     findByPk(id, conditions) {
@@ -29,7 +27,6 @@ const User = {
             id: id,
             name: 'jorge',
             password: 'abcd',
-            destroy()
         }
     },
 

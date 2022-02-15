@@ -2,78 +2,79 @@ const User = require('../models/User');
 
 class Service {
   /**
-   * Retorna um float 
+   * Retorna um inteiro
    */
-  calculaRaizQuadrada (numero) {
-    const numeroFloat = parseFloat(numero);
-    if (numeroFloat > 0 && typeof numeroFloat == 'number') {
-      const raizQuadrada = Math.sqrt(numeroFloat);
-    } else {
-      throw new TypeError();
-    }
-  };
+  ASobreB(a, b) {
+    if (typeof a != 'number' || typeof b != 'number') throw new TypeError();
+    return a / b;
+  }
 
   /**
-   * Retorna lista de números inteiros 
+   * Retorna um float
    */
-  retornaDivisores (numero) {
-    const numeroInt = parseInt(numero);
-    if (numeroInt > 0 && typeof numeroInt == 'number') {
-      let lista = [];
-      let divisor = 1;
-      while (divisor <= Math.ceil(numeroInt / 2)) {
-        if (numeroInt % divisor == 0) {
-          lista.push(divisor);
-        }
-        divisor++;
+  raizQuadrada(numero) {
+    if (typeof numero != 'number') throw new TypeError();
+    if (numero < 0) throw new Error('Número menor que 0');
+    return Math.sqrt(numero);
+  }
+
+  /**
+   * Retorna lista de números inteiros
+   */
+  divisores(numero) {
+    if (typeof numero != 'number') throw new TypeError();
+    if (numero < 0) throw new Error('Número menor que 0');
+    let divisores = [];
+    let divisor = 1;
+    while (divisor <= Math.ceil(numero / 2)) {
+      if (numero % divisor == 0) {
+        divisores.push(divisor);
       }
-      lista.push(numeroInt);
-    } else {
-      throw new TypeError();
+      divisor++;
     }
-  };
+    divisores.push(numero);
+    return divisores;
+  }
 
   /**
    * Retornar lista de strings
    */
-   retornaVogais (string) {
-    if (typeof string == 'string') {
-      const stringMinuscula = string.toLocaleLowerCase();
-      const vogais = ['a', 'e', 'i', 'o', 'u'];
-      let listaVogais = [];
-      for (let i = 0; i < stringMinuscula.length; i++) {
-        const letra = stringMinuscula[i];
-        if (vogais.includes(letra)) {
-          listaVogais.push(letra);
-        }
+  vogais(string) {
+    if (typeof string != 'string') throw new TypeError();
+    const stringMinuscula = string.toLocaleLowerCase();
+    const vogais = ['a', 'e', 'i', 'o', 'u'];
+    let listaVogais = [];
+    for (let i = 0; i < stringMinuscula.length; i++) {
+      const letra = stringMinuscula[i];
+      if (vogais.includes(letra)) {
+        listaVogais.push(letra);
       }
-    } else {
-      throw new TypeError();
     }
-  };
+    return listaVogais;
+  }
 
   /**
    * Retorna booleano
    */
-  async senhaFraca (userId) {
+  async senhaFraca(userId) {
     const user = await User.findByPk(userId);
+    
+    if (typeof user.password != 'string') throw new TypeError();
+    if (!user) throw new Error('Usuário não encontrado');
+    
     let senhaFraca = false;
-    if (user && typeof user.password == 'string') {
-      if (user.password.length < 8) {
-        senhaFraca = true;
-      } else {
-        senhaFraca = false;
-      }
-      return senhaFraca;
+    if (user.password.length < 8) {
+      senhaFraca = true;
     } else {
-      throw new TypeError();
+      senhaFraca = false;
     }
-  };
+    return senhaFraca;
+  }
 
   /**
    * Retorna uma lista de objetos baseada em resultado de outra função
    */
-  async retornaUsuariosComSenhaFraca () {
+  async usersComSenhaFraca() {
     const users = await User.findAll();
     let usuariosComSenhaFraca = [];
     for (let i = 0; i < users.length; i++) {
@@ -83,12 +84,12 @@ class Service {
       }
     }
     return usuariosComSenhaFraca;
-  };
+  }
 
   /**
-   * Retorna uma lista de lista objetos 
-   */ 
-   async retornaIdsComMesmoNome () {
+   * Retorna uma lista de lista objetos
+   */
+  async idsComMesmoNome() {
     const users = await User.findAll();
     let nomes = [];
     for (let i = 0; i < users.length; i++) {
@@ -100,18 +101,19 @@ class Service {
           ids.push(user2.id);
         }
       }
-      nomes[i] = ids; 
+      nomes[i] = ids;
     }
     return nomes;
-  };
+  }
 
-  /** 
+  /**
    * Chama outras funções mas não retorna nada
-   */ 
-  async noReturn () {
+   */
+  async noReturn() {
     const user = await User.findByPk(1);
     await user.delete();
-  };
+  }
 }
 
 module.exports = new Service();
+

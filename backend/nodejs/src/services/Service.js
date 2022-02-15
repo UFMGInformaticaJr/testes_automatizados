@@ -85,6 +85,26 @@ class Service {
     return usuariosComSenhaFraca;
   };
 
+  /**
+   * Retorna uma lista de lista objetos 
+   */ 
+   async retornaIdsComMesmoNome () {
+    const users = await User.findAll();
+    let nomes = [];
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      let ids = [];
+      for (let j = 0; j < users.length; j++) {
+        const user2 = users[j];
+        if (user.name === user2.name) {
+          ids.push(user2.id);
+        }
+      }
+      nomes[i] = ids; 
+    }
+    return nomes;
+  };
+
   /** 
    * Chama outras funções mas não retorna nada
    */ 

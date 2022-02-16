@@ -6,6 +6,8 @@ describe('Testando ASobreB', () => {
            numerador                        | denominador                        | valorEsperado
             ${6}                            |  ${3}                              |    ${2}
             ${4}                            |  ${2}                              |    ${2}
+            ${-12}                          |  ${3}                              |    ${-4}
+            ${-12}                          |  ${-3}                             |    ${4}
             ${10}                           |  ${3}                              |    ${3.3333333333333335}
             ${Number.MAX_SAFE_INTEGER}      |  ${5}                              |    ${1801439850948198.2}
             ${1}                            |  ${Number.MAX_SAFE_INTEGER}        |    ${1.1102230246251568e-16}

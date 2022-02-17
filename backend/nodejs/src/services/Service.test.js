@@ -25,6 +25,7 @@ describe('Testando raizQuadrada', () => {
         test.concurrent.each([
             [9, 3],
             [225, 15],
+            [225.2, 15.006665185843255],
             [Number.MAX_SAFE_INTEGER, 94906265.62425154],
             [22, 4.69041575982343],
         ])('.raizQuadrada de %f', async (numero, valorEsperado) => {

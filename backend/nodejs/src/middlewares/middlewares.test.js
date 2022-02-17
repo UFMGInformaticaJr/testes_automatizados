@@ -1,28 +1,18 @@
-const express = require('express');
-
 describe('testing middlewares', () => {
-  let app;
-  // Antes de cada teste a variável app é reinicializada
-  beforeEach(() => {
-    app = express();
-    app.use(express.json());
-    return app;
-  });
-
   describe('testing object-filter', () => {
     const {requestFilter} = require('./object-filter');
 
     it('should return the filtered object', () => {
       const mockedNext = jest.fn();
-      const obj = {body: {a: 1, b: 5, c: 3, d: 7}};
+      const req = {body: {a: 1, b: 5, c: 3, d: 7}};
 
       const reqFilter = requestFilter('body', ['a', 'b', 'd']);
 
       // O atributo res é nulo pois não importa para o objetivo deste teste
-      reqFilter(obj, null, mockedNext);
+      reqFilter(req, null, mockedNext);
 
       expect(mockedNext).toBeCalledWith();
-      expect(obj).toEqual({body: {a: 1, b: 5, d: 7}});
+      expect(req).toEqual({body: {a: 1, b: 5, d: 7}});
     });
   });
 

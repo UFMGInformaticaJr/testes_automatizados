@@ -17,3 +17,20 @@ describe('Testando ASobreB', () => {
     });
 
 });
+
+describe('Testando raizQuadrada', () => {
+    const service = require('./Service');
+
+    describe('Quando um número é passado como parâmetro, retorna a raiz quadrada do número', () => {
+        test.concurrent.each([
+            [9, 3],
+            [225, 15],
+            [Number.MAX_SAFE_INTEGER, 94906265.62425154],
+            [22, 4.69041575982343],
+        ])('.raizQuadrada de %f', async (numero, valorEsperado) => {
+            expect(service.raizQuadrada(numero)).toBe(valorEsperado);
+        });
+    });
+
+});
+

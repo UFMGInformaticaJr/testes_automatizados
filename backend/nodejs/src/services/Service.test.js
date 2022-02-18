@@ -1,13 +1,11 @@
 describe('Testando ASobreB', () => {
     const service = require('./Service');
 
-    describe('Quando 2 números são passados como parâmetro, retorna a divisão de um pelo outro', () => {
+    describe('Quando 2 números inteiros são passados como parâmetro, retorna a divisão de um pelo outro', () => {
         test.concurrent.each`
            numerador                        | denominador                        | valorEsperado
             ${6}                            |  ${3}                              |    ${2}
             ${4}                            |  ${2}                              |    ${2}
-            ${7.5224455678}                 |  ${2.7666}                         |    ${2.7190217479216368}
-            ${7.5224455678}                 |  ${-2}                             |    ${-3.7612227839}
             ${-12}                          |  ${3}                              |    ${-4}
             ${-12}                          |  ${-3}                             |    ${4}
             ${10}                           |  ${3}                              |    ${3.3333333333333335}
@@ -15,6 +13,66 @@ describe('Testando ASobreB', () => {
             ${1}                            |  ${Number.MAX_SAFE_INTEGER}        |    ${1.1102230246251568e-16}
         `('.ASobreB($numerador, $denominador)', async ({numerador, denominador, valorEsperado}) => {
             expect(service.ASobreB(numerador, denominador)).toBe(valorEsperado);
+        });
+    });
+
+    describe('Quando 2 números são passados como parâmetro, e um deles ou ambos são float, retorna a divisão de um pelo outro', () => {
+        test.concurrent.each`
+           numerador                        | denominador                        | valorEsperado
+            ${7.5224455678}                 |  ${2.7666}                         |    ${2.7190217479216368}
+            ${7.5224455678}                 |  ${-2}                             |    ${-3.7612227839}
+            ${Number. MAX_VALUE}            |  ${4.2}                            |    ${4.28022174967218e+307}
+            ${8}                            |  ${Number. MAX_VALUE}              |    ${4.450147717014404e-308}
+        `('.ASobreB($numerador, $denominador)', async ({numerador, denominador, valorEsperado}) => {
+            expect(service.ASobreB(numerador, denominador)).toBeCloseTo(valorEsperado, 16);
+        });
+    });
+
+    describe('Quando o numerador é um número maior que 0 mas o denominador é igual a 0, retorna Infinity', () => {
+        test.concurrent.each`
+           numerador                   
+            ${6}                   
+            ${2.1}                     
+            ${Number. MAX_VALUE}       
+            ${Number.MAX_SAFE_INTEGER}
+        `('.ASobreB($numerador, 0)', async ({numerador}) => {
+            expect(service.ASobreB(numerador, 0)).toEqual(Infinity);
+        });
+    });
+
+    describe('Quando o numerador é um número menor que 0 mas o denominador é igual a 0, retorna Infinity negativo', () => {
+        test.concurrent.each`
+           numerador                   
+            ${-6}                   
+            ${-2.1}                     
+            ${-Number. MAX_VALUE}       
+            ${-Number.MAX_SAFE_INTEGER}
+        `('.ASobreB($numerador, 0)', async ({numerador}) => {
+            expect(service.ASobreB(numerador, 0)).toEqual(-Infinity);
+        });
+    });
+
+    describe('Quando o numerador e o denominador são iguais a 0, retorna NaN', () => {
+        test.concurrent('.ASobreB(0, 0)', async () => {
+            expect(service.ASobreB(0, 0)).toEqual(NaN);
+        });
+    });
+
+    describe('Quando algum dos parâmetros não é um número, lança exceção', () => {
+        test.concurrent.each`
+           numerador                        | denominador          
+            ${"uma string"}                 |  ${2.7666}           
+            ${true}                         |  ${-2}               
+            ${{atributo: 1}}                |  ${4.2}              
+            ${() => {}}                     |  ${Number. MAX_VALUE}
+            ${2.7666}                       |  ${"uma string"} 
+            ${-2}                           |  ${true}         
+            ${4.2}                          |  ${{atributo: 1}}
+            ${Number. MAX_VALUE}            |  ${() => {}}     
+        `('.ASobreB($numerador, $denominador)', async ({numerador, denominador}) => {
+            expect(() => {
+                service.ASobreB(numerador, denominador);
+            }).toThrow(TypeError);
         });
     });
 

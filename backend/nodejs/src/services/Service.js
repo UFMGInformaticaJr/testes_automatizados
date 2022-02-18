@@ -113,6 +113,15 @@ class Service {
     const user = await User.findByPk(1);
     await user.delete();
   }
+
+  async getNameById(id){
+    const user = await User.findByPk(id);
+    if( user.name[0]==='a' ||  user.name[0]==='e' ||  user.name[0]==='i' || user.name[0]==='o' || user.name[0] === 'u' ){
+      return `O nome do usuário começa com vogal ("${user.name}").`;
+    }
+    return `O nome do usuário começa com consoante ("${user.name}").`;
+  }
+
 }
 
 module.exports = new Service();

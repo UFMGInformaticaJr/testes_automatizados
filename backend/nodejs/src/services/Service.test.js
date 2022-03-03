@@ -95,3 +95,37 @@ describe('Testando raizQuadrada', () => {
 
 });
 
+describe('Testando vogais', () => {
+    const service = require('./Service');
+
+    describe('Quando uma string é passada por parâmetro, retorna, em minúsculo, as vogais dessa string', () => {
+        test.concurrent.each`
+        ENTRADA                         SAÍDA ESPERADA
+        ${"aabaaea"}                 |   ${['a','a','a','a','e','a']}
+        ${"AAbaaEA"}                 |   ${['a','a','a','a','e','a']}
+        ${"aa baa ea"}               |   ${['a','a','a','a','e','a']}
+        `
+        ('.vogais($string)', async ({string}) => {
+            expect(() => {
+                service.vogais(string);
+            }).toThrow(TypeError);
+        });
+
+    });
+
+    describe('Quando algum dos parâmetros não é uma string, lança exceção', () => {
+        test.concurrent.each`
+        ENTRADA                         
+        ${true}                                        
+        ${{atributo: 1}}                              
+        ${() => {}}                     
+        ${2}                          
+        `
+        ('.vogais($string)', async ({string}) => {
+            expect(() => {
+                service.vogais(string);
+            }).toThrow(TypeError);
+        });
+
+    });
+});

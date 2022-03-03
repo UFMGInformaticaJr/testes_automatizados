@@ -12,8 +12,6 @@ class User {
     this.password = password;
     if(classificacao_etaria === 'adulto' || classificacao_etaria === 'adolescente' || classificacao_etaria === 'crianca'){
       this.classificacao_etaria = classificacao_etaria;
-    } else{
-      throw new Error('A classificacao etaria deve ser "adulto", "adolescente" ou "crianca". ')
     }
     this.age = age;
     this.instance = id && name && password ? true : false;

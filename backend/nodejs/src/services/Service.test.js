@@ -95,3 +95,36 @@ describe('Testando raizQuadrada', () => {
 
 });
 
+describe('Testando senhaFraca', () => {
+    const service = require('./Service');
+
+    describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
+        test.concurrent.each`
+           user                            | valor esperado
+            ${1}                           |  ${true}
+            ${9}                           |  ${false}
+            ${4}                           |  ${true}
+            ${5}                           |  ${true}
+            ${10}                          |  ${false}
+            `('.senhaFraca($user)', async ({user, valorEsperado}) => {
+            expect(() => {service.senhaFraca(user)})
+            .toBe(valorEsperado);
+        });
+    });
+    
+    // describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
+    //     test.concurrent.each`
+    //         titulo
+    //         ${"uma string"}  
+    //         ${"a"}            
+    //         ${"&"}            
+    //         ${"("}            
+    //         ${"("}            
+    //         ${" "}            
+    //     ` ('.senhaFraca de %d', async ({user}) => {
+    //         expect(service.senhaFraca(user)).toThrow(TypeError);
+    //     });
+    // });
+
+});
+

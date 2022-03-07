@@ -57,9 +57,12 @@ class Service {
    * Retorna booleano
    */
   async senhaFraca(userId) {
-    const user = await User.findByPk(userId);
-    
-    if (typeof user.password != 'string') throw new TypeError();
+    const id = parseInt(userId);    
+    if (isNaN(id) || id < 0) {
+      throw new TypeError('Id inválido');
+    }
+    const user = await User.findByPk(id);
+
     if (!user) throw new Error('Usuário não encontrado');
     
     let senhaFraca = false;

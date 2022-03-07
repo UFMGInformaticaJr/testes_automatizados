@@ -2,10 +2,10 @@ const router = require('express').Router();
 
 const Service = require('../services/Service');
 
-router.get('/calculaRaizQuadrada/:numero', function (req, res) {
+router.get('/raizQuadrada/:numero', function (req, res) {
   const numero = req.params.numero;
   try {
-    Service.calculaRaizQuadrada(numero);
+    Service.raizQuadrada(numero);
     res.end();
   } catch (error) {
     console.log(error + ': Valor Inválido');
@@ -13,10 +13,10 @@ router.get('/calculaRaizQuadrada/:numero', function (req, res) {
   }
 });
 
-router.get('/retornaDivisores/:numero', function (req, res) {
+router.get('/divisores/:numero', function (req, res) {
   const numero = req.params.numero;
   try {
-    Service.retornaDivisores(numero);
+    Service.divisores(numero);
     res.end();
   } catch (error) {
     console.log(error + ': Valor Inválido');
@@ -24,10 +24,10 @@ router.get('/retornaDivisores/:numero', function (req, res) {
   }
 });
 
-router.get('/retornaVogais/:string', function (req, res) {
+router.get('/vogais/:string', function (req, res) {
   const string = req.params.string;
   try {
-    Service.retornaVagas(string);
+    Service.vogais(string);
     res.end();
   } catch (error) {
     console.log(error + ': Valor Inválido');

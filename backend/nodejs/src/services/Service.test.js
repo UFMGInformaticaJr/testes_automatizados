@@ -11,7 +11,7 @@ describe('Testando ASobreB', () => {
             ${10}                           |  ${3}                              |    ${3.3333333333333335}
             ${Number.MAX_SAFE_INTEGER}      |  ${5}                              |    ${1801439850948198.2}
             ${1}                            |  ${Number.MAX_SAFE_INTEGER}        |    ${1.1102230246251568e-16}
-        `('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
+        `('.ASobreB($numerador, $denominador)', async ({numerador, denominador, valorEsperado}) => {
             expect(service.ASobreB(numerador, denominador)).toBe(valorEsperado);
         });
     });
@@ -23,7 +23,7 @@ describe('Testando ASobreB', () => {
             ${7.5224455678}                 |  ${-2}                             |    ${-3.7612227839}
             ${Number. MAX_VALUE}            |  ${4.2}                            |    ${4.28022174967218e+307}
             ${8}                            |  ${Number. MAX_VALUE}              |    ${4.450147717014404e-308}
-        `('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
+        `('.ASobreB($numerador, $denominador)', async ({numerador, denominador, valorEsperado}) => {
             expect(service.ASobreB(numerador, denominador)).toBeCloseTo(valorEsperado, 16);
         });
     });
@@ -35,7 +35,7 @@ describe('Testando ASobreB', () => {
             ${2.1}                     
             ${Number. MAX_VALUE}       
             ${Number.MAX_SAFE_INTEGER}
-        `('.ASobreB($numerador, 0)', ({numerador}) => {
+        `('.ASobreB($numerador, 0)', async ({numerador}) => {
             expect(service.ASobreB(numerador, 0)).toEqual(Infinity);
         });
     });
@@ -47,13 +47,13 @@ describe('Testando ASobreB', () => {
             ${-2.1}                     
             ${-Number. MAX_VALUE}       
             ${-Number.MAX_SAFE_INTEGER}
-        `('.ASobreB($numerador, 0)', ({numerador}) => {
+        `('.ASobreB($numerador, 0)', async ({numerador}) => {
             expect(service.ASobreB(numerador, 0)).toEqual(-Infinity);
         });
     });
 
     describe('Quando o numerador e o denominador são iguais a 0, retorna NaN', () => {
-        test.concurrent('.ASobreB(0, 0)', () => {
+        test.concurrent('.ASobreB(0, 0)', async () => {
             expect(service.ASobreB(0, 0)).toEqual(NaN);
         });
     });
@@ -69,7 +69,7 @@ describe('Testando ASobreB', () => {
             ${-2}                           |  ${true}         
             ${4.2}                          |  ${{atributo: 1}}
             ${Number. MAX_VALUE}            |  ${() => {}}     
-        `('.ASobreB($numerador, $denominador)', ({numerador, denominador}) => {
+        `('.ASobreB($numerador, $denominador)', async ({numerador, denominador}) => {
             expect(() => {
                 service.ASobreB(numerador, denominador);
             }).toThrow(TypeError);
@@ -88,7 +88,7 @@ describe('Testando raizQuadrada', () => {
             [225.2, 15.006665185843255],
             [Number.MAX_SAFE_INTEGER, 94906265.62425154],
             [22, 4.69041575982343],
-        ])('.raizQuadrada de %f', (numero, valorEsperado) => {
+        ])('.raizQuadrada de %f', async (numero, valorEsperado) => {
             expect(service.raizQuadrada(numero)).toBe(valorEsperado);
         });
     });
@@ -100,15 +100,15 @@ describe('Testando senhaFraca', () => {
 
     describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
         test.concurrent.each`
-           user                            | valor esperado
-            ${1}                           |  ${true}
-            ${9}                           |  ${false}
-            ${4}                           |  ${true}
-            ${5}                           |  ${true}
-            ${10}                          |  ${false}
-            `('.senhaFraca($user)', async ({user, valorEsperado}) => {
-            expect(() => {service.senhaFraca(user)})
-            .toBe(valorEsperado);
+        ENTRADA                         SAÍDA ESPERADA
+        ${"aabaaea"}                 |   ${['a','a','a','a','e','a']}
+        ${"AAbaaEA"}                 |   ${['a','a','a','a','e','a']}
+        ${"aa baa ea"}               |   ${['a','a','a','a','e','a']}
+        `
+        ('.vogais($string)', async ({string}) => {
+            expect(() => {
+                service.vogais(string);
+            }).toThrow(TypeError);
         });
     });
     
@@ -126,5 +126,20 @@ describe('Testando senhaFraca', () => {
     //     });
     // });
 
+    describe('Quando algum dos parâmetros não é uma string, lança exceção', () => {
+        test.concurrent.each`
+        ENTRADA                         
+        ${true}                                        
+        ${{atributo: 1}}                              
+        ${() => {}}                     
+        ${2}                          
+        `
+        ('.vogais($string)', async ({string}) => {
+            expect(() => {
+                service.vogais(string);
+            }).toThrow(TypeError);
+        });
+
+    });
 });
 

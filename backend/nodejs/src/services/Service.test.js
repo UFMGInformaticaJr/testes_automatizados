@@ -95,51 +95,147 @@ describe('Testando raizQuadrada', () => {
 
 });
 
-describe('Testando senhaFraca', () => {
+describe('Testando vogais', () => {
     const service = require('./Service');
 
-    describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
+    describe('Quando uma string é passada por parâmetro, retorna, em minúsculo, as vogais dessa string', () => {
         test.concurrent.each`
-        ENTRADA                         SAÍDA ESPERADA
+        entrada                      |   valorEsperado
         ${"aabaaea"}                 |   ${['a','a','a','a','e','a']}
         ${"AAbaaEA"}                 |   ${['a','a','a','a','e','a']}
         ${"aa baa ea"}               |   ${['a','a','a','a','e','a']}
         `
-        ('.vogais($string)', async ({string}) => {
-            expect(() => {
-                service.vogais(string);
-            }).toThrow(TypeError);
+        ('.vogais($entrada)', ({entrada, valorEsperado}) => {
+            expect(service.vogais(entrada)).toEqual(valorEsperado);
+
         });
+
     });
-    
-    // describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
-    //     test.concurrent.each`
-    //         titulo
-    //         ${"uma string"}  
-    //         ${"a"}            
-    //         ${"&"}            
-    //         ${"("}            
-    //         ${"("}            
-    //         ${" "}            
-    //     ` ('.senhaFraca de %d', async ({user}) => {
-    //         expect(service.senhaFraca(user)).toThrow(TypeError);
-    //     });
-    // });
 
     describe('Quando algum dos parâmetros não é uma string, lança exceção', () => {
         test.concurrent.each`
-        ENTRADA                         
+        entrada                         
         ${true}                                        
         ${{atributo: 1}}                              
         ${() => {}}                     
         ${2}                          
         `
-        ('.vogais($string)', async ({string}) => {
-            expect(() => {
-                service.vogais(string);
-            }).toThrow(TypeError);
+        ('.vogais($entrada)', ({entrada}) => {
+            expect(() => service.vogais(entrada)).toThrow(TypeError);
         });
 
     });
+});	
+
+describe('Testando senhaFraca', () => {
+    test('Teste 1', () => {
+        const User = require('../models/User');
+        const service = require('./Service');
+        
+        jest.spyOn(User,'findByPk').mockReturnValue({
+            name: 'jorge',
+            password: 'abcd',
+            classificacao_etaria: 'adolescente',
+            age: 15,
+        });
+        
+        expect(service.senhaFraca(1)).resolves.toEqual(true);
+    });
+
+    test('Teste 1', () => {
+        const User = require('../models/User');
+        const service = require('./Service');
+        
+        jest.spyOn(User,'findByPk').mockReturnValue({
+            name: 'gabi',
+            password: 'abcdefghi',
+            classificacao_etaria: 'adolescente',
+            age: 16,
+        });
+        
+        expect(service.senhaFraca(2)).resolves.toEqual(false);
+    });
+    
+    test('Teste 3', () => {
+        const User = require('../models/User');
+        const service = require('./Service');
+        
+        jest.spyOn(User,'findByPk').mockReturnValue({
+            name: 'gabriel',
+            password: 'abcdefghijk',
+            classificacao_etaria: 'adolescente',
+            age: 17,
+        });
+        
+        expect(service.senhaFraca(2)).resolves.toEqual(false);
+    });
+
+    test('Teste 4', () => {
+        const User = require('../models/User');
+        const service = require('./Service');
+        
+        jest.spyOn(User,'findByPk').mockReturnValue({
+            name: 'bernardo',
+            password: 'abc',
+            classificacao_etaria: 'adolescente',
+            age: 17,
+        });
+        
+        expect(service.senhaFraca(2)).resolves.toEqual(true);
+    });
+
+    test('Teste 4', () => {
+        const User = require('../models/User');
+        const service = require('./Service');
+        
+        jest.spyOn(User,'findByPk').mockReturnValue({
+            name: 'vinicius',
+            password: 'a',
+            classificacao_etaria: 'adolescente',
+            age: 14,
+        });
+        
+        expect(service.senhaFraca(2)).resolves.toEqual(true);
+    });
+   
+    // describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
+    //     const User = require('../models/User');
+    //     const service = require('./Service');
+    //     test.concurrent.each([
+    //         [jest.spyOn(User,'findByPk').mockReturnValue({
+    //             name: 'jorge',
+    //             password: 'abcd',
+    //             classificacao_etaria: 'adolescente',
+    //             age: 15}), true],
+    //         [{
+    //             name: 'gabi',
+    //             password: 'abcdefghashud',
+    //             classificacao_etaria: 'adolescente',
+    //             age: 16,
+    //         }, false],
+    //         [{
+    //             name: 'gabriel',
+    //             password: 'abcdefghijk',
+    //             classificacao_etaria: 'adolescente',
+    //             age: 17,
+    //         }, false],
+    //         [{
+    //             name: 'bernardo',
+    //             password: 'abc',
+    //             classificacao_etaria: 'adolescente',
+    //             age: 17,
+    //         }, true],
+    //         [{
+    //             name: 'vinicius',
+    //             password: 'a',
+    //             classificacao_etaria: 'adolescente',
+    //             age: 14,
+    //         }, true],
+    //     ])
+    //     ('.senhaFraca($user)', async ({user, valorEsperado}) => {
+    //         expect(service.senhaFraca(1)).resolves.toBe(valorEsperado);
+    //     });
+    // });
+
 });
 

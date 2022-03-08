@@ -11,7 +11,7 @@ describe('Testando ASobreB', () => {
             ${10}                           |  ${3}                              |    ${3.3333333333333335}
             ${Number.MAX_SAFE_INTEGER}      |  ${5}                              |    ${1801439850948198.2}
             ${1}                            |  ${Number.MAX_SAFE_INTEGER}        |    ${1.1102230246251568e-16}
-        `('.ASobreB($numerador, $denominador)', async ({numerador, denominador, valorEsperado}) => {
+        `('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
             expect(service.ASobreB(numerador, denominador)).toBe(valorEsperado);
         });
     });
@@ -23,7 +23,7 @@ describe('Testando ASobreB', () => {
             ${7.5224455678}                 |  ${-2}                             |    ${-3.7612227839}
             ${Number. MAX_VALUE}            |  ${4.2}                            |    ${4.28022174967218e+307}
             ${8}                            |  ${Number. MAX_VALUE}              |    ${4.450147717014404e-308}
-        `('.ASobreB($numerador, $denominador)', async ({numerador, denominador, valorEsperado}) => {
+        `('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
             expect(service.ASobreB(numerador, denominador)).toBeCloseTo(valorEsperado, 16);
         });
     });
@@ -35,7 +35,7 @@ describe('Testando ASobreB', () => {
             ${2.1}                     
             ${Number. MAX_VALUE}       
             ${Number.MAX_SAFE_INTEGER}
-        `('.ASobreB($numerador, 0)', async ({numerador}) => {
+        `('.ASobreB($numerador, 0)', ({numerador}) => {
             expect(service.ASobreB(numerador, 0)).toEqual(Infinity);
         });
     });
@@ -47,7 +47,7 @@ describe('Testando ASobreB', () => {
             ${-2.1}                     
             ${-Number. MAX_VALUE}       
             ${-Number.MAX_SAFE_INTEGER}
-        `('.ASobreB($numerador, 0)', async ({numerador}) => {
+        `('.ASobreB($numerador, 0)', ({numerador}) => {
             expect(service.ASobreB(numerador, 0)).toEqual(-Infinity);
         });
     });
@@ -69,7 +69,7 @@ describe('Testando ASobreB', () => {
             ${-2}                           |  ${true}         
             ${4.2}                          |  ${{atributo: 1}}
             ${Number. MAX_VALUE}            |  ${() => {}}     
-        `('.ASobreB($numerador, $denominador)', async ({numerador, denominador}) => {
+        `('.ASobreB($numerador, $denominador)', ({numerador, denominador}) => {
             expect(() => {
                 service.ASobreB(numerador, denominador);
             }).toThrow(TypeError);
@@ -88,7 +88,7 @@ describe('Testando raizQuadrada', () => {
             [225.2, 15.006665185843255],
             [Number.MAX_SAFE_INTEGER, 94906265.62425154],
             [22, 4.69041575982343],
-        ])('.raizQuadrada de %f', async (numero, valorEsperado) => {
+        ])('.raizQuadrada de %f', (numero, valorEsperado) => {
             expect(service.raizQuadrada(numero)).toBe(valorEsperado);
         });
     });
@@ -128,114 +128,46 @@ describe('Testando vogais', () => {
 });	
 
 describe('Testando senhaFraca', () => {
-    test('Teste 1', () => {
+    describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
         const User = require('../models/User');
         const service = require('./Service');
-        
-        jest.spyOn(User,'findByPk').mockReturnValue({
-            name: 'jorge',
-            password: 'abcd',
-            classificacao_etaria: 'adolescente',
-            age: 15,
-        });
-        
-        expect(service.senhaFraca(1)).resolves.toEqual(true);
-    });
 
-    test('Teste 1', () => {
-        const User = require('../models/User');
-        const service = require('./Service');
-        
-        jest.spyOn(User,'findByPk').mockReturnValue({
-            name: 'gabi',
-            password: 'abcdefghi',
-            classificacao_etaria: 'adolescente',
-            age: 16,
+        test.concurrent.each([
+            [{
+                name: 'jorge',
+                password: 'abcd',
+                classificacao_etaria: 'adolescente',
+                age: 15}, true],
+            [{
+                name: 'gabi',
+                password: 'abcdefghashud',
+                classificacao_etaria: 'adolescente',
+                age: 16,
+            }, false],
+            [{
+                name: 'gabriel',
+                password: 'abcdefghijk',
+                classificacao_etaria: 'adolescente',
+                age: 17,
+            }, false],
+            [{
+                name: 'bernardo',
+                password: 'abc',
+                classificacao_etaria: 'adolescente',
+                age: 17,
+            }, true],
+            [{
+                name: 'vinicius',
+                password: 'a',
+                classificacao_etaria: 'adolescente',
+                age: 14,
+            }, true],
+        ])
+        ('.senhaFraca(%p)', (user, valorEsperado) => {
+            // jest.mock
+            jest.spyOn(User,'findByPk').mockReturnValue(user);
+            expect(service.senhaFraca(1)).resolves.toBe(valorEsperado);
         });
-        
-        expect(service.senhaFraca(2)).resolves.toEqual(false);
     });
-    
-    test('Teste 3', () => {
-        const User = require('../models/User');
-        const service = require('./Service');
-        
-        jest.spyOn(User,'findByPk').mockReturnValue({
-            name: 'gabriel',
-            password: 'abcdefghijk',
-            classificacao_etaria: 'adolescente',
-            age: 17,
-        });
-        
-        expect(service.senhaFraca(2)).resolves.toEqual(false);
-    });
-
-    test('Teste 4', () => {
-        const User = require('../models/User');
-        const service = require('./Service');
-        
-        jest.spyOn(User,'findByPk').mockReturnValue({
-            name: 'bernardo',
-            password: 'abc',
-            classificacao_etaria: 'adolescente',
-            age: 17,
-        });
-        
-        expect(service.senhaFraca(2)).resolves.toEqual(true);
-    });
-
-    test('Teste 4', () => {
-        const User = require('../models/User');
-        const service = require('./Service');
-        
-        jest.spyOn(User,'findByPk').mockReturnValue({
-            name: 'vinicius',
-            password: 'a',
-            classificacao_etaria: 'adolescente',
-            age: 14,
-        });
-        
-        expect(service.senhaFraca(2)).resolves.toEqual(true);
-    });
-   
-    // describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
-    //     const User = require('../models/User');
-    //     const service = require('./Service');
-    //     test.concurrent.each([
-    //         [jest.spyOn(User,'findByPk').mockReturnValue({
-    //             name: 'jorge',
-    //             password: 'abcd',
-    //             classificacao_etaria: 'adolescente',
-    //             age: 15}), true],
-    //         [{
-    //             name: 'gabi',
-    //             password: 'abcdefghashud',
-    //             classificacao_etaria: 'adolescente',
-    //             age: 16,
-    //         }, false],
-    //         [{
-    //             name: 'gabriel',
-    //             password: 'abcdefghijk',
-    //             classificacao_etaria: 'adolescente',
-    //             age: 17,
-    //         }, false],
-    //         [{
-    //             name: 'bernardo',
-    //             password: 'abc',
-    //             classificacao_etaria: 'adolescente',
-    //             age: 17,
-    //         }, true],
-    //         [{
-    //             name: 'vinicius',
-    //             password: 'a',
-    //             classificacao_etaria: 'adolescente',
-    //             age: 14,
-    //         }, true],
-    //     ])
-    //     ('.senhaFraca($user)', async ({user, valorEsperado}) => {
-    //         expect(service.senhaFraca(1)).resolves.toBe(valorEsperado);
-    //     });
-    // });
-
 });
 

@@ -131,6 +131,10 @@ describe('Testando senhaFraca', () => {
     describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
         const User = require('../models/User');
         const service = require('./Service');
+        beforeEach(() => {
+            jest.restoreAllMocks();
+            jest.clearAllMocks();
+        });
 
         test.concurrent.each([
             [{

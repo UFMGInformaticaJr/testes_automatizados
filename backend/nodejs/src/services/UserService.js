@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const NotAuthorizedError = require('../errors/index');
 const User = require('../models/User');
 

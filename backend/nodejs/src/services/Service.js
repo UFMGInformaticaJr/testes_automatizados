@@ -2,7 +2,7 @@ const User = require('../models/User');
 
 class Service {
   /**
-   * Retorna um inteiro
+   * Retorna um float ** TESTADO
    */
   ASobreB(a, b) {
     if (typeof a != 'number' || typeof b != 'number') throw new TypeError();
@@ -37,7 +37,7 @@ class Service {
   }
 
   /**
-   * Retornar lista de strings
+   * Retornar lista de strings ** TESTADO
    */
   vogais(string) {
     if (typeof string != 'string') throw new TypeError();

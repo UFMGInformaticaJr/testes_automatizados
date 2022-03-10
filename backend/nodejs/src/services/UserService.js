@@ -1,5 +1,5 @@
 // const bcrypt = require('bcrypt');
-const NotAuthorizedError = require('../errors/index');
+const {NotFoundError, NotAuthorizedError} = require('../errors');
 const User = require('../models/User');
 
 class UserService {
@@ -30,7 +30,7 @@ class UserService {
       },
     });
     if (!user) {
-      throw new NotAuthorizedError(
+      throw new NotFoundError(
         `Nao foi encontrado um usuario com o ID: ${id}`
       );
     }
@@ -42,7 +42,7 @@ class UserService {
     const user = await User.findByPk(id);
 
     if (!user) {
-      throw new NotAuthorizedError(
+      throw new NotFoundError(
         `Nao foi encontrado um usuario com o ID: ${id}`
       );
     }
@@ -68,7 +68,7 @@ class UserService {
     const user = await User.findByPk(id);
 
     if (!user) {
-      throw new NotAuthorizedError(
+      throw new NotFoundError(
         `Nao foi encontrado um usuario com o ID: ${id}`
       );
     }
@@ -86,7 +86,7 @@ class UserService {
       },
     });
     if (!user) {
-      throw new NotAuthorizedError(
+      throw new NotFoundError(
         `Nao foi encontrado um usuario com o ID: ${id}`
       );
     }

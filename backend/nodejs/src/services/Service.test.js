@@ -93,6 +93,32 @@ describe('Testando raizQuadrada', () => {
         });
     });
 
+    describe('Quando o parâmetro não é um número, lança exceção', () => {
+        test.concurrent.each([
+            ["uma string"],
+            [true],
+            [{atributo: 1}],
+            [() => {}],
+        ])('.raizQuadrada de %f', (numero) => {
+            expect(() => {
+                service.raizQuadrada(numero);
+            }).toThrow(TypeError);
+        });
+    });
+
+    describe('Quando o parâmetro é um número negativo, lança exceção', () => {
+        test.concurrent.each([
+            [-1],
+            [-15.67],
+            [-Number.MAX_SAFE_INTEGER],
+            [-Number.MAX_VALUE],
+        ])('.raizQuadrada de %f', (numero) => {
+            expect(() => {
+                service.raizQuadrada(numero);
+            }).toThrow(Error);
+        });
+    });
+
 });
 
 describe('Testando vogais', () => {
@@ -141,7 +167,8 @@ describe('Testando senhaFraca', () => {
                 name: 'jorge',
                 password: 'abcd',
                 classificacao_etaria: 'adolescente',
-                age: 15}, true],
+                age: 15,
+            }, true],
             [{
                 name: 'gabi',
                 password: 'abcdefghashud',
@@ -174,4 +201,46 @@ describe('Testando senhaFraca', () => {
         });
     });
 });
+
+describe ('Testando idsComMesmoNome', () => {
+    const User = require('../models/User');
+    const service = require('./Service');
+    beforeEach(() => {
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
+    });
+    
+    test.concurrent.each([
+        [{
+            name: 'jorge',
+            password: 'abcd',
+            classificacao_etaria: 'adolescente',
+            age: 15,
+        },{
+            name: 'gabi',
+            password: 'abcdefghashud',
+            classificacao_etaria: 'adolescente',
+            age: 16,
+        },[1]
+        ],
+        [{
+            name: 'manuel',
+            password: 'abcd',
+            classificacao_etaria: 'adolescente',
+            age: 15,
+        },{
+            name: 'manuel',
+            password: 'abcdefghashud',
+            classificacao_etaria: 'adolescente',
+            age: 16,
+        },
+        [[1,2], [1,2]],
+        ]
+    ])
+    ('.idsComMesmoNome(%p)', (user1, user2, valorEsperado) => {
+        jest.spyOn(User,'findAll').mockReturnValue(user1, user2);
+        expect(service.idsComMesmoNome()).resolves.toEqual(expect.arrayContaining(valorEsperado));
+    });    
+}); 
+
 

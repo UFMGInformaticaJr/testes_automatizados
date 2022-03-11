@@ -75,7 +75,6 @@ describe('Testando ASobreB', () => {
             }).toThrow(TypeError);
         });
     });
-
 });
 
 describe('Testando raizQuadrada', () => {
@@ -118,7 +117,6 @@ describe('Testando raizQuadrada', () => {
             }).toThrow(Error);
         });
     });
-
 });
 
 describe('Testando vogais', () => {
@@ -133,9 +131,7 @@ describe('Testando vogais', () => {
         `
         ('.vogais($entrada)', ({entrada, valorEsperado}) => {
             expect(service.vogais(entrada)).toEqual(valorEsperado);
-
         });
-
     });
 
     describe('Quando algum dos parâmetros não é uma string, lança exceção', () => {
@@ -149,7 +145,6 @@ describe('Testando vogais', () => {
         ('.vogais($entrada)', ({entrada}) => {
             expect(() => service.vogais(entrada)).toThrow(TypeError);
         });
-
     });
 });	
 
@@ -195,7 +190,6 @@ describe('Testando senhaFraca', () => {
             }, true],
         ])
         ('.senhaFraca(%p)', (user, valorEsperado) => {
-            // jest.mock
             jest.spyOn(User,'findByPk').mockReturnValue(user);
             expect(service.senhaFraca(1)).resolves.toBe(valorEsperado);
         });
@@ -211,36 +205,36 @@ describe ('Testando idsComMesmoNome', () => {
     });
     
     test.concurrent.each([
-        [{
+        [[{
+            id: 1,
             name: 'jorge',
             password: 'abcd',
             classificacao_etaria: 'adolescente',
             age: 15,
         },{
+            id: 2,
             name: 'gabi',
             password: 'abcdefghashud',
             classificacao_etaria: 'adolescente',
             age: 16,
-        },[1]
-        ],
-        [{
+        }],[[1],[2]]],
+        [[{
+            id: 1,
             name: 'manuel',
             password: 'abcd',
             classificacao_etaria: 'adolescente',
             age: 15,
         },{
+            id: 2,
             name: 'manuel',
             password: 'abcdefghashud',
             classificacao_etaria: 'adolescente',
             age: 16,
-        },
-        [[1,2], [1,2]],
-        ]
+        }],
+        [[1,2],[1,2]]]
     ])
-    ('.idsComMesmoNome(%p)', (user1, user2, valorEsperado) => {
-        jest.spyOn(User,'findAll').mockReturnValue(user1, user2);
-        expect(service.idsComMesmoNome()).resolves.toEqual(expect.arrayContaining(valorEsperado));
+    ('.idsComMesmoNome(%p)', (users, valorEsperado) => {
+        jest.spyOn(User,'findAll').mockReturnValue(users);
+        expect(service.idsComMesmoNome()).resolves.toEqual(valorEsperado);
     });    
 }); 
-
-

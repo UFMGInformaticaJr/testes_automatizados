@@ -146,54 +146,6 @@ describe('Testando vogais', () => {
             expect(() => service.vogais(entrada)).toThrow(TypeError);
         });
     });
-});	
-
-describe('Testando senhaFraca', () => {
-    describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
-        const User = require('../models/User');
-        const service = require('./Service');
-        beforeEach(() => {
-            jest.restoreAllMocks();
-            jest.clearAllMocks();
-        });
-
-        test.concurrent.each([
-            [{
-                name: 'jorge',
-                password: 'abcd',
-                classificacao_etaria: 'adolescente',
-                age: 15,
-            }, true],
-            [{
-                name: 'gabi',
-                password: 'abcdefghashud',
-                classificacao_etaria: 'adolescente',
-                age: 16,
-            }, false],
-            [{
-                name: 'gabriel',
-                password: 'abcdefghijk',
-                classificacao_etaria: 'adolescente',
-                age: 17,
-            }, false],
-            [{
-                name: 'bernardo',
-                password: 'abc',
-                classificacao_etaria: 'adolescente',
-                age: 17,
-            }, true],
-            [{
-                name: 'vinicius',
-                password: 'a',
-                classificacao_etaria: 'adolescente',
-                age: 14,
-            }, true],
-        ])
-        ('.senhaFraca(%p)', (user, valorEsperado) => {
-            jest.spyOn(User,'findByPk').mockReturnValue(user);
-            expect(service.senhaFraca(1)).resolves.toBe(valorEsperado);
-        });
-    });
 });
 
 describe ('Testando idsComMesmoNome', () => {
@@ -238,3 +190,73 @@ describe ('Testando idsComMesmoNome', () => {
         expect(service.idsComMesmoNome()).resolves.toEqual(valorEsperado);
     });    
 }); 
+
+describe('Testando usersComSenhaFraca', () => {
+    const service = require('./Service');
+    const User = require('../models/User');
+    const SenhaService = require('./SenhaService');
+    beforeEach(() => {
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
+    });
+
+    describe('Quando o método é executado, busca todos os usuários', () => {
+        test(
+            '.usersComSenhaFraca()',
+            async () => {
+                var userFindAll = jest.spyOn(User,'findAll');
+                
+                await service.usersComSenhaFraca();
+
+                expect(userFindAll).toHaveBeenCalled();
+            }
+        );
+    });
+
+    describe('Quando a busca retorna usuários, verifica senha fraca dos usuários', () => {
+        test(
+            '.usersComSenhaFraca()',
+            async () => {
+                jest.spyOn(User,'findAll').mockReturnValue([{
+                    id: 1,
+                    name: 'vitor'
+                },{
+                    id: 2,
+                    name: 'geovanna'
+                }]);
+
+                var senhaServiceSenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
+
+                await service.usersComSenhaFraca();
+
+                expect(senhaServiceSenhaFraca).toHaveBeenCalledTimes(2);
+            }
+        );
+    });
+
+    describe('Quando a busca retorna usuários com senha fraca, retorna lista com estes usuários', () => {
+        test(
+            '.usersComSenhaFraca()',
+            async () => {
+                var usuariosComSenhaFraca = [{
+                    id: 1,
+                    name: 'vitor'
+                },{
+                    id: 2,
+                    name: 'geovanna'
+                }];
+
+                jest.spyOn(User,'findAll').mockReturnValue(usuariosComSenhaFraca);
+
+                jest.spyOn(SenhaService,'senhaFraca')
+                    .mockReturnValue(true)
+                    .mockReturnValue(true);
+
+                var retorno = await service.usersComSenhaFraca();
+
+                expect(retorno).toEqual(expect.arrayContaining(usuariosComSenhaFraca));
+                expect(retorno.length).toBe(usuariosComSenhaFraca.length);
+            }
+        );
+    });
+});

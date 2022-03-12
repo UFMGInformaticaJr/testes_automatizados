@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const SenhaService = require('./SenhaService');
 
 class Service {
   /**
@@ -54,27 +55,6 @@ class Service {
   }
 
   /**
-   * Retorna booleano
-   */
-  async senhaFraca(userId) {
-    const id = parseInt(userId);    
-    if (isNaN(id) || id < 0) {
-      throw new TypeError('Id inválido');
-    }
-    const user = await User.findByPk(id);
-
-    if (!user) throw new Error('Usuário não encontrado');
-    
-    let senhaFraca = false;
-    if (user.password.length < 8) {
-      senhaFraca = true;
-    } else {
-      senhaFraca = false;
-    }
-    return senhaFraca;
-  }
-
-  /**
    * Retorna uma lista de objetos baseada em resultado de outra função
    */
   async usersComSenhaFraca() {
@@ -82,8 +62,8 @@ class Service {
     let usuariosComSenhaFraca = [];
     for (let i = 0; i < users.length; i++) {
       const user = users[i];
-      if (this.senhaFraca(user.id)) {
-        usuariosComSenhaFraca.push(user.id);
+      if (await SenhaService.senhaFraca(user.id)) {
+        usuariosComSenhaFraca.push(user);
       }
     }
     return usuariosComSenhaFraca;

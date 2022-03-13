@@ -195,25 +195,24 @@ describe('Testando usersComSenhaFraca', () => {
     const service = require('./Service');
     const User = require('../models/User');
     const SenhaService = require('./SenhaService');
+    
     beforeEach(() => {
         jest.restoreAllMocks();
         jest.clearAllMocks();
     });
 
-    describe('Quando o método é executado, busca todos os usuários', () => {
-        test(
-            '.usersComSenhaFraca()',
-            async () => {
-                var userFindAll = jest.spyOn(User,'findAll');
-                
-                await service.usersComSenhaFraca();
+    test(
+        'Quando o método é executado, busca todos os usuários',
+        async () => {
+            var userFindAll = jest.spyOn(User,'findAll');
+            
+            await service.usersComSenhaFraca();
 
-                expect(userFindAll).toHaveBeenCalled();
-            }
-        );
-    });
+            expect(userFindAll).toHaveBeenCalled();
+        }
+    );
 
-    describe('Quando a busca retorna usuários, verifica senha fraca dos usuários', () => {
+    describe('Quando a busca retorna usuários, verifica senha fraca de todos os usuários', () => {
         test.each(
             [                                   
                 {
@@ -226,41 +225,71 @@ describe('Testando usersComSenhaFraca', () => {
                             id: 2,
                             name: 'geovanna'
                         }
-                    ],
-                    numeroVerificacoesDeSenhaFraca: 2
+                    ]
+                },
+                {
+                    usuarios:[
+                        {
+                            id: 1
+                        }
+                    ]
+                },
+                {
+                    usuarios:[]
                 }
             ]                                       
         )(
             '%j',
-            async ({usuarios, numeroVerificacoesDeSenhaFraca}) => {
+            async ({usuarios}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuarios);
 
-                var senhaServiceSenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
+                var spySenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
 
                 await service.usersComSenhaFraca();
 
-                expect(senhaServiceSenhaFraca).toHaveBeenCalledTimes(numeroVerificacoesDeSenhaFraca);
+                expect(spySenhaFraca).toHaveBeenCalledTimes(usuarios.length);
             }
         );
     });
 
     describe('Quando a busca retorna usuários com senha fraca, retorna lista com estes usuários', () => {
-        test(
-            'Sem parâmetros',
-            async () => {
-                var usuariosComSenhaFraca = [{
-                    id: 1,
-                    name: 'vitor'
-                },{
-                    id: 2,
-                    name: 'geovanna'
-                }];
-
+        test.each(
+            [                                   
+                {
+                    usuariosComSenhaFraca:[
+                        {
+                            id: 1,
+                            name: 'vitor',
+                            password: "1234"
+                        },
+                        {
+                            id: 2,
+                            name: 'geovanna',
+                            password: "abcd"
+                        }
+                    ]
+                },
+                {
+                    usuariosComSenhaFraca:[
+                        {
+                            id: 1,
+                            password: "1a2b"
+                        }
+                    ]
+                },
+                {
+                    usuariosComSenhaFraca:[]
+                }
+            ]                                       
+        )(
+            '%j',
+            async ({usuariosComSenhaFraca}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuariosComSenhaFraca);
 
-                jest.spyOn(SenhaService,'senhaFraca')
-                    .mockReturnValue(true)
-                    .mockReturnValue(true);
+                var spySenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
+                for (let i = 0; i < usuariosComSenhaFraca.length; i++){
+                    spySenhaFraca.mockReturnValue(true);
+                }
 
                 var retorno = await service.usersComSenhaFraca();
 

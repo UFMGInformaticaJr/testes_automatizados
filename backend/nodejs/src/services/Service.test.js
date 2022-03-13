@@ -213,32 +213,31 @@ describe('Testando usersComSenhaFraca', () => {
     );
 
     describe('Quando a busca retorna usuários, verifica senha fraca de todos os usuários', () => {
-        test.each(
-            [                                   
-                {
-                    usuarios:[
-                        {
-                            id: 1,
-                            name: 'vitor'
-                        },
-                        {
-                            id: 2,
-                            name: 'geovanna'
-                        }
-                    ]
-                },
-                {
-                    usuarios:[
-                        {
-                            id: 1
-                        }
-                    ]
-                },
-                {
-                    usuarios:[]
-                }
-            ]                                       
-        )(
+        test.each([                                   
+            {
+                usuarios:[
+                    {
+                        id: 1,
+                        name: 'vitor'
+                    },
+                    {
+                        id: 2,
+                        name: 'geovanna'
+                    }
+                ]
+            },
+            {
+                usuarios:[
+                    {
+                        id: 1
+                    }
+                ]
+            },
+            {
+                usuarios:[]
+            }
+                                                   
+        ])(
             '%j',
             async ({usuarios}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuarios);
@@ -253,35 +252,33 @@ describe('Testando usersComSenhaFraca', () => {
     });
 
     describe('Quando a busca retorna usuários com senha fraca, retorna lista com estes usuários', () => {
-        test.each(
-            [                                   
-                {
-                    usuariosComSenhaFraca:[
-                        {
-                            id: 1,
-                            name: 'vitor',
-                            password: "1234"
-                        },
-                        {
-                            id: 2,
-                            name: 'geovanna',
-                            password: "abcd"
-                        }
-                    ]
-                },
-                {
-                    usuariosComSenhaFraca:[
-                        {
-                            id: 1,
-                            password: "1a2b"
-                        }
-                    ]
-                },
-                {
-                    usuariosComSenhaFraca:[]
-                }
-            ]                                       
-        )(
+        test.each([                                   
+            {
+                usuariosComSenhaFraca:[
+                    {
+                        id: 1,
+                        name: 'vitor',
+                        password: "1234"
+                    },
+                    {
+                        id: 2,
+                        name: 'geovanna',
+                        password: "abcd"
+                    }
+                ]
+            },
+            {
+                usuariosComSenhaFraca:[
+                    {
+                        id: 1,
+                        password: "1a2b"
+                    }
+                ]
+            },
+            {
+                usuariosComSenhaFraca:[]
+            }                                   
+        ])(
             '%j',
             async ({usuariosComSenhaFraca}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuariosComSenhaFraca);

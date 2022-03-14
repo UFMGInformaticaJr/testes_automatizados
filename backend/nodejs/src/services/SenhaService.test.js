@@ -1,13 +1,15 @@
-describe('Testando senhaFraca', () => {
-    describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
-        const User = require('../models/User');
-        const SenhaService = require('./SenhaService');
-        beforeEach(() => {
-            jest.restoreAllMocks();
-            jest.clearAllMocks();
-        });
+const {NotFoundError} = require('../errors');
 
-        test.concurrent.each([
+describe('Testando senhaFraca', () => {
+    const User = require('../models/User');
+    const SenhaService = require('./SenhaService');
+    beforeEach(() => {
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
+    });
+
+    describe('Quando um id de um usuário é passado como parâmetro, retorna se a senha do usuário é fraca', () => {
+        test.each([
             [{
                 name: 'jorge',
                 password: 'abcd',
@@ -44,4 +46,26 @@ describe('Testando senhaFraca', () => {
             expect(SenhaService.senhaFraca(1)).resolves.toBe(valorEsperado);
         });
     });
+
+    test('Quando um usuário não é encontrado, lança exceção', async () => {
+        jest.spyOn(User,'findByPk').mockReturnValue(undefined);
+    
+        expect(async () => {
+          const id = 1;
+          await SenhaService.senhaFraca(id);
+        }).rejects.toThrow(NotFoundError);
+    });
+
+    describe('Quando o parâmetro não é um número, lança exceção', () => {
+        test.each([
+            ["uma string"],
+            [true],
+            [{atributo: 1}],
+            [() => {}],
+        ])('.senhaFraca de %f', (numero) => {
+            expect(async () => {
+                await SenhaService.senhaFraca(numero);
+            }).rejects.toThrow(TypeError);
+        });
+    });  
 });

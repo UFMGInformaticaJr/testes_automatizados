@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const {NotFoundError} = require('../errors');
 
 class SenhaService {
     /**
@@ -11,7 +12,7 @@ class SenhaService {
     }
     const user = await User.findByPk(id);
 
-    if (!user) throw new Error('Usuário não encontrado');
+    if (!user) throw new NotFoundError('Usuário não encontrado');
     
     let senhaFraca = false;
     if (user.password.length < 8) {

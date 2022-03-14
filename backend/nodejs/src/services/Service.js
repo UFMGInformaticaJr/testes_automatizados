@@ -103,10 +103,10 @@ class Service {
     */
   async getNameById(id){
     const user = await User.findByPk(id);
-    if( user.name[0]==='a' || user.name[0]==='e' || user.name[0]==='o' || user.name[0] === 'u' ){
-      return "O nome do usuário começa com vogal (`${user.name}`).";
+    if( user.name[0]==='a' || user.name[0]==='e' || user.name[0]==='i' || user.name[0]==='o' || user.name[0] === 'u' ){
+      return "O nome do usuário começa com vogal (" + user.name + ")";
     }
-    return "O nome do usuário começa com consoante (`${user.name}`).";
+    return "O nome do usuário começa com consoante (" + user.name + ")";
   }
 
   /**

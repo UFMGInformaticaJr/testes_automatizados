@@ -76,7 +76,7 @@ class UserService {
     if (id == reqUserId) {
       throw new NotAuthorizedError('Você não tem permissão para se deletar!');
     }
-    await User.delete(id);
+    await user.delete();
   }
 
   async getCurrentUser(id) {

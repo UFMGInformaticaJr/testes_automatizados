@@ -53,7 +53,7 @@ class User {
     return this;
   }
 
-  async delete(id) {
+  async delete() {
     // Apenas separando os casos pra possíveis futuros incrementos
     if(this.instance) return;
     return;

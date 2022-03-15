@@ -220,20 +220,28 @@ describe('Testando deleteUser', () => {
 
   const UserService = require('./UserService');
   test('Quando o método recebe o id de um usuário, deleta esse usuário', async () => {
-    jest.spyOn(UserModel,'findByPk').mockImplementation(() => {
-      return ({
-        name: 'jorge',
-        password: 'abcd',
-        classificacao_etaria: 'adolescente',
-        age: 15,
-      });
-    });
-    
-    var userDelete = jest.spyOn(UserModel,'delete');
-      
-    await UserService.deleteUser(1, 2);
+    const user = {
+      id: 3,
+      name: 'jorge',
+      password: 'abcd',
+      classificacao_etaria: 'adolescente',
+      age: 15,
+      delete: () => {}
+    };
 
-    expect(userDelete).toHaveBeenCalled();
+    const usuarioDeletandoUser = {
+      id: 2
+    };
+    
+    jest.spyOn(UserModel,'findByPk').mockImplementation(() => {
+      return user;
+    });
+     
+    var spyDelete = jest.spyOn(user, 'delete');
+      
+    await UserService.deleteUser(user.id, usuarioDeletandoUser.id);
+
+    expect(spyDelete).toHaveBeenCalledTimes(1);
   });
 
   test('Quando um usuário não é encontrado, lança exceção', async () => {

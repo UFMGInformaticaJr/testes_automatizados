@@ -215,27 +215,23 @@ describe('Testando usersComSenhaFraca', () => {
     describe('Quando a busca retorna usuários, verifica senha fraca de todos os usuários', () => {
         test.each([                                   
             {
-                usuarios:[
-                    {
-                        id: 1,
-                        name: 'vitor'
-                    },
-                    {
-                        id: 2,
-                        name: 'geovanna'
-                    }
+ 
+                usuarios:
+                [
+                    {   id: 1, name: 'vitor'},
+                    {   id: 2, name: 'geovanna'}
                 ]
             },
             {
-                usuarios:[
-                    {
-                        id: 1
-                    }
+                usuarios:
+                [
+                    { id: 1}
                 ]
             },
             {
-                usuarios:[]
-            }
+                usuarios:
+                []
+            }                                     
                                                    
         ])(
             '%j',

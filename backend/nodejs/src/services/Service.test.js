@@ -251,24 +251,13 @@ describe('Testando usersComSenhaFraca', () => {
         test.each([                                   
             {
                 usuariosComSenhaFraca:[
-                    {
-                        id: 1,
-                        name: 'vitor',
-                        password: "1234"
-                    },
-                    {
-                        id: 2,
-                        name: 'geovanna',
-                        password: "abcd"
-                    }
+                    {   id: 1, name: 'vitor', password: "1234" },
+                    {   id: 2,name: 'geovanna',password: "abcd"}
                 ]
             },
             {
                 usuariosComSenhaFraca:[
-                    {
-                        id: 1,
-                        password: "1a2b"
-                    }
+                    {   id: 1,password: "1a2b" }
                 ]
             },
             {

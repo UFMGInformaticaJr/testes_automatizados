@@ -306,26 +306,35 @@ describe ('Testando updateClassificacaoEtariaById', () => {
         test.each([     
             {   
                 user: {   id: 1, name: 'jorge', password: 'abcd', classificacao_etaria: 'adolescente', age: 5},
-                new_user: {   id: 1, name: 'jorge', password: 'abcd', classificacao_etaria: 'crianca', age: 5},
+                classificacao_etaria_esperada: 'crianca',
             },
             {   
                 user: {   id: 2, name: 'gabi', password: 'abcdefghashud', classificacao_etaria: 'adulto', age: 16},
-                new_user: {   id: 2, name: 'gabi', password: 'abcdefghashud', classificacao_etaria: 'adolescente', age: 16}
+                classificacao_etaria_esperada: 'adolescente'
             },
             {   
                 user: {   id: 3, name: 'manuel', password: 'abcd', classificacao_etaria: 'crianca', age: 30},
-                new_user: {   id: 3, name: 'manuel', password: 'abcd', classificacao_etaria: 'adulto', age: 30}
+                classificacao_etaria_esperada: 'adulto'
             },                              
                               
         ])
         (
             '%j',
-            async ({user,new_user}) => {
+            async ({user,classificacao_etaria_esperada}) => {
+                user.update = async (body) => {
+                    user.classificacao_etaria = body.classificacao_etaria;
+                };
+
                 jest.spyOn(User,'findByPk').mockReturnValue(user);
 
                 var retorno = await service.updateClassificacaoEtariaById(user.id);
 
-                expect(retorno).toEqual(new_user);
+                var userEsperado = {
+                    ...user
+                };
+                userEsperado.classificacao_etaria = classificacao_etaria_esperada;
+
+                expect(retorno).toEqual(userEsperado);
             }
         );
     });

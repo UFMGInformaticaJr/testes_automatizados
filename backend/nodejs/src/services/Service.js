@@ -138,7 +138,7 @@ class Service {
       classificacao_etaria: nova_classificacao_etaria,
       age: this.age}
 
-user.update(new_user);
+    await user.update(new_user);
 
     return user;
   }

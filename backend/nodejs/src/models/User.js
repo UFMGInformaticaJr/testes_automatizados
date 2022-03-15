@@ -17,6 +17,10 @@ class User {
     this.instance = id && name && password ? true : false;
   }
 
+  async criaNovaInstancia(userObj){
+    return new User(userObj.id, userObj.name, userObj.password);
+  }
+
   async create() {
     if (this.instance) 
       return this;

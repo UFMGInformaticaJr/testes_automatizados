@@ -131,3 +131,62 @@ describe('Testando getCurrentUser', () => {
     }).rejects.toThrow(NotFoundError);
   });
 });
+
+describe('Testando createUser', () => {
+  const User = require('../models/User');
+  const userService = require('./UserService');
+  const bcrypt = require('bcrypt');
+
+  test('Quando os dados de usuário são passados como entrada, criptografa a senha', async () => {
+    var spyHash = jest.spyOn(bcrypt, 'hash');
+
+    var dadosUsuario = {
+      id:20,
+      name: "aureliano",
+      password: "624hff8"
+    }
+
+    await userService.createUser(dadosUsuario);
+
+    var saltRounds = 10;
+    expect(spyHash.mock.calls[0]).toEqual(expect.arrayContaining([dadosUsuario.password, saltRounds]));
+  });
+
+  test('Quando a senha é criptografada, atualiza senha do usuário a ser criado', async () => {
+    var senhaCriptografada = "senha criptografada";
+    jest.spyOn(bcrypt, 'hash').mockReturnValue(senhaCriptografada);
+
+    var spyCriaNovaInstancia = jest.spyOn(User, 'criaNovaInstancia');
+
+    var dadosUsuario = {
+      id:20,
+      name: "aureliano",
+      password: "624hff8"
+    }
+
+    await userService.createUser(dadosUsuario);
+
+    dadosUsuario.password = senhaCriptografada;
+    expect(spyCriaNovaInstancia.mock.calls[0][0]).toEqual(dadosUsuario);
+  });
+
+  test('Quando os dados de usuário são passados como entrada, cria este usuário no banco de dados', async () => {
+    var dadosUsuario = {
+      id:20,
+      name: "aureliano",
+      password: "624hff8"
+    };
+    
+    var novoUsuario = {
+      ...dadosUsuario,
+      create: () => {}
+    };
+
+    jest.spyOn(User, 'criaNovaInstancia').mockReturnValue(novoUsuario);
+    var spyCreate = jest.spyOn(novoUsuario, 'create');
+
+    await userService.createUser(dadosUsuario);
+
+    expect(spyCreate).toHaveBeenCalledTimes(1);
+  });
+});

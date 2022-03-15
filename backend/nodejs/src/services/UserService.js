@@ -1,4 +1,4 @@
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const {NotFoundError, NotAuthorizedError} = require('../errors');
 const User = require('../models/User');
 
@@ -6,10 +6,10 @@ class UserService {
   async createUser(userObj) {
     const saltRounds = 10;
 
-    // Possivelmente abstrair também o bcrypt
-    const password = await bcrypt.hash(user.password, saltRounds);
-    
-    const user = new User(userObj.id, userObj.name, password);
+    var dadosNovoUsuario = {...userObj}
+    dadosNovoUsuario.password = await bcrypt.hash(userObj.password, saltRounds);
+
+    const user = await User.criaNovaInstancia(dadosNovoUsuario);
     await user.create();
   }
 

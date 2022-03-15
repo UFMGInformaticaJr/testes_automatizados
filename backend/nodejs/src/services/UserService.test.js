@@ -209,10 +209,23 @@ describe('Testando getAllUsers', () => {
       
       await UserService.getAllUsers();
 
-      expect(userFindAll).toHaveBeenCalled();
+      expect(userFindAll).toHaveBeenCalledTimes(1);
     }
   );
 
+  test('Quando o método é executado, retorna todos os usuários',
+    async () => {
+      const usuario = {
+        name: 'jorge',
+        password: 'abcd',
+        classificacao_etaria: 'adolescente',
+        age: 15,
+      };
+      jest.spyOn(User,'findAll').mockReturnValue(usuario);
+      
+      expect(UserService.getAllUsers()).resolves.toStrictEqual(usuario);
+    }
+  );
 });
 
 describe('Testando deleteUser', () => {

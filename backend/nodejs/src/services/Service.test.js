@@ -293,6 +293,56 @@ describe('Testando usersComSenhaFraca', () => {
     });
 });
 
+describe ('Testando updateClassificacaoEtariaById', () => {
+    const User = require('../models/User');
+    const service = require('./Service');
+
+    beforeEach(() => {
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
+    });
+
+    test(
+        'Quando o método é executado, busca o usuário com o id informado',
+        async () => {
+            var spyUserEncontrado = jest.spyOn(User,'findByPk');  
+
+            await service.updateClassificacaoEtariaById();
+
+            expect(spyUserEncontrado).toHaveBeenCalled();
+        }
+    );
+
+    describe('Quando a busca retorna um usuário com a classificação etária errada, retorna esse usuário com a classificação atualizada corretamente', () => {
+        test.each([     
+            {   
+                user: {   id: 1, name: 'jorge', password: 'abcd', classificacao_etaria: 'adolescente', age: 5},
+                new_user: {   id: 1, name: 'jorge', password: 'abcd', classificacao_etaria: 'crianca', age: 5},
+            },
+            {   
+                user: {   id: 2, name: 'gabi', password: 'abcdefghashud', classificacao_etaria: 'adulto', age: 16},
+                new_user: {   id: 2, name: 'gabi', password: 'abcdefghashud', classificacao_etaria: 'adolescente', age: 16}
+            },
+            {   
+                user: {   id: 3, name: 'manuel', password: 'abcd', classificacao_etaria: 'crianca', age: 30},
+                new_user: {   id: 3, name: 'manuel', password: 'abcd', classificacao_etaria: 'adulto', age: 30}
+            },                              
+                              
+        ])
+        (
+            '%j',
+            async ({user,new_user}) => {
+                jest.spyOn(User,'findByPk').mockReturnValue(user);
+
+                var retorno = await service.updateClassificacaoEtariaById(user.id);
+
+                expect(retorno).toEqual(new_user);
+            }
+        );
+    });
+
+}); 
+
 describe('Testando getNameById', () => {
     const User = require('../models/User');
     const Service = require('./Service');

@@ -130,8 +130,15 @@ class Service {
       nova_classificacao_etaria = "adulto";
     }
 
-    user.classificacao_etaria = nova_classificacao_etaria;
-    user.update({classificacao_etaria:nova_classificacao_etaria});
+    // user.classificacao_etaria = nova_classificacao_etaria;
+    // user.update({classificacao_etaria:nova_classificacao_etaria});
+
+    let new_user = {name: this.name, 
+      password: this.password, 
+      classificacao_etaria: nova_classificacao_etaria,
+      age: this.age}
+
+user.update(new_user);
 
     return user;
   }

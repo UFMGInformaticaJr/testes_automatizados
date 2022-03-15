@@ -209,7 +209,7 @@ describe('Testando usersComSenhaFraca', () => {
             await service.usersComSenhaFraca();
 
             expect(userFindAll).toHaveBeenCalled();
-        }
+        }   
     );
 
     describe('Quando a busca retorna usuários, verifica senha fraca de todos os usuários', () => {
@@ -295,4 +295,53 @@ describe('Testando usersComSenhaFraca', () => {
             }
         );
     });
+});
+
+describe('Testando getNameById', () => {
+    const User = require('../models/User');
+    const Service = require('./Service');
+    beforeEach(() => {
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
+    });
+
+    describe('Quando um id de um usuário é passado como parâmetro, retorna strings diferentes dependendo da primeira letra da string', () => {
+        test.each([
+            [{
+                name: 'joao',
+                password: 'abcd',
+                classificacao_etaria: 'adolescente',
+                age: 15,
+            }, "O nome do usuário começa com consoante (joao)"],
+            [{
+                name: 'gabi',
+                password: 'abcdefghashud',
+                classificacao_etaria: 'adolescente',
+                age: 16,
+            }, "O nome do usuário começa com consoante (gabi)"],
+            [{
+                name: 'gabriel',
+                password: 'abcdefghijk',
+                classificacao_etaria: 'adolescente',
+                age: 17,
+            }, "O nome do usuário começa com consoante (gabriel)"],
+            [{
+                name: 'iuri',
+                password: 'abc',
+                classificacao_etaria: 'adolescente',
+                age: 17,
+            }, "O nome do usuário começa com vogal (iuri)"],
+            [{
+                name: 'amanda',
+                password: 'a',
+                classificacao_etaria: 'adolescente',
+                age: 14,
+            }, "O nome do usuário começa com vogal (amanda)"],
+        ])
+        ('.getNameById(%p)', (user, valorEsperado) => {
+            jest.spyOn(User,'findByPk').mockReturnValue(user);
+            expect(Service.getNameById(1)).resolves.toEqual(valorEsperado);
+        });
+    });
+  
 });

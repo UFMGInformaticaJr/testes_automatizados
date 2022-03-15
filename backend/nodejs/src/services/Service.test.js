@@ -156,40 +156,43 @@ describe ('Testando idsComMesmoNome', () => {
         jest.clearAllMocks();
     });
     
-    test.concurrent.each([
-        [[{
-            id: 1,
-            name: 'jorge',
-            password: 'abcd',
-            classificacao_etaria: 'adolescente',
-            age: 15,
-        },{
-            id: 2,
-            name: 'gabi',
-            password: 'abcdefghashud',
-            classificacao_etaria: 'adolescente',
-            age: 16,
-        }],[[1],[2]]],
-        [[{
-            id: 1,
-            name: 'manuel',
-            password: 'abcd',
-            classificacao_etaria: 'adolescente',
-            age: 15,
-        },{
-            id: 2,
-            name: 'manuel',
-            password: 'abcdefghashud',
-            classificacao_etaria: 'adolescente',
-            age: 16,
-        }],
-        [[1,2],[1,2]]]
-    ])
-    ('.idsComMesmoNome(%p)', (users, valorEsperado) => {
-        jest.spyOn(User,'findAll').mockReturnValue(users);
-        expect(service.idsComMesmoNome()).resolves.toEqual(valorEsperado);
+    describe('Quando usuários são passados como parâmetro, retorna uma lista de lista de usuários com o mesmo nome', () => {
+        test.each([
+            [[{
+                id: 1,
+                name: 'jorge',
+                password: 'abcd',
+                classificacao_etaria: 'adolescente',
+                age: 15,
+            },{
+                id: 2,
+                name: 'gabi',
+                password: 'abcdefghashud',
+                classificacao_etaria: 'adolescente',
+                age: 16,
+            }],[[1],[2]]],
+            [[{
+                id: 1,
+                name: 'manuel',
+                password: 'abcd',
+                classificacao_etaria: 'adolescente',
+                age: 15,
+            },{
+                id: 2,
+                name: 'manuel',
+                password: 'abcdefghashud',
+                classificacao_etaria: 'adolescente',
+                age: 16,
+            }],
+            [[1,2],[1,2]]]
+        ])
+        ('.idsComMesmoNome(%j)', (users, valorEsperado) => {
+            jest.spyOn(User,'findAll').mockReturnValue(users);
+
+            return expect(service.idsComMesmoNome()).resolves.toEqual(expect.arrayContaining(valorEsperado));
+        });
     });    
-}); 
+});
 
 describe('Testando usersComSenhaFraca', () => {
     const service = require('./Service');
@@ -294,11 +297,17 @@ describe ('Testando updateClassificacaoEtariaById', () => {
     test(
         'Quando o método é executado, busca o usuário com o id informado',
         async () => {
-            var spyUserEncontrado = jest.spyOn(User,'findByPk');  
+            const userId = 1;
 
-            await service.updateClassificacaoEtariaById();
+            var spyUserEncontrado = jest.spyOn(User,'findByPk').mockReturnValue({
+                id: userId,
+                age: 12,
+                update: () => {}
+            });
 
-            expect(spyUserEncontrado).toHaveBeenCalled();
+            await service.updateClassificacaoEtariaById(userId);
+
+            expect(spyUserEncontrado).toHaveBeenCalledTimes(1);
         }
     );
 

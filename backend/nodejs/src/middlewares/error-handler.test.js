@@ -9,7 +9,7 @@ describe('Testando error-handler', () => {
     NotFoundError,
   } = require('../errors');
 
-  test.concurrent.each([
+  test.each([
     [new NotAuthorizedError('Teste'), 401, {error: 'Teste'}],
     [new AccessDeniedError('Teste message'), 403, {error: 'Teste message'}],
     [new InternalError('Internal error!'), 500, {error: 'Internal error!'}],

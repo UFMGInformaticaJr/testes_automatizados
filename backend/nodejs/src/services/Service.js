@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const SenhaService = require('./SenhaService');
+const {NotFoundError} = require('../errors');
 
 class Service {
   /**

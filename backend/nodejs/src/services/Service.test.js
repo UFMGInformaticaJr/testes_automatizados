@@ -4,7 +4,7 @@ describe('Testando ASobreB', () => {
     const service = require('./Service');
 
     describe('Quando 2 números inteiros são passados como parâmetro, retorna a divisão de um pelo outro', () => {
-        test.concurrent.each`
+        test.each`
            numerador                        | denominador                        | valorEsperado
             ${6}                            |  ${3}                              |    ${2}
             ${4}                            |  ${2}                              |    ${2}
@@ -19,7 +19,7 @@ describe('Testando ASobreB', () => {
     });
 
     describe('Quando 2 números são passados como parâmetro, e um deles ou ambos são float, retorna a divisão de um pelo outro', () => {
-        test.concurrent.each`
+        test.each`
            numerador                        | denominador                        | valorEsperado
             ${7.5224455678}                 |  ${2.7666}                         |    ${2.7190217479216368}
             ${7.5224455678}                 |  ${-2}                             |    ${-3.7612227839}
@@ -31,7 +31,7 @@ describe('Testando ASobreB', () => {
     });
 
     describe('Quando o numerador é um número maior que 0 mas o denominador é igual a 0, retorna Infinity', () => {
-        test.concurrent.each`
+        test.each`
            numerador                   
             ${6}                   
             ${2.1}                     
@@ -43,7 +43,7 @@ describe('Testando ASobreB', () => {
     });
 
     describe('Quando o numerador é um número menor que 0 mas o denominador é igual a 0, retorna Infinity negativo', () => {
-        test.concurrent.each`
+        test.each`
            numerador                   
             ${-6}                   
             ${-2.1}                     
@@ -55,13 +55,13 @@ describe('Testando ASobreB', () => {
     });
 
     describe('Quando o numerador e o denominador são iguais a 0, retorna NaN', () => {
-        test.concurrent('.ASobreB(0, 0)', async () => {
+        test('.ASobreB(0, 0)', async () => {
             expect(service.ASobreB(0, 0)).toEqual(NaN);
         });
     });
 
     describe('Quando algum dos parâmetros não é um número, lança exceção', () => {
-        test.concurrent.each`
+        test.each`
            numerador                        | denominador          
             ${"uma string"}                 |  ${2.7666}           
             ${true}                         |  ${-2}               
@@ -83,7 +83,7 @@ describe('Testando raizQuadrada', () => {
     const service = require('./Service');
 
     describe('Quando um número é passado como parâmetro, retorna a raiz quadrada do número', () => {
-        test.concurrent.each([
+        test.each([
             [9, 3],
             [225, 15],
             [225.2, 15.006665185843255],
@@ -95,7 +95,7 @@ describe('Testando raizQuadrada', () => {
     });
 
     describe('Quando o parâmetro não é um número, lança exceção', () => {
-        test.concurrent.each([
+        test.each([
             ["uma string"],
             [true],
             [{atributo: 1}],
@@ -108,7 +108,7 @@ describe('Testando raizQuadrada', () => {
     });
 
     describe('Quando o parâmetro é um número negativo, lança exceção', () => {
-        test.concurrent.each([
+        test.each([
             [-1],
             [-15.67],
             [-Number.MAX_SAFE_INTEGER],
@@ -125,7 +125,7 @@ describe('Testando vogais', () => {
     const service = require('./Service');
 
     describe('Quando uma string é passada por parâmetro, retorna, em minúsculo, as vogais dessa string', () => {
-        test.concurrent.each`
+        test.each`
         entrada                      |   valorEsperado
         ${"aabaaea"}                 |   ${['a','a','a','a','e','a']}
         ${"AAbaaEA"}                 |   ${['a','a','a','a','e','a']}
@@ -137,7 +137,7 @@ describe('Testando vogais', () => {
     });
 
     describe('Quando algum dos parâmetros não é uma string, lança exceção', () => {
-        test.concurrent.each`
+        test.each`
         entrada                         
         ${true}                                        
         ${{atributo: 1}}                              
@@ -169,7 +169,7 @@ describe ('Testando idsComMesmoNome', () => {
         }   
     );
     
-    describe('Quando usuários são passados como parâmetro, retorna uma lista de lista de usuários com o mesmo nome', () => {
+    describe('Quando a busca de usuários retorna, retorna uma lista de listas do id dos usuários com o mesmo nome', () => {
         test.each([
             [[{
                 id: 1,
@@ -189,9 +189,28 @@ describe ('Testando idsComMesmoNome', () => {
                 id: 3,
                 name: 'manuel',
             }],
-            [[1,3],[2],[1,3]]],
+            [[1,3],[1,3], [2]]],
+            [[{
+                id: 1,
+                name: 'manuel',
+            },{
+                id: 2,
+                name: 'jao',
+            },{
+                id: 3,
+                name: 'manuel',
+            },
+            {
+                id: 4,
+                name: 'jao',
+            },
+            {
+                id: 5,
+                name: 'bandeira',
+            }],
+            [[1,3], [2, 4], [5], [2, 4],[1,3]]],
             [ 
-                {},[] 
+                [], [] 
             ]
         ])
         ('.idsComMesmoNome(%j)', (users, valorEsperado) => {
@@ -322,7 +341,7 @@ describe ('Testando updateClassificacaoEtariaById', () => {
     test('Quando um usuário não é encontrado, lança exceção', async () => {
         jest.spyOn(User,'findByPk').mockReturnValue(undefined);
     
-        expect(async () => {
+        return expect(async () => {
           var id = 3425;
           await service.updateClassificacaoEtariaById(id);
         }).rejects.toThrow(NotFoundError);

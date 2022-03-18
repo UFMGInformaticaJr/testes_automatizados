@@ -1,7 +1,7 @@
 describe('Testando object-filter', () => {
   const {requestFilter} = require('./object-filter');
   
-  test.concurrent.each([
+  test.each([
     [
       {body: {a: 1, b: 3, c: 3, d: 7}},
       'body',

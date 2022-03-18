@@ -98,6 +98,113 @@ describe('Testando getUserById', () => {
   });
 });
 
+describe('Testando updateUser', () => {
+  const User = require('../models/User');
+  const userService = require('./UserService');
+
+  beforeEach(() => {
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
+  });
+
+  test('Quando um usuário não é encontrado, lança exceção', async () => {
+    jest.spyOn(User,'findByPk').mockReturnValue(undefined);
+
+    expect(async () => {
+      const id = 1,
+      reqUserId = 2,
+      reqUserRole = 'admin', 
+      body = {
+        id: 5,
+        name: 'julio'
+      }
+      await userService.updateUser(id, reqUserId, reqUserRole, body);
+    }).rejects.toThrow(NotFoundError);
+  });
+
+  test('Quando um usuário não é admin porém quer mudar seu próprio role, lança exceção', async () => {
+    var spyGetCurrentUser = jest.spyOn(User,'findByPk');
+
+    expect(async () => {
+      const id = 5,
+      reqUserId = 1,
+      reqUserRole = 'user', 
+      body = {
+        id: 1,
+        role: 'admin'
+      }
+      await userService.updateUser(id, reqUserId, reqUserRole, body);
+    }).rejects.toThrow(NotAuthorizedError);
+  });
+
+  test('Quando um usuário não é admin porém quer atualizar outro usuário, lança exceção', async () => {
+    var spyGetCurrentUser = jest.spyOn(User,'findByPk');
+
+    expect(async () => {
+      const id = 1,
+      reqUserId = 2,
+      reqUserRole = 'user', 
+      body = {
+        id: 3,
+        role: 'admin'
+      }
+      await userService.updateUser(id, reqUserId, reqUserRole, body);
+    }).rejects.toThrow(NotAuthorizedError);
+  });
+
+  test('Quando um usuário é admin, pode alterar outro usuario', async () => {
+    var user = {
+      id: 3,
+      name: 'jorge',
+      role: 'user',
+      update: async (body) => {user.name = body.name}
+    };
+
+    jest.spyOn(User,'findByPk').mockReturnValue(user);
+
+    const id = user.id,
+    reqUserId = 10,
+    reqUserRole = 'admin', 
+    body = {name: 'gabriel'}
+    
+    await userService.updateUser(id, reqUserId, reqUserRole, body);
+
+    var nomeEsprado = 'gabriel'
+    var userEsperado = {
+      ...user
+    };
+    userEsperado.name = nomeEsprado;
+
+    expect(user).toEqual(userEsperado);
+  });
+
+  test('Quando um usuário é user, pode alterar a si mesmo', async () => {
+    var user = {
+      id: 3,
+      name: 'jorge',
+      role: 'user',
+      update: async (body) => {user.name = body.name}
+    };
+
+    jest.spyOn(User,'findByPk').mockReturnValue(user);
+
+    const id = user.id,
+    reqUserId = 3,
+    reqUserRole = 'user', 
+    body = {name: 'gabriel'}
+    
+    await userService.updateUser(id, reqUserId, reqUserRole, body);
+
+    var nomeEsprado = 'gabriel'
+    var userEsperado = {
+      ...user
+    };
+    userEsperado.name = nomeEsprado;
+
+    expect(user).toEqual(userEsperado);
+  });
+});
+
 describe('Testando getCurrentUser', () => {
   const User = require('../models/User');
   const userService = require('./UserService');
@@ -199,6 +306,7 @@ describe('Testando createUser', () => {
     expect(spyCreate).toHaveBeenCalledTimes(1);
   });
 });
+
 describe('Testando getAllUsers', () => {
   const User = require('../models/User');
   const UserService = require('./UserService');

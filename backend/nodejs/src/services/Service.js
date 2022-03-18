@@ -92,8 +92,8 @@ class Service {
   /**
    * Chama outras funções mas não retorna nada
    */
-  async noReturn() {
-    const user = await User.findByPk(1);
+  async noReturn(id) {
+    const user = await User.findByPk(id);
     await user.delete();
   }
 
@@ -117,7 +117,7 @@ class Service {
     let nova_classificacao_etaria;
 
     if (!user) {
-      throw new NotAuthorizedError(
+      throw new NotFoundError(
         `Nao foi encontrado um usuario com o ID: ${id}`
       );
     }

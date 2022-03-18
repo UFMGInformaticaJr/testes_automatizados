@@ -1,3 +1,5 @@
+const {NotFoundError, NotAuthorizedError} = require('../errors');
+
 describe('Testando ASobreB', () => {
     const service = require('./Service');
 
@@ -155,36 +157,42 @@ describe ('Testando idsComMesmoNome', () => {
         jest.restoreAllMocks();
         jest.clearAllMocks();
     });
+
+    test(
+        'Quando o método é executado, busca todos os usuários',
+        async () => {
+            var userFindAll = jest.spyOn(User,'findAll');
+            
+            await service.idsComMesmoNome();
+
+            expect(userFindAll).toHaveBeenCalledTimes(1);
+        }   
+    );
     
     describe('Quando usuários são passados como parâmetro, retorna uma lista de lista de usuários com o mesmo nome', () => {
         test.each([
             [[{
                 id: 1,
                 name: 'jorge',
-                password: 'abcd',
-                classificacao_etaria: 'adolescente',
-                age: 15,
-            },{
+                },{
                 id: 2,
                 name: 'gabi',
-                password: 'abcdefghashud',
-                classificacao_etaria: 'adolescente',
-                age: 16,
-            }],[[1],[2]]],
+            }],
+            [[1],[2]]],
             [[{
                 id: 1,
                 name: 'manuel',
-                password: 'abcd',
-                classificacao_etaria: 'adolescente',
-                age: 15,
             },{
                 id: 2,
+                name: 'jao',
+            },{
+                id: 3,
                 name: 'manuel',
-                password: 'abcdefghashud',
-                classificacao_etaria: 'adolescente',
-                age: 16,
             }],
-            [[1,2],[1,2]]]
+            [[1,3],[2],[1,3]]],
+            [ 
+                {},[] 
+            ]
         ])
         ('.idsComMesmoNome(%j)', (users, valorEsperado) => {
             jest.spyOn(User,'findAll').mockReturnValue(users);
@@ -311,6 +319,15 @@ describe ('Testando updateClassificacaoEtariaById', () => {
         }
     );
 
+    test('Quando um usuário não é encontrado, lança exceção', async () => {
+        jest.spyOn(User,'findByPk').mockReturnValue(undefined);
+    
+        expect(async () => {
+          var id = 3425;
+          await service.updateClassificacaoEtariaById(id);
+        }).rejects.toThrow(NotFoundError);
+      });
+
     describe('Quando a busca retorna um usuário com a classificação etária errada, retorna esse usuário com a classificação atualizada corretamente', () => {
         test.each([     
             {   
@@ -342,13 +359,54 @@ describe ('Testando updateClassificacaoEtariaById', () => {
                     ...user
                 };
                 userEsperado.classificacao_etaria = classificacao_etaria_esperada;
-
+                
                 expect(retorno).toEqual(userEsperado);
             }
         );
     });
 
 }); 
+
+describe('Testando noReturn', () => {
+    const User = require('../models/User');
+    const Service = require('./Service');
+    beforeEach(() => {
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
+    });
+    test(
+        'Quando o método é executado, busca o usuário com o id informado',
+        async () => {
+            const userId = 1;
+
+            var spyUserEncontrado = jest.spyOn(User,'findByPk');
+
+            await Service.noReturn(userId);
+
+            expect(spyUserEncontrado).toHaveBeenCalledTimes(1);
+        }
+    );
+
+    test('Quando o método recebe o id de um usuário, deleta esse usuário', async () => {
+        const user = {
+          id: 3,
+          name: 'jorge',
+          password: 'abcd',
+          classificacao_etaria: 'adolescente',
+          age: 15,
+          delete: () => {}
+        };
+        
+        jest.spyOn(User,'findByPk').mockImplementation(() => {
+          return user;
+        });
+          
+        var retorno = await Service.noReturn(user.id);
+    
+        expect(retorno).toBeUndefined();
+      });
+
+});
 
 describe('Testando getNameById', () => {
     const User = require('../models/User');

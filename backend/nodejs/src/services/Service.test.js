@@ -394,7 +394,7 @@ describe('Testando noReturn', () => {
         jest.clearAllMocks();
     });
     test(
-        'Quando o método é executado, busca o usuário com o id informado',
+        'Quando o método recebe o id de um usuário, busca o usuário com o id informado',
         async () => {
             const userId = 1;
 
@@ -406,7 +406,7 @@ describe('Testando noReturn', () => {
         }
     );
 
-    test('Quando o método recebe o id de um usuário, deleta esse usuário', async () => {
+    test('Quando o método encontra um usuário, deleta esse usuário', async () => {
         const user = {
           id: 3,
           name: 'jorge',
@@ -419,12 +419,13 @@ describe('Testando noReturn', () => {
         jest.spyOn(User,'findByPk').mockImplementation(() => {
           return user;
         });
-          
-        var retorno = await Service.noReturn(user.id);
-    
-        expect(retorno).toBeUndefined();
-      });
 
+        var spyUserSendoDeletado = jest.spyOn(user,'delete');
+          
+        await Service.noReturn(user.id);
+    
+        expect(spyUserSendoDeletado).toHaveBeenCalledTimes(1);
+      });
 });
 
 describe('Testando getNameById', () => {

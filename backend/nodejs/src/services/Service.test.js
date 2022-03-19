@@ -232,17 +232,17 @@ describe('Testando usersComSenhaFraca', () => {
     });
 
     test(
-        'Quando o método é executado, busca todos os usuários',
+        'Quando o método é executado, busca todos os usuários no banco de dados',
         async () => {
             var userFindAll = jest.spyOn(User,'findAll');
             
             await service.usersComSenhaFraca();
 
-            expect(userFindAll).toHaveBeenCalled();
+            expect(userFindAll).toHaveBeenCalledTimes(1);
         }   
     );
 
-    describe('Quando a busca retorna usuários, verifica senha fraca de todos os usuários', () => {
+    describe('Quando usuários são buscados do banco de dados, verifica senha fraca de todos os usuários', () => {
         test.each([                                   
             {
  
@@ -277,7 +277,7 @@ describe('Testando usersComSenhaFraca', () => {
         );
     });
 
-    describe('Quando a busca retorna usuários com senha fraca, retorna lista com estes usuários', () => {
+    describe('Quando usuários buscados do banco de dados vem com a senha fraca, retorna lista com estes usuários', () => {
         test.each([                                   
             {
                 usuariosComSenhaFraca:[

@@ -439,30 +439,35 @@ describe('Testando getNameById', () => {
     describe('Quando um id de um usuário é passado como parâmetro, retorna strings diferentes dependendo da primeira letra da string', () => {
         test.each([
             [{
+                id: 1,
                 name: 'joao',
                 password: 'abcd',
                 classificacao_etaria: 'adolescente',
                 age: 15,
             }, "O nome do usuário começa com consoante (joao)"],
             [{
+                id: 2,
                 name: 'gabi',
                 password: 'abcdefghashud',
                 classificacao_etaria: 'adolescente',
                 age: 16,
             }, "O nome do usuário começa com consoante (gabi)"],
             [{
+                id: 3,
                 name: 'gabriel',
                 password: 'abcdefghijk',
                 classificacao_etaria: 'adolescente',
                 age: 17,
             }, "O nome do usuário começa com consoante (gabriel)"],
             [{
+                id: 4,
                 name: 'iuri',
                 password: 'abc',
                 classificacao_etaria: 'adolescente',
                 age: 17,
             }, "O nome do usuário começa com vogal (iuri)"],
             [{
+                id: 5,
                 name: 'amanda',
                 password: 'a',
                 classificacao_etaria: 'adolescente',
@@ -471,7 +476,34 @@ describe('Testando getNameById', () => {
         ])
         ('.getNameById(%p)', (user, valorEsperado) => {
             jest.spyOn(User,'findByPk').mockReturnValue(user);
-            expect(Service.getNameById(1)).resolves.toEqual(valorEsperado);
+
+
+            expect(Service.getNameById(user.id)).resolves.toEqual(valorEsperado);
+        });
+    });
+
+    describe('Quando um id é passado como parâmetro, busca o usuário com este id', () => {
+        test.each([
+            [{
+                id: 2644,
+                name: "picollo"
+            }],
+            [{
+                id: 959,
+                name: "babidi"
+            },
+            {
+                id: 65889,
+                name: "bulma"
+            }]
+        ])
+        ('.getNameById(%p)', async (user) => {
+            var spyFindByPk = jest.spyOn(User,'findByPk').mockReturnValue(user);
+
+            await Service.getNameById(user.id);
+            
+            expect(spyFindByPk.mock.calls[0][0]).toBe(user.id);
+            expect(spyFindByPk).toHaveBeenCalledTimes(1);
         });
     });
   

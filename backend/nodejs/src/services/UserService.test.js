@@ -1,4 +1,5 @@
 const {NotFoundError, NotAuthorizedError} = require('../errors');
+const { password } = require('../models/User');
 
 describe('Testando getUserById', () => {
   const User = require('../models/User');
@@ -115,7 +116,6 @@ describe('Testando updateUser', () => {
       reqUserId = 2,
       reqUserRole = 'admin', 
       body = {
-        id: 5,
         name: 'julio'
       }
       await userService.updateUser(id, reqUserId, reqUserRole, body);
@@ -123,14 +123,13 @@ describe('Testando updateUser', () => {
   });
 
   test('Quando um usuário não é admin porém quer mudar seu próprio role, lança exceção', async () => {
-    var spyGetCurrentUser = jest.spyOn(User,'findByPk');
+    jest.spyOn(User,'findByPk');
 
     expect(async () => {
-      const id = 5,
+      const id = 1, 
       reqUserId = 1,
       reqUserRole = 'user', 
       body = {
-        id: 1,
         role: 'admin'
       }
       await userService.updateUser(id, reqUserId, reqUserRole, body);
@@ -138,14 +137,13 @@ describe('Testando updateUser', () => {
   });
 
   test('Quando um usuário não é admin porém quer atualizar outro usuário, lança exceção', async () => {
-    var spyGetCurrentUser = jest.spyOn(User,'findByPk');
+    jest.spyOn(User,'findByPk');
 
     expect(async () => {
       const id = 1,
       reqUserId = 2,
       reqUserRole = 'user', 
-      body = {
-        id: 3,
+      body = { 
         role: 'admin'
       }
       await userService.updateUser(id, reqUserId, reqUserRole, body);
@@ -169,11 +167,11 @@ describe('Testando updateUser', () => {
     
     await userService.updateUser(id, reqUserId, reqUserRole, body);
 
-    var nomeEsprado = 'gabriel'
+    var nomeEsperado = 'gabriel'
     var userEsperado = {
       ...user
     };
-    userEsperado.name = nomeEsprado;
+    userEsperado.name = nomeEsperado;
 
     expect(user).toEqual(userEsperado);
   });
@@ -195,11 +193,37 @@ describe('Testando updateUser', () => {
     
     await userService.updateUser(id, reqUserId, reqUserRole, body);
 
-    var nomeEsprado = 'gabriel'
+    var nomeEsperado = 'gabriel'
     var userEsperado = {
       ...user
     };
-    userEsperado.name = nomeEsprado;
+    userEsperado.name = nomeEsperado;
+
+    expect(user).toEqual(userEsperado);
+  });
+
+  test('Quando um usuário é admin, pode alterar a si mesmo', async () => {
+    var user = {
+      id: 3,
+      name: 'jorge',
+      role: 'admin',
+      update: async (body) => {user.name = body.name}
+    };
+
+    jest.spyOn(User,'findByPk').mockReturnValue(user);
+
+    const id = user.id,
+    reqUserId = 3,
+    reqUserRole = 'admin', 
+    body = {name: 'gabriel'}
+    
+    await userService.updateUser(id, reqUserId, reqUserRole, body);
+
+    var nomeEsperado = 'gabriel'
+    var userEsperado = {
+      ...user
+    };
+    userEsperado.name = nomeEsperado;
 
     expect(user).toEqual(userEsperado);
   });
@@ -254,9 +278,9 @@ describe('Testando createUser', () => {
   const bcrypt = require('bcrypt');
 
   test('Quando os dados de usuário são passados como entrada, criptografa a senha', async () => {
-    var spyHash = jest.spyOn(bcrypt, 'hash');
+    const spyHash = jest.spyOn(bcrypt, 'hash');
 
-    var dadosUsuario = {
+    const dadosUsuario = {
       id:20,
       name: "aureliano",
       password: "624hff8"
@@ -264,17 +288,18 @@ describe('Testando createUser', () => {
 
     await userService.createUser(dadosUsuario);
 
-    var saltRounds = 10;
-    expect(spyHash.mock.calls[0]).toEqual(expect.arrayContaining([dadosUsuario.password, saltRounds]));
+    const saltRounds = 10;
+    const primeiraChamadaBcrypt = spyHash.mock.calls[0];
+    expect(primeiraChamadaBcrypt).toEqual(expect.arrayContaining([dadosUsuario.password, saltRounds]));
   });
 
   test('Quando a senha é criptografada, atualiza senha do usuário a ser criado', async () => {
-    var senhaCriptografada = "senha criptografada";
+    const senhaCriptografada = "senha criptografada";
     jest.spyOn(bcrypt, 'hash').mockReturnValue(senhaCriptografada);
 
-    var spyCriaNovaInstancia = jest.spyOn(User, 'criaNovaInstancia');
+    const spyCriaNovaInstancia = jest.spyOn(User, 'criaNovaInstancia');
 
-    var dadosUsuario = {
+    const dadosUsuario = {
       id:20,
       name: "aureliano",
       password: "624hff8"
@@ -283,23 +308,26 @@ describe('Testando createUser', () => {
     await userService.createUser(dadosUsuario);
 
     dadosUsuario.password = senhaCriptografada;
-    expect(spyCriaNovaInstancia.mock.calls[0][0]).toEqual(dadosUsuario);
+    
+    const dadosUsuarioDaChamada = spyCriaNovaInstancia.mock.calls[0][0]
+
+    expect(dadosUsuarioDaChamada).toEqual(dadosUsuario);
   });
 
   test('Quando os dados de usuário são passados como entrada, cria este usuário no banco de dados', async () => {
-    var dadosUsuario = {
+    const dadosUsuario = {
       id:20,
       name: "aureliano",
       password: "624hff8"
     };
     
-    var novoUsuario = {
+    const novoUsuario = {
       ...dadosUsuario,
       create: () => {}
     };
 
     jest.spyOn(User, 'criaNovaInstancia').mockReturnValue(novoUsuario);
-    var spyCreate = jest.spyOn(novoUsuario, 'create');
+    const spyCreate = jest.spyOn(novoUsuario, 'create');
 
     await userService.createUser(dadosUsuario);
 

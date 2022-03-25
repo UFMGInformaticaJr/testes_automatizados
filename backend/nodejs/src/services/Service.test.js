@@ -310,6 +310,62 @@ describe('Testando usersComSenhaFraca', () => {
             }
         );
     });
+
+    describe('Ao buscar os usuários de um banco de dados, retorna uma lista com os usuários de senha fraca', () => {
+        test.each([                                   
+            {
+                usuarios:[
+                    {   id: 1, password: "1234" },
+                    {   id: 2, password: "1a3b" },
+                    {   id: 3, password: "abcd"}
+                ],
+                usuariosEsperados:[
+                    {   id: 1, password: "1234" },
+                    {   id: 2, password: "1a3b" },
+                    {   id: 3, password: "abcd"}
+                ]
+            },
+            {
+                usuarios:[
+                    {   id: 1, password: "123456789" },
+                    {   id: 2, password: "abcdefghi" },
+                    {   id: 3, password: "a2c4e6g8i" }
+                ],
+                usuariosEsperados:[]
+            },
+            {
+                usuarios:[
+                    {   id: 1, password: "123456789" },
+                    {   id: 2, password: "1234" },
+                    {   id: 3, password: "abcdefghi" },
+                    {   id: 4, password: "1a3b" },
+                    {   id: 5, password: "a2c4e6g8i" },
+                    {   id: 6, password: "abcd"}
+                ],
+                usuariosEsperados:[
+                    {   id: 2, password: "1234" },
+                    {   id: 4, password: "1a3b" },
+                    {   id: 6, password: "abcd"}
+                ]
+            },
+            {
+                usuarios:[],
+                usuariosEsperados:[] 
+            }                                   
+        ])(
+            '%j',
+            async ({usuarios,usuariosEsperados}) => {
+                jest.spyOn(User,'findAll').mockReturnValue(usuarios);
+
+                var spySenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
+                spySenhaFraca.mockReturnValue(() => usuarios.password.length < 8)
+                
+                var retorno = await service.usersComSenhaFraca();
+
+                expect(retorno).toEqual(expect.arrayContaining(usuariosEsperados));
+            }
+        );
+    });
 });
 
 describe ('Testando updateClassificacaoEtariaById', () => {

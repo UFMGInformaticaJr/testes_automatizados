@@ -10,6 +10,19 @@ describe('Testando getUserById', () => {
       jest.clearAllMocks();
   });
 
+  test(
+    'Quando o método recebe o id de um usuário, busca o usuário com o id informado',
+    async () => {
+        const userId = 1;
+
+        var spyUserEncontrado = jest.spyOn(User,'findByPk');
+
+        await userService.getUserById(userId);
+
+        expect(spyUserEncontrado).toHaveBeenCalledTimes(1);
+    }
+);
+
   describe('Quando um id de um usuário é passado como parâmetro, retorna os dados do usuario', () => {
     test.each([
         [ 
@@ -79,7 +92,7 @@ describe('Testando getUserById', () => {
         ],
       ])
     ('.getUserById(%p)', (user, valorEsperado) => {
-        // jest.mock
+    
         jest.spyOn(User,'findByPk').mockImplementation( () => {
           delete user["password"];  
           return user;
@@ -238,6 +251,19 @@ describe('Testando getCurrentUser', () => {
     jest.clearAllMocks();
   });
 
+  test(
+    'Quando o método recebe o id de um usuário, busca o usuário com o id informado',
+    async () => {
+        const userId = 1;
+
+        var spyUserEncontrado = jest.spyOn(User,'findByPk');
+
+        await userService.getCurrentUser(userId);
+
+        expect(spyUserEncontrado).toHaveBeenCalledTimes(1);
+    }
+);
+
   test('Quando o método recebe um id, busca usuário por esse id', async () => {
     var spyGetCurrentUser = jest.spyOn(User,'findByPk');
     var idUsuario = 1347;
@@ -251,14 +277,24 @@ describe('Testando getCurrentUser', () => {
       var idUsuario = 367;
       var usuario = {
         id: idUsuario,
-        name: "nicolas"
+        name: "nicolas",
+        password: "1234"
       };
 
-      jest.spyOn(User,'findByPk').mockReturnValue(usuario);
+      jest.spyOn(User,'findByPk').mockImplementation(() => {
+          delete usuario["password"];  
+          return usuario
+          }
+      );
 
       var retorno = await userService.getCurrentUser(idUsuario);
+
+      var usuarioEsperado = {
+        id: idUsuario,
+        name: "nicolas"
+      };
       
-      expect(retorno).toStrictEqual(usuario);
+      return expect(retorno).toStrictEqual(usuarioEsperado);
     }
   );
 
@@ -351,15 +387,27 @@ describe('Testando getAllUsers', () => {
 
   test('Quando o método é executado, retorna todos os usuários',
     async () => {
-      const usuario = {
+      const usuarios = [{
         name: 'jorge',
         password: 'abcd',
         classificacao_etaria: 'adolescente',
         age: 15,
-      };
-      jest.spyOn(User,'findAll').mockReturnValue(usuario);
+        },{
+        name: 'ben',
+        password: 'ab123d',
+        classificacao_etaria: 'crianca',
+        age: 6,
+        },{
+        name: 'javi',
+        password: 'asfiask',
+        classificacao_etaria: 'adulto',
+        age: 22,
+        }  
+      ];
+
+      jest.spyOn(User,'findAll').mockReturnValue(usuarios);
       
-      expect(UserService.getAllUsers()).resolves.toStrictEqual(usuario);
+      return expect(UserService.getAllUsers()).resolves.toEqual(expect.arrayContaining(usuarios));
     }
   );
 });

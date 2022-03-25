@@ -1,7 +1,7 @@
 const {NotFoundError, NotAuthorizedError} = require('../errors');
 const { password } = require('../models/User');
 
-describe('Testando getUserById', () => {
+describe('getUserById', () => {
   const User = require('../models/User');
   const userService = require('./UserService');
 
@@ -112,7 +112,7 @@ describe('Testando getUserById', () => {
   });
 });
 
-describe('Testando updateUser', () => {
+describe('updateUser', () => {
   const User = require('../models/User');
   const userService = require('./UserService');
 
@@ -242,7 +242,7 @@ describe('Testando updateUser', () => {
   });
 });
 
-describe('Testando getCurrentUser', () => {
+describe('getCurrentUser', () => {
   const User = require('../models/User');
   const userService = require('./UserService');
 
@@ -308,7 +308,7 @@ describe('Testando getCurrentUser', () => {
   });
 });
 
-describe('Testando createUser', () => {
+describe('createUser', () => {
   const User = require('../models/User');
   const userService = require('./UserService');
   const bcrypt = require('bcrypt');
@@ -371,7 +371,7 @@ describe('Testando createUser', () => {
   });
 });
 
-describe('Testando getAllUsers', () => {
+describe('getAllUsers', () => {
   const User = require('../models/User');
   const UserService = require('./UserService');
 
@@ -412,7 +412,7 @@ describe('Testando getAllUsers', () => {
   );
 });
 
-describe('Testando deleteUser', () => {
+describe('deleteUser', () => {
   const UserModel = require('../models/User');
 
   const UserService = require('./UserService');

@@ -1,9 +1,9 @@
 const {NotFoundError, NotAuthorizedError} = require('../errors');
 
-describe('Testando ASobreB', () => {
+describe('ASobreB', () => {
     const service = require('./Service');
 
-    describe('Quando 2 números inteiros são passados como parâmetro, retorna a divisão de um pelo outro', () => {
+    describe('2 números inteiros são passados como parâmetro ==> retorna a divisão de um pelo outro', () => {
         test.each`
            numerador                        | denominador                        | valorEsperado
             ${6}                            |  ${3}                              |    ${2}
@@ -18,7 +18,7 @@ describe('Testando ASobreB', () => {
         });
     });
 
-    describe('Quando 2 números são passados como parâmetro, e um deles ou ambos são float, retorna a divisão de um pelo outro', () => {
+    describe('2 números são passados como parâmetro, e um deles ou ambos são float ==> retorna a divisão de um pelo outro', () => {
         test.each`
            numerador                        | denominador                        | valorEsperado
             ${7.5224455678}                 |  ${2.7666}                         |    ${2.7190217479216368}
@@ -30,7 +30,7 @@ describe('Testando ASobreB', () => {
         });
     });
 
-    describe('Quando o numerador é um número maior que 0 mas o denominador é igual a 0, retorna Infinity', () => {
+    describe('o numerador é um número maior que 0 mas o denominador é igual a 0 ==> retorna Infinity', () => {
         test.each`
            numerador                   
             ${6}                   
@@ -42,7 +42,7 @@ describe('Testando ASobreB', () => {
         });
     });
 
-    describe('Quando o numerador é um número menor que 0 mas o denominador é igual a 0, retorna Infinity negativo', () => {
+    describe('o numerador é um número menor que 0 mas o denominador é igual a 0 | retorna Infinity negativo', () => {
         test.each`
            numerador                   
             ${-6}                   
@@ -54,13 +54,13 @@ describe('Testando ASobreB', () => {
         });
     });
 
-    describe('Quando o numerador e o denominador são iguais a 0, retorna NaN', () => {
+    describe('o numerador e o denominador são iguais a 0 | retorna NaN', () => {
         test('.ASobreB(0, 0)', async () => {
             expect(service.ASobreB(0, 0)).toEqual(NaN);
         });
     });
 
-    describe('Quando algum dos parâmetros não é um número, lança exceção', () => {
+    describe('algum dos parâmetros não é um número | lança exceção', () => {
         test.each`
            numerador                        | denominador          
             ${"uma string"}                 |  ${2.7666}           
@@ -79,10 +79,10 @@ describe('Testando ASobreB', () => {
     });
 });
 
-describe('Testando raizQuadrada', () => {
+describe('raizQuadrada', () => {
     const service = require('./Service');
 
-    describe('Quando um número é passado como parâmetro, retorna a raiz quadrada do número', () => {
+    describe('um número é passado como parâmetro | retorna a raiz quadrada do número', () => {
         test.each([
             [9, 3],
             [225, 15],
@@ -94,7 +94,7 @@ describe('Testando raizQuadrada', () => {
         });
     });
 
-    describe('Quando o parâmetro não é um número, lança exceção', () => {
+    describe('o parâmetro não é um número, lança exceção', () => {
         test.each([
             ["uma string"],
             [true],
@@ -107,7 +107,7 @@ describe('Testando raizQuadrada', () => {
         });
     });
 
-    describe('Quando o parâmetro é um número negativo, lança exceção', () => {
+    describe('o parâmetro é um número negativo, lança exceção', () => {
         test.each([
             [-1],
             [-15.67],
@@ -121,10 +121,10 @@ describe('Testando raizQuadrada', () => {
     });
 });
 
-describe('Testando vogais', () => {
+describe('vogais', () => {
     const service = require('./Service');
 
-    describe('Quando uma string é passada por parâmetro, retorna, em minúsculo, as vogais dessa string', () => {
+    describe('uma string é passada por parâmetro, retorna, em minúsculo, as vogais dessa string', () => {
         test.each`
         entrada                      |   valorEsperado
         ${"aabaaea"}                 |   ${['a','a','a','a','e','a']}
@@ -136,7 +136,7 @@ describe('Testando vogais', () => {
         });
     });
 
-    describe('Quando algum dos parâmetros não é uma string, lança exceção', () => {
+    describe('algum dos parâmetros não é uma string, lança exceção', () => {
         test.each`
         entrada                         
         ${true}                                        
@@ -150,7 +150,7 @@ describe('Testando vogais', () => {
     });
 });
 
-describe ('Testando idsComMesmoNome', () => {
+describe ('idsComMesmoNome', () => {
     const User = require('../models/User');
     const service = require('./Service');
     beforeEach(() => {
@@ -159,7 +159,7 @@ describe ('Testando idsComMesmoNome', () => {
     });
 
     test(
-        'Quando o método é executado, busca todos os usuários',
+        'o método é executado, busca todos os usuários',
         async () => {
             var userFindAll = jest.spyOn(User,'findAll');
             
@@ -169,7 +169,7 @@ describe ('Testando idsComMesmoNome', () => {
         }   
     );
     
-    describe('Quando a busca de usuários retorna, retorna uma lista de listas do id dos usuários com o mesmo nome', () => {
+    describe('a busca de usuários retorna, retorna uma lista de listas do id dos usuários com o mesmo nome', () => {
         test.each([
             [[{
                 id: 1,
@@ -221,7 +221,7 @@ describe ('Testando idsComMesmoNome', () => {
     });    
 });
 
-describe('Testando usersComSenhaFraca', () => {
+describe('usersComSenhaFraca', () => {
     const service = require('./Service');
     const User = require('../models/User');
     const SenhaService = require('./SenhaService');
@@ -232,7 +232,7 @@ describe('Testando usersComSenhaFraca', () => {
     });
 
     test(
-        'Quando o método é executado, busca todos os usuários no banco de dados',
+        'o método é executado, busca todos os usuários no banco de dados',
         async () => {
             var userFindAll = jest.spyOn(User,'findAll');
             
@@ -242,7 +242,7 @@ describe('Testando usersComSenhaFraca', () => {
         }   
     );
 
-    describe('Quando usuários são buscados do banco de dados, verifica senha fraca de todos os usuários', () => {
+    describe('usuários são buscados do banco de dados, verifica senha fraca de todos os usuários', () => {
         test.each([                                   
             {
  
@@ -277,7 +277,7 @@ describe('Testando usersComSenhaFraca', () => {
         );
     });
 
-    describe('Quando usuários buscados do banco de dados vem com a senha fraca, retorna lista com estes usuários', () => {
+    describe('usuários buscados do banco de dados vem com a senha fraca, retorna lista com estes usuários', () => {
         test.each([                                   
             {
                 usuariosComSenhaFraca:[
@@ -368,7 +368,7 @@ describe('Testando usersComSenhaFraca', () => {
     });
 });
 
-describe ('Testando updateClassificacaoEtariaById', () => {
+describe ('updateClassificacaoEtariaById', () => {
     const User = require('../models/User');
     const service = require('./Service');
 
@@ -378,7 +378,7 @@ describe ('Testando updateClassificacaoEtariaById', () => {
     });
 
     test(
-        'Quando o método é executado, busca o usuário com o id informado',
+        'o método é executado, busca o usuário com o id informado',
         async () => {
             const userId = 1;
 
@@ -394,7 +394,7 @@ describe ('Testando updateClassificacaoEtariaById', () => {
         }
     );
 
-    test('Quando um usuário não é encontrado, lança exceção', async () => {
+    test('um usuário não é encontrado, lança exceção', async () => {
         jest.spyOn(User,'findByPk').mockReturnValue(undefined);
     
         return expect(async () => {
@@ -403,7 +403,7 @@ describe ('Testando updateClassificacaoEtariaById', () => {
         }).rejects.toThrow(NotFoundError);
       });
 
-    describe('Quando a busca retorna um usuário com a classificação etária errada, retorna esse usuário com a classificação atualizada corretamente', () => {
+    describe('a busca retorna um usuário com a classificação etária errada, retorna esse usuário com a classificação atualizada corretamente', () => {
         test.each([     
             {   
                 user: {   id: 1, name: 'jorge', password: 'abcd', classificacao_etaria: 'adolescente', age: 5},
@@ -442,7 +442,7 @@ describe ('Testando updateClassificacaoEtariaById', () => {
 
 }); 
 
-describe('Testando noReturn', () => {
+describe('noReturn', () => {
     const User = require('../models/User');
     const Service = require('./Service');
     beforeEach(() => {
@@ -450,7 +450,7 @@ describe('Testando noReturn', () => {
         jest.clearAllMocks();
     });
     test(
-        'Quando o método recebe o id de um usuário, busca o usuário com o id informado',
+        'o método recebe o id de um usuário, busca o usuário com o id informado',
         async () => {
             const userId = 1;
 
@@ -462,7 +462,7 @@ describe('Testando noReturn', () => {
         }
     );
 
-    test('Quando o método encontra um usuário, deleta esse usuário', async () => {
+    test('o método encontra um usuário, deleta esse usuário', async () => {
         const user = {
           id: 3,
           name: 'jorge',
@@ -484,7 +484,7 @@ describe('Testando noReturn', () => {
       });
 });
 
-describe('Testando getNameById', () => {
+describe('getNameById', () => {
     const User = require('../models/User');
     const Service = require('./Service');
     beforeEach(() => {
@@ -492,7 +492,7 @@ describe('Testando getNameById', () => {
         jest.clearAllMocks();
     });
 
-    describe('Quando um id de um usuário é passado como parâmetro, retorna strings diferentes dependendo da primeira letra da string', () => {
+    describe('um id de um usuário é passado como parâmetro, retorna strings diferentes dependendo da primeira letra da string', () => {
         test.each([
             [{
                 id: 1,
@@ -538,7 +538,7 @@ describe('Testando getNameById', () => {
         });
     });
 
-    describe('Quando um id é passado como parâmetro, busca o usuário com este id', () => {
+    describe('um id é passado como parâmetro, busca o usuário com este id', () => {
         test.each([
             [{
                 id: 2644,

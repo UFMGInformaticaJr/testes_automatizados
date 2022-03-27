@@ -4,52 +4,49 @@ describe('ASobreB', () => {
     const service = require('./Service');
 
     describe('2 números inteiros são passados como parâmetro ==> retorna a divisão de um pelo outro', () => {
-        test.each`
-           numerador                        | denominador                        | valorEsperado
-            ${6}                            |  ${3}                              |    ${2}
-            ${4}                            |  ${2}                              |    ${2}
-            ${-12}                          |  ${3}                              |    ${-4}
-            ${-12}                          |  ${-3}                             |    ${4}
-            ${10}                           |  ${3}                              |    ${3.3333333333333335}
-            ${Number.MAX_SAFE_INTEGER}      |  ${5}                              |    ${1801439850948198.2}
-            ${1}                            |  ${Number.MAX_SAFE_INTEGER}        |    ${1.1102230246251568e-16}
-        `('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
+        test.each([
+            {numerador: 6,                       denominador: 3,                       valorEsperado: 2},
+            {numerador: 4,                       denominador: 2,                       valorEsperado: 2},
+            {numerador: -12,                     denominador: 3,                       valorEsperado: -4},
+            {numerador: -12,                     denominador: -3,                      valorEsperado: 4},
+            {numerador: 10,                      denominador: 3,                       valorEsperado: 3.3333333333333335},
+            {numerador: Number.MAX_SAFE_INTEGER, denominador: 5,                       valorEsperado: 1801439850948198.2},
+            {numerador: 1,                       denominador: Number.MAX_SAFE_INTEGER, valorEsperado: 1.1102230246251568e-16}
+        ])
+        ('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
             expect(service.ASobreB(numerador, denominador)).toBe(valorEsperado);
         });
     });
 
     describe('2 números são passados como parâmetro, e um deles ou ambos são float ==> retorna a divisão de um pelo outro', () => {
-        test.each`
-           numerador                        | denominador                        | valorEsperado
-            ${7.5224455678}                 |  ${2.7666}                         |    ${2.7190217479216368}
-            ${7.5224455678}                 |  ${-2}                             |    ${-3.7612227839}
-            ${Number. MAX_VALUE}            |  ${4.2}                            |    ${4.28022174967218e+307}
-            ${8}                            |  ${Number. MAX_VALUE}              |    ${4.450147717014404e-308}
-        `('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
+        test.each([
+            {numerador: 7.5224455678,            denominador: 2.7666,                  valorEsperado: 2.7190217479216368},
+            {numerador: 7.5224455678,            denominador: -2,                      valorEsperado: -3.7612227839},
+            {numerador: Number. MAX_VALUE,       denominador: 4.2,                     valorEsperado: 4.28022174967218e+307},
+            {numerador: 8,                       denominador: Number. MAX_VALUE,       valorEsperado: 4.450147717014404e-308}
+        ])('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
             expect(service.ASobreB(numerador, denominador)).toBeCloseTo(valorEsperado, 16);
         });
     });
 
     describe('o numerador é um número maior que 0 mas o denominador é igual a 0 ==> retorna Infinity', () => {
-        test.each`
-           numerador                   
-            ${6}                   
-            ${2.1}                     
-            ${Number. MAX_VALUE}       
-            ${Number.MAX_SAFE_INTEGER}
-        `('.ASobreB($numerador, 0)', ({numerador}) => {
+        test.each([
+            {numerador: 6                      },
+            {numerador: 2.1                    },
+            {numerador: Number. MAX_VALUE      },
+            {numerador: Number.MAX_SAFE_INTEGER}
+        ])('.ASobreB($numerador, 0)', ({numerador}) => {
             expect(service.ASobreB(numerador, 0)).toEqual(Infinity);
         });
     });
 
     describe('o numerador é um número menor que 0 mas o denominador é igual a 0 | retorna Infinity negativo', () => {
-        test.each`
-           numerador                   
-            ${-6}                   
-            ${-2.1}                     
-            ${-Number. MAX_VALUE}       
-            ${-Number.MAX_SAFE_INTEGER}
-        `('.ASobreB($numerador, 0)', ({numerador}) => {
+        test.each([
+            {numerador: -6                      },
+            {numerador: -2.1                    },
+            {numerador: -Number. MAX_VALUE      },
+            {numerador: -Number.MAX_SAFE_INTEGER}
+        ])('.ASobreB($numerador, 0)', ({numerador}) => {
             expect(service.ASobreB(numerador, 0)).toEqual(-Infinity);
         });
     });
@@ -61,17 +58,16 @@ describe('ASobreB', () => {
     });
 
     describe('algum dos parâmetros não é um número | lança exceção', () => {
-        test.each`
-           numerador                        | denominador          
-            ${"uma string"}                 |  ${2.7666}           
-            ${true}                         |  ${-2}               
-            ${{atributo: 1}}                |  ${4.2}              
-            ${() => {}}                     |  ${Number. MAX_VALUE}
-            ${2.7666}                       |  ${"uma string"} 
-            ${-2}                           |  ${true}         
-            ${4.2}                          |  ${{atributo: 1}}
-            ${Number. MAX_VALUE}            |  ${() => {}}     
-        `('.ASobreB($numerador, $denominador)', ({numerador, denominador}) => {
+        test.each([        
+            {numerador: "uma string"     , denominador: 2.7666},           
+            {numerador: true             , denominador: -2               },               
+            {numerador: {atributo: 1}    , denominador: 4.2              },              
+            {numerador: () => {}         , denominador: Number. MAX_VALUE},
+            {numerador: 2.7666           , denominador: "uma string"     }, 
+            {numerador: -2               , denominador: true             },         
+            {numerador: 4.2              , denominador: {atributo: 1}    },
+            {numerador: Number. MAX_VALUE, denominador: () => {}         }     
+        ])('.ASobreB($numerador, $denominador)', ({numerador, denominador}) => {
             expect(() => {
                 service.ASobreB(numerador, denominador);
             }).toThrow(TypeError);
@@ -84,23 +80,23 @@ describe('raizQuadrada', () => {
 
     describe('um número é passado como parâmetro | retorna a raiz quadrada do número', () => {
         test.each([
-            [9, 3],
-            [225, 15],
-            [225.2, 15.006665185843255],
-            [Number.MAX_SAFE_INTEGER, 94906265.62425154],
-            [22, 4.69041575982343],
-        ])('.raizQuadrada de %f', (numero, valorEsperado) => {
+            {numero: 9                      , valorEsperado: 3                 },
+            {numero: 225                    , valorEsperado: 15                },
+            {numero: 225.2                  , valorEsperado: 15.006665185843255},
+            {numero: Number.MAX_SAFE_INTEGER, valorEsperado: 94906265.62425154 },
+            {numero: 22                     , valorEsperado: 4.69041575982343  }
+        ])('.raizQuadrada de %f', ({numero, valorEsperado}) => {
             expect(service.raizQuadrada(numero)).toBe(valorEsperado);
         });
     });
 
     describe('o parâmetro não é um número, lança exceção', () => {
         test.each([
-            ["uma string"],
-            [true],
-            [{atributo: 1}],
-            [() => {}],
-        ])('.raizQuadrada de %f', (numero) => {
+            {numero: "uma string" },
+            {numero: true         },
+            {numero: {atributo: 1}},
+            {numero: () => {}     },
+        ])('.raizQuadrada de %f', ({numero}) => {
             expect(() => {
                 service.raizQuadrada(numero);
             }).toThrow(TypeError);

@@ -105,11 +105,11 @@ describe('raizQuadrada', () => {
 
     describe('o parâmetro é um número negativo, lança exceção', () => {
         test.each([
-            [-1],
-            [-15.67],
-            [-Number.MAX_SAFE_INTEGER],
-            [-Number.MAX_VALUE],
-        ])('.raizQuadrada de %f', (numero) => {
+            {numero: -1                      },
+            {numero: -15.67                  },
+            {numero: -Number.MAX_SAFE_INTEGER},
+            {numero: -Number.MAX_VALUE       }
+        ])('.raizQuadrada de %f', ({numero}) => {
             expect(() => {
                 service.raizQuadrada(numero);
             }).toThrow(Error);
@@ -121,26 +121,22 @@ describe('vogais', () => {
     const service = require('./Service');
 
     describe('uma string é passada por parâmetro, retorna, em minúsculo, as vogais dessa string', () => {
-        test.each`
-        entrada                      |   valorEsperado
-        ${"aabaaea"}                 |   ${['a','a','a','a','e','a']}
-        ${"AAbaaEA"}                 |   ${['a','a','a','a','e','a']}
-        ${"aa baa ea"}               |   ${['a','a','a','a','e','a']}
-        `
-        ('.vogais($entrada)', ({entrada, valorEsperado}) => {
+        test.each([
+            {entrada: "aabaaea"      , valorEsperado: ['a','a','a','a','e','a']},
+            {entrada: "AAbaaEA"      , valorEsperado: ['a','a','a','a','e','a']},
+            {entrada: "aa baa ea"    , valorEsperado: ['a','a','a','a','e','a']}
+        ])('.vogais($entrada)', ({entrada, valorEsperado}) => {
             expect(service.vogais(entrada)).toEqual(valorEsperado);
         });
     });
 
     describe('algum dos parâmetros não é uma string, lança exceção', () => {
-        test.each`
-        entrada                         
-        ${true}                                        
-        ${{atributo: 1}}                              
-        ${() => {}}                     
-        ${2}                          
-        `
-        ('.vogais($entrada)', ({entrada}) => {
+        test.each([                        
+        {entrada: true         },                                        
+        {entrada: {atributo: 1}},                              
+        {entrada: () => {}     },                     
+        {entrada: 2            }                          
+        ])('.vogais($entrada)', ({entrada}) => {
             expect(() => service.vogais(entrada)).toThrow(TypeError);
         });
     });

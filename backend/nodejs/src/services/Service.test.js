@@ -163,49 +163,43 @@ describe ('idsComMesmoNome', () => {
     
     describe('a busca de usuários retorna, retorna uma lista de listas do id dos usuários com o mesmo nome', () => {
         test.each([
-            [[{
-                id: 1,
-                name: 'jorge',
-                },{
-                id: 2,
-                name: 'gabi',
-            }],
-            [[1],[2]]],
-            [[{
-                id: 1,
-                name: 'manuel',
-            },{
-                id: 2,
-                name: 'jao',
-            },{
-                id: 3,
-                name: 'manuel',
-            }],
-            [[1,3],[1,3], [2]]],
-            [[{
-                id: 1,
-                name: 'manuel',
-            },{
-                id: 2,
-                name: 'jao',
-            },{
-                id: 3,
-                name: 'manuel',
+            {
+                users: [
+                {id: 1, name: 'jorge'},
+                {id: 2, name: 'gabi'}
+                ],
+                valorEsperado:[
+                    [1], [2]
+                ]
             },
             {
-                id: 4,
-                name: 'jao',
+                users:[
+                    {id: 1, name: 'manuel'},
+                    {id: 2, name: 'jao'},
+                    {id: 3, name: 'manuel'}
+                ],
+                valorEsperado:[
+                    [1,3], [1,3], [2]
+                ]
             },
-            {
-                id: 5,
-                name: 'bandeira',
-            }],
-            [[1,3], [2, 4], [5], [2, 4],[1,3]]],
-            [ 
-                [], [] 
-            ]
+            {   
+                users:[
+                    {id: 1, name: 'manuel'},
+                    {id: 2, name: 'jao'},
+                    {id: 3, name: 'manuel'},
+                    {id: 4, name: 'jao'},
+                    {id: 5, name: 'bandeira'}
+                ],
+                valorEsperado:[
+                    [1,3], [2, 4], [5], [2, 4], [1,3]
+                ]
+            },
+            { 
+                users:[], 
+                valorEsperado:[] 
+            }
         ])
-        ('.idsComMesmoNome(%j)', (users, valorEsperado) => {
+        ('.idsComMesmoNome(%j)', ({users, valorEsperado}) => {
             jest.spyOn(User,'findAll').mockReturnValue(users);
 
             return expect(service.idsComMesmoNome()).resolves.toEqual(expect.arrayContaining(valorEsperado));
@@ -240,14 +234,14 @@ describe('usersComSenhaFraca', () => {
  
                 usuarios:
                 [
-                    {   id: 1, name: 'vitor'},
-                    {   id: 2, name: 'geovanna'}
+                    {   id: 347},
+                    {   id: 484}
                 ]
             },
             {
                 usuarios:
                 [
-                    { id: 1}
+                    { id: 98}
                 ]
             },
             {
@@ -273,13 +267,13 @@ describe('usersComSenhaFraca', () => {
         test.each([                                   
             {
                 usuariosComSenhaFraca:[
-                    {   id: 1, name: 'vitor', password: "1234" },
-                    {   id: 2,name: 'geovanna',password: "abcd"}
+                    {   id: 1, password: "1234" },
+                    {   id: 2, password: "abcd"}
                 ]
             },
             {
                 usuariosComSenhaFraca:[
-                    {   id: 1,password: "1a2b" }
+                    {   id: 1, password: "1a2b" }
                 ]
             },
             {
@@ -486,43 +480,58 @@ describe('getNameById', () => {
 
     describe('um id de um usuário é passado como parâmetro, retorna strings diferentes dependendo da primeira letra da string', () => {
         test.each([
-            [{
-                id: 1,
-                name: 'joao',
-                password: 'abcd',
-                classificacao_etaria: 'adolescente',
-                age: 15,
-            }, "O nome do usuário começa com consoante (joao)"],
-            [{
-                id: 2,
-                name: 'gabi',
-                password: 'abcdefghashud',
-                classificacao_etaria: 'adolescente',
-                age: 16,
-            }, "O nome do usuário começa com consoante (gabi)"],
-            [{
-                id: 3,
-                name: 'gabriel',
-                password: 'abcdefghijk',
-                classificacao_etaria: 'adolescente',
-                age: 17,
-            }, "O nome do usuário começa com consoante (gabriel)"],
-            [{
-                id: 4,
-                name: 'iuri',
-                password: 'abc',
-                classificacao_etaria: 'adolescente',
-                age: 17,
-            }, "O nome do usuário começa com vogal (iuri)"],
-            [{
-                id: 5,
-                name: 'amanda',
-                password: 'a',
-                classificacao_etaria: 'adolescente',
-                age: 14,
-            }, "O nome do usuário começa com vogal (amanda)"],
+            {
+                user:{
+                    id: 1,
+                    name: 'joao',
+                    password: 'abcd',
+                    classificacao_etaria: 'adolescente',
+                    age: 15,
+                }, 
+                valorEsperado:"O nome do usuário começa com consoante (joao)"
+            },
+            {
+                user:{
+                    id: 2,
+                    name: 'gabi',
+                    password: 'abcdefghashud',
+                    classificacao_etaria: 'adolescente',
+                    age: 16,
+                }, 
+                valorEsperado:"O nome do usuário começa com consoante (gabi)"
+            },
+            {
+                user:{
+                    id: 3,
+                    name: 'gabriel',
+                    password: 'abcdefghijk',
+                    classificacao_etaria: 'adolescente',
+                    age: 17,
+                }, 
+                valorEsperado:"O nome do usuário começa com consoante (gabriel)"
+            },
+            {
+                user:{
+                    id: 4,
+                    name: 'iuri',
+                    password: 'abc',
+                    classificacao_etaria: 'adolescente',
+                    age: 17,
+                }, 
+                valorEsperado:"O nome do usuário começa com vogal (iuri)"
+            },
+            {
+                user:{
+                    id: 5,
+                    name: 'amanda',
+                    password: 'a',
+                    classificacao_etaria: 'adolescente',
+                    age: 14,
+                }, 
+                valorEsperado:"O nome do usuário começa com vogal (amanda)"
+            },
         ])
-        ('.getNameById(%p)', (user, valorEsperado) => {
+        ('.getNameById(%p)', ({user, valorEsperado}) => {
             jest.spyOn(User,'findByPk').mockReturnValue(user);
 
 
@@ -532,20 +541,26 @@ describe('getNameById', () => {
 
     describe('um id é passado como parâmetro, busca o usuário com este id', () => {
         test.each([
-            [{
-                id: 2644,
-                name: "picollo"
-            }],
-            [{
-                id: 959,
-                name: "babidi"
+            {
+                user:{
+                    id: 2644,
+                    name: "picollo"
+                }
             },
             {
-                id: 65889,
-                name: "bulma"
-            }]
+                user:{
+                    id: 1,
+                    name: "babidi"
+                }
+            },
+            {
+                user:{
+                    id: 658896,
+                    name: "bulma"
+                }
+            }
         ])
-        ('.getNameById(%p)', async (user) => {
+        ('.getNameById(%j)', async ({user}) => {
             var spyFindByPk = jest.spyOn(User,'findByPk').mockReturnValue(user);
 
             await Service.getNameById(user.id);

@@ -25,73 +25,73 @@ describe('getUserById', () => {
 
   describe('Quando um id de um usuário é passado como parâmetro, retorna os dados do usuario', () => {
     test.each([
-        [ 
-          {
+        { 
+          user:{
             name: 'jorge',
             password: 'abcd',
             classificacao_etaria: 'adolescente',
             age: 15
           }, 
-          { 
+          valorEsperado:{ 
             name: 'jorge',
             classificacao_etaria: 'adolescente',
             age: 15,
           }
-        ],
-        [ 
-          {
+        },
+        { 
+          user:{
             name: 'gabi',
             password: 'abcdefghashud',
             classificacao_etaria: 'adolescente',
             age: 16,
           }, 
-          {
+          valorEsperado:{
             name: 'gabi',
             classificacao_etaria: 'adolescente',
             age: 16,
           }
-        ],
-        [ 
-          {
+        },
+        { 
+          user:{
             name: 'gabriel',
             password: 'abcdefghijk',
             classificacao_etaria: 'adolescente',
             age: 17,
           },
-          {
+          valorEsperado:{
             name: 'gabriel',
             classificacao_etaria: 'adolescente',
             age: 17,
           } 
-        ],
-        [ 
-          {
+        },
+        { 
+          user:{
             name: 'bernardo',
             password: 'abc',
             classificacao_etaria: 'adolescente',
             age: 17,
           }, 
-          {
+          valorEsperado:{
             name: 'bernardo',
             classificacao_etaria: 'adolescente',
             age: 17,
           }
-        ],
-        [
-          {
+        },
+        {
+          user:{
             name: 'vinicius',
             password: 'a',
             classificacao_etaria: 'adolescente',
             age: 14,
           }, 
-          {
+          valorEsperado:{
             name: 'vinicius',
             classificacao_etaria: 'adolescente',
             age: 14,
           }
-        ],
+        },
       ])
-    ('.getUserById(%p)', (user, valorEsperado) => {
+    ('.getUserById(%j)', ({user, valorEsperado}) => {
     
         jest.spyOn(User,'findByPk').mockImplementation( () => {
           delete user["password"];  

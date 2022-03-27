@@ -392,15 +392,15 @@ describe ('updateClassificacaoEtariaById', () => {
     describe('a busca retorna um usuário com a classificação etária errada, retorna esse usuário com a classificação atualizada corretamente', () => {
         test.each([     
             {   
-                user: {   id: 1, name: 'jorge', password: 'abcd', classificacao_etaria: 'adolescente', age: 5},
+                user: {id: 1, classificacao_etaria: 'adolescente', age: 5},
                 classificacao_etaria_esperada: 'crianca',
             },
             {   
-                user: {   id: 2, name: 'gabi', password: 'abcdefghashud', classificacao_etaria: 'adulto', age: 16},
+                user: {id: 2, classificacao_etaria: 'adulto', age: 16},
                 classificacao_etaria_esperada: 'adolescente'
             },
             {   
-                user: {   id: 3, name: 'manuel', password: 'abcd', classificacao_etaria: 'crianca', age: 30},
+                user: {id: 3, classificacao_etaria: 'crianca', age: 30},
                 classificacao_etaria_esperada: 'adulto'
             },                              
                               
@@ -483,55 +483,40 @@ describe('getNameById', () => {
             {
                 user:{
                     id: 1,
-                    name: 'joao',
-                    password: 'abcd',
-                    classificacao_etaria: 'adolescente',
-                    age: 15,
+                    name: 'joao'
                 }, 
                 valorEsperado:"O nome do usuário começa com consoante (joao)"
             },
             {
                 user:{
                     id: 2,
-                    name: 'gabi',
-                    password: 'abcdefghashud',
-                    classificacao_etaria: 'adolescente',
-                    age: 16,
+                    name: 'gabi'
                 }, 
                 valorEsperado:"O nome do usuário começa com consoante (gabi)"
             },
             {
                 user:{
                     id: 3,
-                    name: 'gabriel',
-                    password: 'abcdefghijk',
-                    classificacao_etaria: 'adolescente',
-                    age: 17,
+                    name: 'gabriel'
                 }, 
                 valorEsperado:"O nome do usuário começa com consoante (gabriel)"
             },
             {
                 user:{
                     id: 4,
-                    name: 'iuri',
-                    password: 'abc',
-                    classificacao_etaria: 'adolescente',
-                    age: 17,
+                    name: 'iuri'
                 }, 
                 valorEsperado:"O nome do usuário começa com vogal (iuri)"
             },
             {
                 user:{
                     id: 5,
-                    name: 'amanda',
-                    password: 'a',
-                    classificacao_etaria: 'adolescente',
-                    age: 14,
+                    name: 'amanda'
                 }, 
                 valorEsperado:"O nome do usuário começa com vogal (amanda)"
             },
         ])
-        ('.getNameById(%p)', ({user, valorEsperado}) => {
+        ('.getNameById(%j)', ({user, valorEsperado}) => {
             jest.spyOn(User,'findByPk').mockReturnValue(user);
 
 

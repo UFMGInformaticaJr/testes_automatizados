@@ -23,7 +23,7 @@ describe('getUserById', () => {
     }
 );
 
-  describe('Quando um id de um usuário é passado como parâmetro, retorna os dados do usuario', () => {
+  describe('Quando um id de um usuário é passado como parâmetro, retorna os dados não sensíveis do usuario', () => {
     test.each([
         { 
           user:{

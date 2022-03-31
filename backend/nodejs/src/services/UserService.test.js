@@ -26,69 +26,24 @@ describe('getUserById', () => {
   describe('Quando um id de um usuário é passado como parâmetro, retorna os dados não sensíveis do usuario', () => {
     test.each([
         { 
-          user:{
-            name: 'jorge',
-            password: 'abcd',
-            classificacao_etaria: 'adolescente',
-            age: 15
-          }, 
-          valorEsperado:{ 
-            name: 'jorge',
-            classificacao_etaria: 'adolescente',
-            age: 15,
-          }
+          user:{name: 'jorge',password: 'abcd'}, 
+          valorEsperado:{name: 'jorge'}
         },
         { 
-          user:{
-            name: 'gabi',
-            password: 'abcdefghashud',
-            classificacao_etaria: 'adolescente',
-            age: 16,
-          }, 
-          valorEsperado:{
-            name: 'gabi',
-            classificacao_etaria: 'adolescente',
-            age: 16,
-          }
+          user:{name: 'gabi', password: 'abcdefghashud'}, 
+          valorEsperado:{name: 'gabi'}
         },
         { 
-          user:{
-            name: 'gabriel',
-            password: 'abcdefghijk',
-            classificacao_etaria: 'adolescente',
-            age: 17,
-          },
-          valorEsperado:{
-            name: 'gabriel',
-            classificacao_etaria: 'adolescente',
-            age: 17,
-          } 
+          user:{name: 'gabriel',password: 'abcdefghijk'},
+          valorEsperado:{name: 'gabriel'} 
         },
         { 
-          user:{
-            name: 'bernardo',
-            password: 'abc',
-            classificacao_etaria: 'adolescente',
-            age: 17,
-          }, 
-          valorEsperado:{
-            name: 'bernardo',
-            classificacao_etaria: 'adolescente',
-            age: 17,
-          }
+          user:{name: 'bernardo',password: 'abc'}, 
+          valorEsperado:{name: 'bernardo'}
         },
         {
-          user:{
-            name: 'vinicius',
-            password: 'a',
-            classificacao_etaria: 'adolescente',
-            age: 14,
-          }, 
-          valorEsperado:{
-            name: 'vinicius',
-            classificacao_etaria: 'adolescente',
-            age: 14,
-          }
+          user:{name: 'vinicius',password: 'a'}, 
+          valorEsperado:{name: 'vinicius'}
         },
       ])
     ('.getUserById(%j)', ({user, valorEsperado}) => {
@@ -124,13 +79,14 @@ describe('updateUser', () => {
   test('Quando um usuário não é encontrado, lança exceção', async () => {
     jest.spyOn(User,'findByPk').mockReturnValue(undefined);
 
-    expect(async () => {
-      const id = 1,
-      reqUserId = 2,
-      reqUserRole = 'admin', 
-      body = {
-        name: 'julio'
-      }
+    const id = 1,
+    reqUserId = 2,
+    reqUserRole = 'admin', 
+    body = {
+      name: 'julio'
+    }
+
+    return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
     }).rejects.toThrow(NotFoundError);
   });
@@ -138,13 +94,14 @@ describe('updateUser', () => {
   test('Quando um usuário não é admin porém quer mudar seu próprio role, lança exceção', async () => {
     jest.spyOn(User,'findByPk');
 
-    expect(async () => {
-      const id = 1, 
-      reqUserId = 1,
-      reqUserRole = 'user', 
-      body = {
-        role: 'admin'
-      }
+    const id = 1, 
+    reqUserId = 1,
+    reqUserRole = 'user', 
+    body = {
+      role: 'admin'
+    }
+
+    return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
     }).rejects.toThrow(NotAuthorizedError);
   });
@@ -152,13 +109,14 @@ describe('updateUser', () => {
   test('Quando um usuário não é admin porém quer atualizar outro usuário, lança exceção', async () => {
     jest.spyOn(User,'findByPk');
 
-    expect(async () => {
-      const id = 1,
-      reqUserId = 2,
-      reqUserRole = 'user', 
-      body = { 
-        role: 'admin'
-      }
+    const id = 1,
+    reqUserId = 2,
+    reqUserRole = 'user', 
+    body = { 
+      role: 'admin'
+    }
+
+    return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
     }).rejects.toThrow(NotAuthorizedError);
   });
@@ -277,7 +235,6 @@ describe('getCurrentUser', () => {
       var idUsuario = 367;
       var usuario = {
         id: idUsuario,
-        name: "nicolas",
         password: "1234"
       };
 
@@ -290,8 +247,7 @@ describe('getCurrentUser', () => {
       var retorno = await userService.getCurrentUser(idUsuario);
 
       var usuarioEsperado = {
-        id: idUsuario,
-        name: "nicolas"
+        id: idUsuario
       };
       
       return expect(retorno).toStrictEqual(usuarioEsperado);
@@ -301,8 +257,9 @@ describe('getCurrentUser', () => {
   test('Quando um usuário não é encontrado, lança exceção', async () => {
     jest.spyOn(User,'findByPk').mockReturnValue(undefined);
 
+    var id = 3425;
+
     expect(async () => {
-      var id = 3425;
       await userService.getCurrentUser(id);
     }).rejects.toThrow(NotFoundError);
   });
@@ -388,20 +345,11 @@ describe('getAllUsers', () => {
   test('Quando o método é executado, retorna todos os usuários',
     async () => {
       const usuarios = [{
-        name: 'jorge',
-        password: 'abcd',
-        classificacao_etaria: 'adolescente',
-        age: 15,
+        name: 'jorge'
         },{
-        name: 'ben',
-        password: 'ab123d',
-        classificacao_etaria: 'crianca',
-        age: 6,
+        name: 'ben'
         },{
-        name: 'javi',
-        password: 'asfiask',
-        classificacao_etaria: 'adulto',
-        age: 22,
+        name: 'javi'
         }  
       ];
 
@@ -419,10 +367,6 @@ describe('deleteUser', () => {
   test('Quando o método recebe o id de um usuário, deleta esse usuário', async () => {
     const user = {
       id: 3,
-      name: 'jorge',
-      password: 'abcd',
-      classificacao_etaria: 'adolescente',
-      age: 15,
       delete: () => {}
     };
 
@@ -444,23 +388,22 @@ describe('deleteUser', () => {
   test('Quando um usuário não é encontrado, lança exceção', async () => {
     jest.spyOn(UserModel,'findByPk').mockReturnValue(undefined);
 
+    const id = 1;
+
     expect(async () => {
-      const id = 1;
       await UserService.deleteUser(id);
     }).rejects.toThrow(NotFoundError);
   });
 
   test('Quando o ID passado é igual ao ID do usuário requisitando, lança exceção', async () => {
+    const id = 1;
+    const reqUserId = 1;
+    
     jest.spyOn(UserModel,'findByPk').mockReturnValue({
-      name: 'jorge',
-      password: 'abcd',
-      classificacao_etaria: 'adolescente',
-      age: 15,
+      id: id
     });
 
     expect(async () => {
-      const id = 1;
-      const reqUserId = 1;
       await UserService.deleteUser(id, reqUserId);
     }).rejects.toThrow(NotAuthorizedError);
   });

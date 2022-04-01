@@ -8,7 +8,7 @@ describe('senhaFraca', () => {
         jest.clearAllMocks();
     });
 
-    describe('Quando um id de um usuário é passado como parâmetro ==> retorna se a senha do usuário é fraca', () => {
+    describe('um id de um usuário é passado como parâmetro ==> retorna se a senha do usuário é fraca', () => {
         test.each([
             {
                 user:{name: 'jorge', password: 'abcd'}, 
@@ -37,7 +37,7 @@ describe('senhaFraca', () => {
         });
     });
 
-    test('Quando um usuário não é encontrado ==> lança exceção', async () => {
+    test('um usuário não é encontrado ==> lança exceção', async () => {
         jest.spyOn(User,'findByPk').mockReturnValue(undefined);
     
         const id = 1;
@@ -47,7 +47,7 @@ describe('senhaFraca', () => {
         }).rejects.toThrow(NotFoundError);
     });
 
-    describe('Quando o parâmetro não é um número ==> lança exceção', () => {
+    describe('o parâmetro não é um número ==> lança exceção', () => {
         test.each([
             {
                 numero: "uma string"

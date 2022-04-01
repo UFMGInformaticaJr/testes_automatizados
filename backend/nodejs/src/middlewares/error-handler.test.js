@@ -1,4 +1,4 @@
-describe('Testando error-handler', () => {
+describe('error-handler', () => {
   const errorHandler = require('./error-handler');
   const {
     NotAuthorizedError,
@@ -10,15 +10,39 @@ describe('Testando error-handler', () => {
   } = require('../errors');
 
   test.each([
-    [new NotAuthorizedError('Teste'), 401, {error: 'Teste'}],
-    [new AccessDeniedError('Teste message'), 403, {error: 'Teste message'}],
-    [new InternalError('Internal error!'), 500, {error: 'Internal error!'}],
-    [new InvalidParamsError('Message'), 400, {error: 'Message'}],
-    [new MediaTypeError('Something went wrong!'), 415, {error: 'Something went wrong!'}],
-    [new NotFoundError("The resource couldn't be found"), 404, {error: "The resource couldn't be found"}],
+    {
+      err:new NotAuthorizedError('Teste'), 
+      statusEsperado: 401, 
+      mensagemEsperada:{error: 'Teste'}
+    },
+    {
+      err:new AccessDeniedError('Teste message'), 
+      statusEsperado: 403, 
+      mensagemEsperada: {error: 'Teste message'}
+    },
+    {
+      err:new InternalError('Internal error!'), 
+      statusEsperado: 500, 
+      mensagemEsperada: {error: 'Internal error!'}
+    },
+    {
+      err:new InvalidParamsError('Message'),
+      statusEsperado: 400, 
+      mensagemEsperada: {error: 'Message'}
+    },
+    {
+      err:new MediaTypeError('Something went wrong!'), 
+      statusEsperado: 415, 
+      mensagemEsperada: {error: 'Something went wrong!'}
+    },
+    {
+      err:new NotFoundError("The resource couldn't be found"), 
+      statusEsperado: 404, 
+      mensagemEsperada: {error: "The resource couldn't be found"}
+    },
   ])(
-    'errorHandler(%p)',
-    (err, statusEsperado, mensagemEsperada) => {
+    '%j',
+    ({err, statusEsperado, mensagemEsperada}) => {
       /*
        mockReturnThis torna possível o encadeamento de chamadas usado em 
        res.status(s).json(j)

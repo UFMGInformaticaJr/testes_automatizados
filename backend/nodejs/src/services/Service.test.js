@@ -13,7 +13,7 @@ describe('ASobreB', () => {
             {numerador: Number.MAX_SAFE_INTEGER, denominador: 5,                       valorEsperado: 1801439850948198.2},
             {numerador: 1,                       denominador: Number.MAX_SAFE_INTEGER, valorEsperado: 1.1102230246251568e-16}
         ])
-        ('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
+        ('%j', ({numerador, denominador, valorEsperado}) => {
             expect(service.ASobreB(numerador, denominador)).toBe(valorEsperado);
         });
     });
@@ -24,7 +24,7 @@ describe('ASobreB', () => {
             {numerador: 7.5224455678,            denominador: -2,                      valorEsperado: -3.7612227839},
             {numerador: Number. MAX_VALUE,       denominador: 4.2,                     valorEsperado: 4.28022174967218e+307},
             {numerador: 8,                       denominador: Number. MAX_VALUE,       valorEsperado: 4.450147717014404e-308}
-        ])('.ASobreB($numerador, $denominador)', ({numerador, denominador, valorEsperado}) => {
+        ])('%j', ({numerador, denominador, valorEsperado}) => {
             expect(service.ASobreB(numerador, denominador)).toBeCloseTo(valorEsperado, 16);
         });
     });
@@ -35,7 +35,7 @@ describe('ASobreB', () => {
             {numerador: 2.1                    },
             {numerador: Number. MAX_VALUE      },
             {numerador: Number.MAX_SAFE_INTEGER}
-        ])('.ASobreB($numerador, 0)', ({numerador}) => {
+        ])('%j', ({numerador}) => {
             expect(service.ASobreB(numerador, 0)).toEqual(Infinity);
         });
     });
@@ -46,13 +46,13 @@ describe('ASobreB', () => {
             {numerador: -2.1                    },
             {numerador: -Number. MAX_VALUE      },
             {numerador: -Number.MAX_SAFE_INTEGER}
-        ])('.ASobreB($numerador, 0)', ({numerador}) => {
+        ])('%j', ({numerador}) => {
             expect(service.ASobreB(numerador, 0)).toEqual(-Infinity);
         });
     });
 
     describe('o numerador e o denominador são iguais a 0 ==> retorna NaN', () => {
-        test('.ASobreB(0, 0)', async () => {
+        test('%j', async () => {
             expect(service.ASobreB(0, 0)).toEqual(NaN);
         });
     });
@@ -67,7 +67,7 @@ describe('ASobreB', () => {
             {numerador: -2               , denominador: true             },         
             {numerador: 4.2              , denominador: {atributo: 1}    },
             {numerador: Number. MAX_VALUE, denominador: () => {}         }     
-        ])('.ASobreB($numerador, $denominador)', ({numerador, denominador}) => {
+        ])('%j', ({numerador, denominador}) => {
             expect(() => {
                 service.ASobreB(numerador, denominador);
             }).toThrow(TypeError);
@@ -85,31 +85,31 @@ describe('raizQuadrada', () => {
             {numero: 225.2                  , valorEsperado: 15.006665185843255},
             {numero: Number.MAX_SAFE_INTEGER, valorEsperado: 94906265.62425154 },
             {numero: 22                     , valorEsperado: 4.69041575982343  }
-        ])('.raizQuadrada de %f', ({numero, valorEsperado}) => {
+        ])('%j', ({numero, valorEsperado}) => {
             expect(service.raizQuadrada(numero)).toBe(valorEsperado);
         });
     });
 
-    describe('o parâmetro não é um número, lança exceção', () => {
+    describe('o parâmetro não é um número ==> lança exceção', () => {
         test.each([
             {numero: "uma string" },
             {numero: true         },
             {numero: {atributo: 1}},
             {numero: () => {}     },
-        ])('.raizQuadrada de %f', ({numero}) => {
+        ])('%j', ({numero}) => {
             expect(() => {
                 service.raizQuadrada(numero);
             }).toThrow(TypeError);
         });
     });
 
-    describe('o parâmetro é um número negativo, lança exceção', () => {
+    describe('o parâmetro é um número negativo ==> lança exceção', () => {
         test.each([
             {numero: -1                      },
             {numero: -15.67                  },
             {numero: -Number.MAX_SAFE_INTEGER},
             {numero: -Number.MAX_VALUE       }
-        ])('.raizQuadrada de %f', ({numero}) => {
+        ])('%j', ({numero}) => {
             expect(() => {
                 service.raizQuadrada(numero);
             }).toThrow(Error);
@@ -120,23 +120,23 @@ describe('raizQuadrada', () => {
 describe('vogais', () => {
     const service = require('./Service');
 
-    describe('uma string é passada por parâmetro, retorna, em minúsculo, as vogais dessa string', () => {
+    describe('uma string é passada por parâmetro ==> retorna, em minúsculo, as vogais dessa string', () => {
         test.each([
             {entrada: "aabaaea"      , valorEsperado: ['a','a','a','a','e','a']},
             {entrada: "AAbaaEA"      , valorEsperado: ['a','a','a','a','e','a']},
             {entrada: "aa baa ea"    , valorEsperado: ['a','a','a','a','e','a']}
-        ])('.vogais($entrada)', ({entrada, valorEsperado}) => {
+        ])('%j', ({entrada, valorEsperado}) => {
             expect(service.vogais(entrada)).toEqual(valorEsperado);
         });
     });
 
-    describe('algum dos parâmetros não é uma string, lança exceção', () => {
+    describe('algum dos parâmetros não é uma string ==> lança exceção', () => {
         test.each([                        
         {entrada: true         },                                        
         {entrada: {atributo: 1}},                              
         {entrada: () => {}     },                     
         {entrada: 2            }                          
-        ])('.vogais($entrada)', ({entrada}) => {
+        ])('%j', ({entrada}) => {
             expect(() => service.vogais(entrada)).toThrow(TypeError);
         });
     });
@@ -151,7 +151,7 @@ describe ('idsComMesmoNome', () => {
     });
 
     test(
-        'o método é executado, busca todos os usuários',
+        'o método é executado ==> busca todos os usuários',
         async () => {
             var userFindAll = jest.spyOn(User,'findAll');
             
@@ -161,7 +161,7 @@ describe ('idsComMesmoNome', () => {
         }   
     );
     
-    describe('a busca de usuários retorna, retorna uma lista de listas do id dos usuários com o mesmo nome', () => {
+    describe('a busca de usuários é feita ==> retorna uma lista de listas do id dos usuários com o mesmo nome', () => {
         test.each([
             {
                 users: [
@@ -199,7 +199,7 @@ describe ('idsComMesmoNome', () => {
                 valorEsperado:[] 
             }
         ])
-        ('.idsComMesmoNome(%j)', ({users, valorEsperado}) => {
+        ('%j', ({users, valorEsperado}) => {
             jest.spyOn(User,'findAll').mockReturnValue(users);
 
             return expect(service.idsComMesmoNome()).resolves.toEqual(expect.arrayContaining(valorEsperado));
@@ -218,7 +218,7 @@ describe('usersComSenhaFraca', () => {
     });
 
     test(
-        'o método é executado, busca todos os usuários no banco de dados',
+        'o método é executado ==> busca todos os usuários no banco de dados',
         async () => {
             var userFindAll = jest.spyOn(User,'findAll');
             
@@ -228,7 +228,7 @@ describe('usersComSenhaFraca', () => {
         }   
     );
 
-    describe('usuários são buscados do banco de dados, verifica senha fraca de todos os usuários', () => {
+    describe('usuários são buscados do banco de dados ==> verifica senha fraca de todos os usuários', () => {
         test.each([                                   
             {
  
@@ -263,7 +263,7 @@ describe('usersComSenhaFraca', () => {
         );
     });
 
-    describe('usuários buscados do banco de dados vem com a senha fraca, retorna lista com estes usuários', () => {
+    describe('usuários buscados do banco de dados vem com a senha fraca ==> retorna lista com estes usuários', () => {
         test.each([                                   
             {
                 usuariosComSenhaFraca:[
@@ -297,7 +297,7 @@ describe('usersComSenhaFraca', () => {
         );
     });
 
-    describe('Ao buscar os usuários de um banco de dados, retorna uma lista com os usuários de senha fraca', () => {
+    describe('os usuários do banco de dados são buscados ==> retorna uma lista com os usuários de senha fraca', () => {
         test.each([                                   
             {
                 usuarios:[
@@ -364,7 +364,7 @@ describe ('updateClassificacaoEtariaById', () => {
     });
 
     test(
-        'o método é executado, busca o usuário com o id informado',
+        'o método é executado ==> busca o usuário com o id informado',
         async () => {
             const userId = 1;
 
@@ -380,7 +380,7 @@ describe ('updateClassificacaoEtariaById', () => {
         }
     );
 
-    test('um usuário não é encontrado, lança exceção', async () => {
+    test('um usuário não é encontrado ==> lança exceção', async () => {
         jest.spyOn(User,'findByPk').mockReturnValue(undefined);
     
         return expect(async () => {
@@ -389,7 +389,7 @@ describe ('updateClassificacaoEtariaById', () => {
         }).rejects.toThrow(NotFoundError);
       });
 
-    describe('a busca retorna um usuário com a classificação etária errada, retorna esse usuário com a classificação atualizada corretamente', () => {
+    describe('a busca retorna um usuário com a classificação etária errada ==> retorna esse usuário com a classificação atualizada corretamente', () => {
         test.each([     
             {   
                 user: {id: 1, classificacao_etaria: 'adolescente', age: 5},
@@ -436,7 +436,7 @@ describe('noReturn', () => {
         jest.clearAllMocks();
     });
     test(
-        'o método recebe o id de um usuário, busca o usuário com o id informado',
+        'o método recebe o id de um usuário ==> busca o usuário com o id informado',
         async () => {
             const userId = 1;
 
@@ -448,7 +448,7 @@ describe('noReturn', () => {
         }
     );
 
-    test('o método encontra um usuário, deleta esse usuário', async () => {
+    test('o método encontra um usuário ==> deleta esse usuário', async () => {
         const user = {
           id: 3,
           name: 'jorge',
@@ -478,7 +478,7 @@ describe('getNameById', () => {
         jest.clearAllMocks();
     });
 
-    describe('um id de um usuário é passado como parâmetro, retorna strings diferentes dependendo da primeira letra da string', () => {
+    describe('um id de um usuário é passado como parâmetro ==> retorna strings diferentes dependendo da primeira letra da string', () => {
         test.each([
             {
                 user:{
@@ -516,7 +516,7 @@ describe('getNameById', () => {
                 valorEsperado:"O nome do usuário começa com vogal (amanda)"
             },
         ])
-        ('.getNameById(%j)', ({user, valorEsperado}) => {
+        ('%j', ({user, valorEsperado}) => {
             jest.spyOn(User,'findByPk').mockReturnValue(user);
 
 
@@ -524,7 +524,7 @@ describe('getNameById', () => {
         });
     });
 
-    describe('um id é passado como parâmetro, busca o usuário com este id', () => {
+    describe('um id é passado como parâmetro ==> busca o usuário com este id', () => {
         test.each([
             {
                 user:{
@@ -545,7 +545,7 @@ describe('getNameById', () => {
                 }
             }
         ])
-        ('.getNameById(%j)', async ({user}) => {
+        ('%j', async ({user}) => {
             var spyFindByPk = jest.spyOn(User,'findByPk').mockReturnValue(user);
 
             await Service.getNameById(user.id);

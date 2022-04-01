@@ -1,38 +1,38 @@
-describe('Testando object-filter', () => {
+describe('object-filter', () => {
   const {requestFilter} = require('./object-filter');
   
   test.each([
-    [
-      {body: {a: 1, b: 3, c: 3, d: 7}},
-      'body',
-      ['a', 'b', 'd'],
-      {body: {a: 1, b: 3, d: 7}},
-    ],
-    [
-      {body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1, b: 1}},
-      'body',
-      ['a', 'b', 'd'],
-      {body: {a: 1, b: 3, d: 7}, query: {a: 1, b: 1}},
-    ],
-    [
-      {body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1, b: 1}},
-      'body',
-      ['a', 'b', 'e'],
-      {body: {a: 1, b: 3}, query: {a: 1, b: 1}},
-    ],
-    [
-      {body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1, b: 1}},
-      'query',
-      ['a'],
-      {body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1}},
-    ],
-    [
-      {query: {a: 1, b: 1}},
-      'query',
-      ['a'],
-      {query: {a: 1}},
-    ],
-  ])('reqFilter %#', (reqObj, reqKey, filter, valorEsperado) => {
+    {
+      reqObj:{body: {a: 1, b: 3, c: 3, d: 7}},
+      reqKey: 'body',
+      filter: ['a', 'b', 'd'],
+      valorEsperado: {body: {a: 1, b: 3, d: 7}},
+    },
+    {
+      reqObj:{body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1, b: 1}},
+      reqKey: 'body',
+      filter: ['a', 'b', 'd'],
+      valorEsperado: {body: {a: 1, b: 3, d: 7}, query: {a: 1, b: 1}},
+    },
+    {
+      reqObj:{body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1, b: 1}},
+      reqKey: 'body',
+      filter: ['a', 'b', 'e'],
+      valorEsperado: {body: {a: 1, b: 3}, query: {a: 1, b: 1}},
+    },
+    {
+      reqObj:{body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1, b: 1}},
+      reqKey: 'query',
+      filter: ['a'],
+      valorEsperado: {body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1}},
+    },
+    {
+      reqObj:{query: {a: 1, b: 1}},
+      reqKey: 'query',
+      filter: ['a'],
+      valorEsperado: {query: {a: 1}},
+    },
+  ])('%j', ({reqObj, reqKey, filter, valorEsperado}) => {
     const mockedNext = jest.fn();
 
     const reqFilter = requestFilter(reqKey, filter);

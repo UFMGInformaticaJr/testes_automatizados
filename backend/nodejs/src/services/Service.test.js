@@ -40,7 +40,7 @@ describe('ASobreB', () => {
         });
     });
 
-    describe('o numerador é um número menor que 0 mas o denominador é igual a 0 | retorna Infinity negativo', () => {
+    describe('o numerador é um número menor que 0 mas o denominador é igual a 0 ==> retorna Infinity negativo', () => {
         test.each([
             {numerador: -6                      },
             {numerador: -2.1                    },
@@ -51,13 +51,13 @@ describe('ASobreB', () => {
         });
     });
 
-    describe('o numerador e o denominador são iguais a 0 | retorna NaN', () => {
+    describe('o numerador e o denominador são iguais a 0 ==> retorna NaN', () => {
         test('.ASobreB(0, 0)', async () => {
             expect(service.ASobreB(0, 0)).toEqual(NaN);
         });
     });
 
-    describe('algum dos parâmetros não é um número | lança exceção', () => {
+    describe('algum dos parâmetros não é um número ==> lança exceção', () => {
         test.each([        
             {numerador: "uma string"     , denominador: 2.7666},           
             {numerador: true             , denominador: -2               },               
@@ -78,7 +78,7 @@ describe('ASobreB', () => {
 describe('raizQuadrada', () => {
     const service = require('./Service');
 
-    describe('um número é passado como parâmetro | retorna a raiz quadrada do número', () => {
+    describe('um número é passado como parâmetro ==> retorna a raiz quadrada do número', () => {
         test.each([
             {numero: 9                      , valorEsperado: 3                 },
             {numero: 225                    , valorEsperado: 15                },

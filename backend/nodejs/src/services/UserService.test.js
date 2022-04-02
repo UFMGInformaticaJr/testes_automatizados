@@ -15,7 +15,11 @@ describe('getUserById', () => {
     async () => {
         const idUsuario = 1;
 
-        var userFindByPkSpy = jest.spyOn(User,'findByPk');
+        var userFindByPkSpy = jest.spyOn(User,'findByPk').mockImplementation(
+          () => {
+            return {id: idUsuario}
+          }
+        );
 
         await userService.getUserById(idUsuario);
 
@@ -100,7 +104,12 @@ describe('updateUser', () => {
       role: 'admin'
     }
 
-    jest.spyOn(User,'findByPk');
+    jest.spyOn(User,'findByPk').mockImplementation(
+      () => {return {
+        id: reqUserId,
+        role: reqUserRole
+      }}
+    );
 
     return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
@@ -115,7 +124,12 @@ describe('updateUser', () => {
       role: 'admin'
     }
 
-    jest.spyOn(User,'findByPk');
+    jest.spyOn(User,'findByPk').mockImplementation(
+      () => {return {
+        id: reqUserId,
+        role: reqUserRole
+      }}
+    );
 
     return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
@@ -123,29 +137,29 @@ describe('updateUser', () => {
   });
 
   test('Quando um usuário é admin ==> pode alterar outro usuario', async () => {
-    var user = {
+    var usuario = {
       id: 3,
       name: 'jorge',
       role: 'user',
-      update: async (body) => {user.name = body.name}
+      update: async (body) => {usuario.name = body.name}
     };
 
-    const id = user.id,
+    const id = usuario.id,
     reqUserId = 10,
     reqUserRole = 'admin', 
     body = {name: 'gabriel'}
 
     var nomeEsperado = 'gabriel'
     var userEsperado = {
-      ...user
+      ...usuario
     };
     userEsperado.name = nomeEsperado;
 
-    jest.spyOn(User,'findByPk').mockReturnValue(user);
+    jest.spyOn(User,'findByPk').mockReturnValue(usuario);
     
     await userService.updateUser(id, reqUserId, reqUserRole, body);
 
-    expect(user).toEqual(userEsperado);
+    expect(usuario).toEqual(userEsperado);
   });
 
   test('Quando um usuário é user ==> pode alterar a si mesmo', async () => {
@@ -214,23 +228,20 @@ describe('getCurrentUser', () => {
     async () => {
         const idUsuario = 1;
 
-        var userFindByPkSpy = jest.spyOn(User,'findByPk');
+        var userFindByPkSpy = jest.spyOn(User,'findByPk').mockImplementation(
+          () => {
+            return {
+              id: idUsuario
+            }
+          }
+        );
 
         await userService.getCurrentUser(idUsuario);
 
+        expect(userFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
         expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
     }
 );
-
-  test('Quando o método recebe um id ==> busca usuário por esse id', async () => {
-    var idUsuario = 1347;
-
-    var userFindByPkSpy = jest.spyOn(User,'findByPk');
-
-    await userService.getCurrentUser(idUsuario);
-
-    expect(userFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
-  });
 
   test('Quando um usuário é encontrado ==> retorna ele', async () => {
       var idUsuario = 367;
@@ -278,7 +289,9 @@ describe('createUser', () => {
     }
     const saltRounds = 10;
 
-    const bcryptHashSpy = jest.spyOn(bcrypt, 'hash');
+    const bcryptHashSpy = jest.spyOn(bcrypt, 'hash').mockImplementation(
+      () => {return "a hashed return"}
+    );
 
     await userService.createUser(dadosUsuario);
 
@@ -295,7 +308,9 @@ describe('createUser', () => {
     }
     dadosUsuario.password = senhaCriptografada;
 
-    const userCriaNovaInstanciaSpy = jest.spyOn(User, 'criaNovaInstancia');
+    const userCriaNovaInstanciaSpy = jest.spyOn(User, 'criaNovaInstancia').mockImplementation(
+      () => {return {create: () => {}}}
+    );
 
     jest.spyOn(bcrypt, 'hash').mockReturnValue(senhaCriptografada);
 
@@ -317,7 +332,9 @@ describe('createUser', () => {
     };
 
     jest.spyOn(User, 'criaNovaInstancia').mockReturnValue(novoUsuario);
-    const novoUsuarioCreateSpy = jest.spyOn(novoUsuario, 'create');
+    const novoUsuarioCreateSpy = jest.spyOn(novoUsuario, 'create').mockImplementation(
+      () => {}
+    );
 
     await userService.createUser(dadosUsuario);
 
@@ -331,7 +348,9 @@ describe('getAllUsers', () => {
 
   test('o método é executado ==> busca todos os usuários',
     async () => {
-      var userFindAllSpy = jest.spyOn(User,'findAll');
+      var userFindAllSpy = jest.spyOn(User,'findAll').mockImplementation(
+        () => {return []}
+      );
       
       await UserService.getAllUsers();
 
@@ -373,7 +392,9 @@ describe('deleteUser', () => {
     jest.spyOn(UserModel,'findByPk').mockImplementation(() => {
       return usuario;
     });
-    var usuarioDeleteSpy = jest.spyOn(usuario, 'delete');
+    var usuarioDeleteSpy = jest.spyOn(usuario, 'delete').mockImplementation(
+      () => {}
+    );
       
     await UserService.deleteUser(usuario.id, usuarioDeletandoUser.id);
 

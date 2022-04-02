@@ -77,14 +77,14 @@ describe('updateUser', () => {
   });
 
   test('Quando um usuário não é encontrado ==> lança exceção', async () => {
-    jest.spyOn(User,'findByPk').mockReturnValue(undefined);
-
     const id = 1,
     reqUserId = 2,
     reqUserRole = 'admin', 
     body = {
       name: 'julio'
     }
+    
+    jest.spyOn(User,'findByPk').mockReturnValue(undefined);
 
     return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
@@ -92,8 +92,6 @@ describe('updateUser', () => {
   });
 
   test('Quando um usuário não é admin porém quer mudar seu próprio role ==> lança exceção', async () => {
-    jest.spyOn(User,'findByPk');
-
     const id = 1, 
     reqUserId = 1,
     reqUserRole = 'user', 
@@ -101,20 +99,22 @@ describe('updateUser', () => {
       role: 'admin'
     }
 
+    jest.spyOn(User,'findByPk');
+
     return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
     }).rejects.toThrow(NotAuthorizedError);
   });
 
   test('Quando um usuário não é admin porém quer atualizar outro usuário ==> lança exceção', async () => {
-    jest.spyOn(User,'findByPk');
-
     const id = 1,
     reqUserId = 2,
     reqUserRole = 'user', 
     body = { 
       role: 'admin'
     }
+
+    jest.spyOn(User,'findByPk');
 
     return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
@@ -129,20 +129,20 @@ describe('updateUser', () => {
       update: async (body) => {user.name = body.name}
     };
 
-    jest.spyOn(User,'findByPk').mockReturnValue(user);
-
     const id = user.id,
     reqUserId = 10,
     reqUserRole = 'admin', 
     body = {name: 'gabriel'}
-    
-    await userService.updateUser(id, reqUserId, reqUserRole, body);
 
     var nomeEsperado = 'gabriel'
     var userEsperado = {
       ...user
     };
     userEsperado.name = nomeEsperado;
+
+    jest.spyOn(User,'findByPk').mockReturnValue(user);
+    
+    await userService.updateUser(id, reqUserId, reqUserRole, body);
 
     expect(user).toEqual(userEsperado);
   });
@@ -155,12 +155,12 @@ describe('updateUser', () => {
       update: async (body) => {user.name = body.name}
     };
 
-    jest.spyOn(User,'findByPk').mockReturnValue(user);
-
     const id = user.id,
     reqUserId = 3,
     reqUserRole = 'user', 
     body = {name: 'gabriel'}
+
+    jest.spyOn(User,'findByPk').mockReturnValue(user);
     
     await userService.updateUser(id, reqUserId, reqUserRole, body);
 
@@ -180,21 +180,20 @@ describe('updateUser', () => {
       role: 'admin',
       update: async (body) => {user.name = body.name}
     };
-
-    jest.spyOn(User,'findByPk').mockReturnValue(user);
-
     const id = user.id,
     reqUserId = 3,
     reqUserRole = 'admin', 
     body = {name: 'gabriel'}
-    
-    await userService.updateUser(id, reqUserId, reqUserRole, body);
 
     var nomeEsperado = 'gabriel'
     var userEsperado = {
       ...user
     };
     userEsperado.name = nomeEsperado;
+
+    jest.spyOn(User,'findByPk').mockReturnValue(user);
+    
+    await userService.updateUser(id, reqUserId, reqUserRole, body);
 
     expect(user).toEqual(userEsperado);
   });
@@ -213,7 +212,6 @@ describe('getCurrentUser', () => {
     'Quando o método recebe o id de um usuário ==> busca o usuário com o id informado',
     async () => {
         const userId = 1;
-
         var spyUserEncontrado = jest.spyOn(User,'findByPk');
 
         await userService.getCurrentUser(userId);
@@ -223,8 +221,9 @@ describe('getCurrentUser', () => {
 );
 
   test('Quando o método recebe um id ==> busca usuário por esse id', async () => {
-    var spyGetCurrentUser = jest.spyOn(User,'findByPk');
     var idUsuario = 1347;
+
+    var spyGetCurrentUser = jest.spyOn(User,'findByPk');
 
     await userService.getCurrentUser(idUsuario);
 
@@ -237,27 +236,26 @@ describe('getCurrentUser', () => {
         id: idUsuario,
         password: "1234"
       };
-
-      jest.spyOn(User,'findByPk').mockImplementation(() => {
-          delete usuario["password"];  
-          return usuario
-          }
-      );
-
-      var retorno = await userService.getCurrentUser(idUsuario);
-
       var usuarioEsperado = {
         id: idUsuario
       };
+
+      jest.spyOn(User,'findByPk').mockImplementation(() => {
+        delete usuario["password"];  
+        return usuario
+        }
+    );
+
+      var retorno = await userService.getCurrentUser(idUsuario);
       
       return expect(retorno).toStrictEqual(usuarioEsperado);
     }
   );
 
   test('Quando um usuário não é encontrado ==> lança exceção', async () => {
-    jest.spyOn(User,'findByPk').mockReturnValue(undefined);
-
     var id = 3425;
+    
+    jest.spyOn(User,'findByPk').mockReturnValue(undefined);
 
     expect(async () => {
       await userService.getCurrentUser(id);
@@ -270,40 +268,38 @@ describe('createUser', () => {
   const userService = require('./UserService');
   const bcrypt = require('bcrypt');
 
-  test('Quando os dados de usuário são passados como entrada ==> criptografa a senha', async () => {
-    const spyHash = jest.spyOn(bcrypt, 'hash');
-
+  test('Quando os dados de usuário são passados como entrada ==> criptografa a senha', async () => { 
     const dadosUsuario = {
       id:20,
       name: "aureliano",
       password: "624hff8"
     }
+    const saltRounds = 10;
+
+    const spyHash = jest.spyOn(bcrypt, 'hash');
 
     await userService.createUser(dadosUsuario);
 
-    const saltRounds = 10;
     const primeiraChamadaBcrypt = spyHash.mock.calls[0];
     expect(primeiraChamadaBcrypt).toEqual(expect.arrayContaining([dadosUsuario.password, saltRounds]));
   });
 
   test('Quando a senha é criptografada ==> atualiza senha do usuário a ser criado', async () => {
     const senhaCriptografada = "senha criptografada";
-    jest.spyOn(bcrypt, 'hash').mockReturnValue(senhaCriptografada);
-
-    const spyCriaNovaInstancia = jest.spyOn(User, 'criaNovaInstancia');
-
     const dadosUsuario = {
       id:20,
       name: "aureliano",
       password: "624hff8"
     }
+    dadosUsuario.password = senhaCriptografada;
+
+    const spyCriaNovaInstancia = jest.spyOn(User, 'criaNovaInstancia');
+
+    jest.spyOn(bcrypt, 'hash').mockReturnValue(senhaCriptografada);
 
     await userService.createUser(dadosUsuario);
 
-    dadosUsuario.password = senhaCriptografada;
-    
-    const dadosUsuarioDaChamada = spyCriaNovaInstancia.mock.calls[0][0]
-
+    const dadosUsuarioDaChamada = spyCriaNovaInstancia.mock.calls[0][0];
     expect(dadosUsuarioDaChamada).toEqual(dadosUsuario);
   });
 
@@ -313,7 +309,6 @@ describe('createUser', () => {
       name: "aureliano",
       password: "624hff8"
     };
-    
     const novoUsuario = {
       ...dadosUsuario,
       create: () => {}
@@ -369,15 +364,13 @@ describe('deleteUser', () => {
       id: 3,
       delete: () => {}
     };
-
     const usuarioDeletandoUser = {
       id: 2
     };
-    
+
     jest.spyOn(UserModel,'findByPk').mockImplementation(() => {
       return user;
     });
-     
     var spyDelete = jest.spyOn(user, 'delete');
       
     await UserService.deleteUser(user.id, usuarioDeletandoUser.id);
@@ -386,9 +379,9 @@ describe('deleteUser', () => {
   });
 
   test('um usuário não é encontrado ==> lança exceção', async () => {
-    jest.spyOn(UserModel,'findByPk').mockReturnValue(undefined);
-
     const id = 1;
+
+    jest.spyOn(UserModel,'findByPk').mockReturnValue(undefined);
 
     expect(async () => {
       await UserService.deleteUser(id);
@@ -398,7 +391,7 @@ describe('deleteUser', () => {
   test('o ID passado é igual ao ID do usuário requisitando ==> lança exceção', async () => {
     const id = 1;
     const reqUserId = 1;
-    
+
     jest.spyOn(UserModel,'findByPk').mockReturnValue({
       id: id
     });

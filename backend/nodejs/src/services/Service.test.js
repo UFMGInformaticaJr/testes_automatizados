@@ -253,7 +253,6 @@ describe('usersComSenhaFraca', () => {
             '%j',
             async ({usuarios}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuarios);
-
                 var spySenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
 
                 await service.usersComSenhaFraca();
@@ -283,7 +282,6 @@ describe('usersComSenhaFraca', () => {
             '%j',
             async ({usuariosComSenhaFraca}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuariosComSenhaFraca);
-
                 var spySenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
                 for (let i = 0; i < usuariosComSenhaFraca.length; i++){
                     spySenhaFraca.mockReturnValue(true);
@@ -342,7 +340,6 @@ describe('usersComSenhaFraca', () => {
             '%j',
             async ({usuarios,usuariosEsperados}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuarios);
-
                 var spySenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
                 spySenhaFraca.mockReturnValue(() => usuarios.password.length < 8)
                 
@@ -381,10 +378,11 @@ describe ('updateClassificacaoEtariaById', () => {
     );
 
     test('um usuário não é encontrado ==> lança exceção', async () => {
+        var id = 3425;
+
         jest.spyOn(User,'findByPk').mockReturnValue(undefined);
-    
+
         return expect(async () => {
-          var id = 3425;
           await service.updateClassificacaoEtariaById(id);
         }).rejects.toThrow(NotFoundError);
       });
@@ -411,15 +409,14 @@ describe ('updateClassificacaoEtariaById', () => {
                 user.update = async (body) => {
                     user.classificacao_etaria = body.classificacao_etaria;
                 };
-
-                jest.spyOn(User,'findByPk').mockReturnValue(user);
-
-                var retorno = await service.updateClassificacaoEtariaById(user.id);
-
                 var userEsperado = {
                     ...user
                 };
                 userEsperado.classificacao_etaria = classificacao_etaria_esperada;
+
+                jest.spyOn(User,'findByPk').mockReturnValue(user);
+
+                var retorno = await service.updateClassificacaoEtariaById(user.id);
                 
                 expect(retorno).toEqual(userEsperado);
             }
@@ -457,11 +454,10 @@ describe('noReturn', () => {
           age: 15,
           delete: () => {}
         };
-        
+
         jest.spyOn(User,'findByPk').mockImplementation(() => {
           return user;
         });
-
         var spyUserSendoDeletado = jest.spyOn(user,'delete');
           
         await Service.noReturn(user.id);
@@ -518,7 +514,6 @@ describe('getNameById', () => {
         ])
         ('%j', ({user, valorEsperado}) => {
             jest.spyOn(User,'findByPk').mockReturnValue(user);
-
 
             expect(Service.getNameById(user.id)).resolves.toEqual(valorEsperado);
         });

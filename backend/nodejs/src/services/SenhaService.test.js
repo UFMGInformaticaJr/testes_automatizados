@@ -38,9 +38,9 @@ describe('senhaFraca', () => {
     });
 
     test('um usuário não é encontrado ==> lança exceção', async () => {
-        jest.spyOn(User,'findByPk').mockReturnValue(undefined);
-    
         const id = 1;
+        
+        jest.spyOn(User,'findByPk').mockReturnValue(undefined);
 
         expect(async () => {
           await SenhaService.senhaFraca(id);

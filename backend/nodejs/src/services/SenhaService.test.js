@@ -11,29 +11,29 @@ describe('senhaFraca', () => {
     describe('um id de um usuário é passado como parâmetro ==> retorna se a senha do usuário é fraca', () => {
         test.each([
             {
-                user:{name: 'jorge', password: 'abcd'}, 
-                valorEsperado: true
+                usuario:{name: 'jorge', password: 'abcd'}, 
+                retornoEsperado: true
             },
             {
-                user:{name: 'gabi', password: 'abcdefghashud'}, 
-                valorEsperado: false
+                usuario:{name: 'gabi', password: 'abcdefghashud'}, 
+                retornoEsperado: false
             },
             {
-                user:{name: 'gabriel', password: 'abcdefghijk'}, 
-                valorEsperado: false
+                usuario:{name: 'gabriel', password: 'abcdefghijk'}, 
+                retornoEsperado: false
             },
             {
-                user:{name: 'bernardo', password: 'abc'}, 
-                valorEsperado: true
+                usuario:{name: 'bernardo', password: 'abc'}, 
+                retornoEsperado: true
             },
             {
-                user:{name: 'vinicius',password: 'a'}, 
-                valorEsperado: true
+                usuario:{name: 'vinicius',password: 'a'}, 
+                retornoEsperado: true
             },
         ])
-        ('%j', ({user, valorEsperado}) => {
-            jest.spyOn(User,'findByPk').mockReturnValue(user);
-            return expect(SenhaService.senhaFraca(1)).resolves.toBe(valorEsperado);
+        ('%j', ({usuario, retornoEsperado}) => {
+            jest.spyOn(User,'findByPk').mockReturnValue(usuario);
+            return expect(SenhaService.senhaFraca(1)).resolves.toBe(retornoEsperado);
         });
     });
 

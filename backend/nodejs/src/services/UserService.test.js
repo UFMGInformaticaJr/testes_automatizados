@@ -13,44 +13,44 @@ describe('getUserById', () => {
   test(
     'Quando o método recebe o id de um usuário ==> busca o usuário com o id informado',
     async () => {
-        const userId = 1;
+        const idUsuario = 1;
 
-        var spyUserEncontrado = jest.spyOn(User,'findByPk');
+        var userFindByPkSpy = jest.spyOn(User,'findByPk');
 
-        await userService.getUserById(userId);
+        await userService.getUserById(idUsuario);
 
-        expect(spyUserEncontrado).toHaveBeenCalledTimes(1);
+        expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
     }
 );
 
   describe('Quando um id de um usuário é passado como parâmetro ==> retorna os dados não sensíveis do usuario', () => {
     test.each([
         { 
-          user:{name: 'jorge',password: 'abcd'}, 
-          valorEsperado:{name: 'jorge'}
+          usuario:{name: 'jorge',password: 'abcd'}, 
+          retornoEsperado:{name: 'jorge'}
         },
         { 
-          user:{name: 'gabi', password: 'abcdefghashud'}, 
-          valorEsperado:{name: 'gabi'}
+          usuario:{name: 'gabi', password: 'abcdefghashud'}, 
+          retornoEsperado:{name: 'gabi'}
         },
         { 
-          user:{name: 'gabriel',password: 'abcdefghijk'},
-          valorEsperado:{name: 'gabriel'} 
+          usuario:{name: 'gabriel',password: 'abcdefghijk'},
+          retornoEsperado:{name: 'gabriel'} 
         },
         { 
-          user:{name: 'bernardo',password: 'abc'}, 
-          valorEsperado:{name: 'bernardo'}
+          usuario:{name: 'bernardo',password: 'abc'}, 
+          retornoEsperado:{name: 'bernardo'}
         },
         {
-          user:{name: 'vinicius',password: 'a'}, 
-          valorEsperado:{name: 'vinicius'}
+          usuario:{name: 'vinicius',password: 'a'}, 
+          retornoEsperado:{name: 'vinicius'}
         },
       ])
-    ('%j', ({user, valorEsperado}) => {
+    ('%j', ({usuario, retornoEsperado}) => {
     
         jest.spyOn(User,'findByPk').mockImplementation( () => {
-          delete user["password"];  
-          return user;
+          delete usuario["password"];  
+          return usuario;
           }
         );
         return expect(userService.getUserById(1)).resolves.toStrictEqual(valorEsperado);
@@ -58,10 +58,11 @@ describe('getUserById', () => {
   });
   
   test('Quando um usuário não é encontrado ==> lança exceção', async () => {
+    const id = 1;
+    
     jest.spyOn(User,'findByPk').mockReturnValue(undefined);
 
-    expect(async () => {
-      const id = 1;
+    return expect(async () => {
       await userService.getUserById(id);
     }).rejects.toThrow(NotFoundError);
   });
@@ -148,54 +149,54 @@ describe('updateUser', () => {
   });
 
   test('Quando um usuário é user ==> pode alterar a si mesmo', async () => {
-    var user = {
+    var usuario = {
       id: 3,
       name: 'jorge',
       role: 'user',
-      update: async (body) => {user.name = body.name}
+      update: async (body) => {usuario.name = body.name}
     };
 
-    const id = user.id,
+    const id = usuario.id,
     reqUserId = 3,
     reqUserRole = 'user', 
     body = {name: 'gabriel'}
 
-    jest.spyOn(User,'findByPk').mockReturnValue(user);
+    var nomeEsperado = 'gabriel'
+    var usuarioEsperado = {
+      ...usuario
+    };
+    usuarioEsperado.name = nomeEsperado;
+
+    jest.spyOn(User,'findByPk').mockReturnValue(usuario);
     
     await userService.updateUser(id, reqUserId, reqUserRole, body);
 
-    var nomeEsperado = 'gabriel'
-    var userEsperado = {
-      ...user
-    };
-    userEsperado.name = nomeEsperado;
-
-    expect(user).toEqual(userEsperado);
+    expect(usuario).toEqual(usuarioEsperado);
   });
 
   test('Quando um usuário é admin ==> pode alterar a si mesmo', async () => {
-    var user = {
+    var usuario = {
       id: 3,
       name: 'jorge',
       role: 'admin',
-      update: async (body) => {user.name = body.name}
+      update: async (body) => {usuario.name = body.name}
     };
-    const id = user.id,
+    const id = usuario.id,
     reqUserId = 3,
     reqUserRole = 'admin', 
     body = {name: 'gabriel'}
 
     var nomeEsperado = 'gabriel'
     var userEsperado = {
-      ...user
+      ...usuario
     };
     userEsperado.name = nomeEsperado;
 
-    jest.spyOn(User,'findByPk').mockReturnValue(user);
+    jest.spyOn(User,'findByPk').mockReturnValue(usuario);
     
     await userService.updateUser(id, reqUserId, reqUserRole, body);
 
-    expect(user).toEqual(userEsperado);
+    expect(usuario).toEqual(userEsperado);
   });
 });
 
@@ -211,24 +212,24 @@ describe('getCurrentUser', () => {
   test(
     'Quando o método recebe o id de um usuário ==> busca o usuário com o id informado',
     async () => {
-        const userId = 1;
+        const idUsuario = 1;
 
-        var spyUserEncontrado = jest.spyOn(User,'findByPk');
+        var userFindByPkSpy = jest.spyOn(User,'findByPk');
 
-        await userService.getCurrentUser(userId);
+        await userService.getCurrentUser(idUsuario);
 
-        expect(spyUserEncontrado).toHaveBeenCalledTimes(1);
+        expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
     }
 );
 
   test('Quando o método recebe um id ==> busca usuário por esse id', async () => {
     var idUsuario = 1347;
 
-    var spyGetCurrentUser = jest.spyOn(User,'findByPk');
+    var userFindByPkSpy = jest.spyOn(User,'findByPk');
 
     await userService.getCurrentUser(idUsuario);
 
-    expect(spyGetCurrentUser.mock.calls[0][0]).toBe(idUsuario);
+    expect(userFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
   });
 
   test('Quando um usuário é encontrado ==> retorna ele', async () => {
@@ -277,11 +278,11 @@ describe('createUser', () => {
     }
     const saltRounds = 10;
 
-    const spyHash = jest.spyOn(bcrypt, 'hash');
+    const bcryptHashSpy = jest.spyOn(bcrypt, 'hash');
 
     await userService.createUser(dadosUsuario);
 
-    const primeiraChamadaBcrypt = spyHash.mock.calls[0];
+    const primeiraChamadaBcrypt = bcryptHashSpy.mock.calls[0];
     expect(primeiraChamadaBcrypt).toEqual(expect.arrayContaining([dadosUsuario.password, saltRounds]));
   });
 
@@ -294,13 +295,13 @@ describe('createUser', () => {
     }
     dadosUsuario.password = senhaCriptografada;
 
-    const spyCriaNovaInstancia = jest.spyOn(User, 'criaNovaInstancia');
+    const userCriaNovaInstanciaSpy = jest.spyOn(User, 'criaNovaInstancia');
 
     jest.spyOn(bcrypt, 'hash').mockReturnValue(senhaCriptografada);
 
     await userService.createUser(dadosUsuario);
 
-    const dadosUsuarioDaChamada = spyCriaNovaInstancia.mock.calls[0][0];
+    const dadosUsuarioDaChamada = userCriaNovaInstanciaSpy.mock.calls[0][0];
     expect(dadosUsuarioDaChamada).toEqual(dadosUsuario);
   });
 
@@ -316,11 +317,11 @@ describe('createUser', () => {
     };
 
     jest.spyOn(User, 'criaNovaInstancia').mockReturnValue(novoUsuario);
-    const spyCreate = jest.spyOn(novoUsuario, 'create');
+    const novoUsuarioCreateSpy = jest.spyOn(novoUsuario, 'create');
 
     await userService.createUser(dadosUsuario);
 
-    expect(spyCreate).toHaveBeenCalledTimes(1);
+    expect(novoUsuarioCreateSpy).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -330,11 +331,11 @@ describe('getAllUsers', () => {
 
   test('o método é executado ==> busca todos os usuários',
     async () => {
-      var userFindAll = jest.spyOn(User,'findAll');
+      var userFindAllSpy = jest.spyOn(User,'findAll');
       
       await UserService.getAllUsers();
 
-      expect(userFindAll).toHaveBeenCalledTimes(1);
+      expect(userFindAllSpy).toHaveBeenCalledTimes(1);
     }
   );
 
@@ -361,7 +362,7 @@ describe('deleteUser', () => {
 
   const UserService = require('./UserService');
   test('o método recebe o id de um usuário ==> deleta esse usuário', async () => {
-    const user = {
+    const usuario = {
       id: 3,
       delete: () => {}
     };
@@ -370,13 +371,13 @@ describe('deleteUser', () => {
     };
 
     jest.spyOn(UserModel,'findByPk').mockImplementation(() => {
-      return user;
+      return usuario;
     });
-    var spyDelete = jest.spyOn(user, 'delete');
+    var usuarioDeleteSpy = jest.spyOn(usuario, 'delete');
       
-    await UserService.deleteUser(user.id, usuarioDeletandoUser.id);
+    await UserService.deleteUser(usuario.id, usuarioDeletandoUser.id);
 
-    expect(spyDelete).toHaveBeenCalledTimes(1);
+    expect(usuarioDeleteSpy).toHaveBeenCalledTimes(1);
   });
 
   test('um usuário não é encontrado ==> lança exceção', async () => {

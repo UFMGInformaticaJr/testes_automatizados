@@ -477,38 +477,23 @@ describe('getNameById', () => {
     describe('um id de um usuário é passado como parâmetro ==> retorna strings diferentes dependendo da primeira letra da string', () => {
         test.each([
             {
-                usuario:{
-                    id: 1,
-                    name: 'joao'
-                }, 
+                usuario:{id: 1,name: 'joao'}, 
                 retornoEsperado:"O nome do usuário começa com consoante (joao)"
             },
             {
-                usuario:{
-                    id: 2,
-                    name: 'gabi'
-                }, 
+                usuario:{id: 2,name: 'gabi'}, 
                 retornoEsperado:"O nome do usuário começa com consoante (gabi)"
             },
             {
-                usuario:{
-                    id: 3,
-                    name: 'gabriel'
-                }, 
+                usuario:{id: 3,name: 'gabriel'}, 
                 retornoEsperado:"O nome do usuário começa com consoante (gabriel)"
             },
             {
-                usuario:{
-                    id: 4,
-                    name: 'iuri'
-                }, 
+                usuario:{id: 4,name: 'iuri'}, 
                 retornoEsperado:"O nome do usuário começa com vogal (iuri)"
             },
             {
-                usuario:{
-                    id: 5,
-                    name: 'amanda'
-                }, 
+                usuario:{id: 5,name: 'amanda'}, 
                 retornoEsperado:"O nome do usuário começa com vogal (amanda)"
             },
         ])
@@ -522,22 +507,13 @@ describe('getNameById', () => {
     describe('um id é passado como parâmetro ==> busca o usuário com este id', () => {
         test.each([
             {
-                usuario:{
-                    id: 2644,
-                    name: "picollo"
-                }
+                usuario:{id: 2644,name: "picollo"}
             },
             {
-                usuario:{
-                    id: 1,
-                    name: "babidi"
-                }
+                usuario:{id: 1,name: "babidi"}
             },
             {
-                usuario:{
-                    id: 658896,
-                    name: "bulma"
-                }
+                usuario:{id: 658896,name: "bulma"}
             }
         ])
         ('%j', async ({usuario}) => {

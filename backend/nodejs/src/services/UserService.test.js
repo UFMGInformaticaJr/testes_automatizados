@@ -53,7 +53,7 @@ describe('getUserById', () => {
           return usuario;
           }
         );
-        return expect(userService.getUserById(1)).resolves.toStrictEqual(valorEsperado);
+        return expect(userService.getUserById(1)).resolves.toStrictEqual(retornoEsperado);
     });
   });
   

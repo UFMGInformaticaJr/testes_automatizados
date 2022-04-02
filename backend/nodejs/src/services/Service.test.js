@@ -5,27 +5,27 @@ describe('ASobreB', () => {
 
     describe('2 números inteiros são passados como parâmetro ==> retorna a divisão de um pelo outro', () => {
         test.each([
-            {numerador: 6,                       denominador: 3,                       valorEsperado: 2},
-            {numerador: 4,                       denominador: 2,                       valorEsperado: 2},
-            {numerador: -12,                     denominador: 3,                       valorEsperado: -4},
-            {numerador: -12,                     denominador: -3,                      valorEsperado: 4},
-            {numerador: 10,                      denominador: 3,                       valorEsperado: 3.3333333333333335},
-            {numerador: Number.MAX_SAFE_INTEGER, denominador: 5,                       valorEsperado: 1801439850948198.2},
-            {numerador: 1,                       denominador: Number.MAX_SAFE_INTEGER, valorEsperado: 1.1102230246251568e-16}
+            {numerador: 6,                       denominador: 3,                       retornoEsperado: 2},
+            {numerador: 4,                       denominador: 2,                       retornoEsperado: 2},
+            {numerador: -12,                     denominador: 3,                       retornoEsperado: -4},
+            {numerador: -12,                     denominador: -3,                      retornoEsperado: 4},
+            {numerador: 10,                      denominador: 3,                       retornoEsperado: 3.3333333333333335},
+            {numerador: Number.MAX_SAFE_INTEGER, denominador: 5,                       retornoEsperado: 1801439850948198.2},
+            {numerador: 1,                       denominador: Number.MAX_SAFE_INTEGER, retornoEsperado: 1.1102230246251568e-16}
         ])
-        ('%j', ({numerador, denominador, valorEsperado}) => {
-            expect(service.ASobreB(numerador, denominador)).toBe(valorEsperado);
+        ('%j', ({numerador, denominador, retornoEsperado}) => {
+            expect(service.ASobreB(numerador, denominador)).toBe(retornoEsperado);
         });
     });
 
     describe('2 números são passados como parâmetro, e um deles ou ambos são float ==> retorna a divisão de um pelo outro', () => {
         test.each([
-            {numerador: 7.5224455678,            denominador: 2.7666,                  valorEsperado: 2.7190217479216368},
-            {numerador: 7.5224455678,            denominador: -2,                      valorEsperado: -3.7612227839},
-            {numerador: Number. MAX_VALUE,       denominador: 4.2,                     valorEsperado: 4.28022174967218e+307},
-            {numerador: 8,                       denominador: Number. MAX_VALUE,       valorEsperado: 4.450147717014404e-308}
-        ])('%j', ({numerador, denominador, valorEsperado}) => {
-            expect(service.ASobreB(numerador, denominador)).toBeCloseTo(valorEsperado, 16);
+            {numerador: 7.5224455678,            denominador: 2.7666,                  retornoEsperado: 2.7190217479216368},
+            {numerador: 7.5224455678,            denominador: -2,                      retornoEsperado: -3.7612227839},
+            {numerador: Number. MAX_VALUE,       denominador: 4.2,                     retornoEsperado: 4.28022174967218e+307},
+            {numerador: 8,                       denominador: Number. MAX_VALUE,       retornoEsperado: 4.450147717014404e-308}
+        ])('%j', ({numerador, denominador, retornoEsperado}) => {
+            expect(service.ASobreB(numerador, denominador)).toBeCloseTo(retornoEsperado, 16);
         });
     });
 
@@ -80,13 +80,13 @@ describe('raizQuadrada', () => {
 
     describe('um número é passado como parâmetro ==> retorna a raiz quadrada do número', () => {
         test.each([
-            {numero: 9                      , valorEsperado: 3                 },
-            {numero: 225                    , valorEsperado: 15                },
-            {numero: 225.2                  , valorEsperado: 15.006665185843255},
-            {numero: Number.MAX_SAFE_INTEGER, valorEsperado: 94906265.62425154 },
-            {numero: 22                     , valorEsperado: 4.69041575982343  }
-        ])('%j', ({numero, valorEsperado}) => {
-            expect(service.raizQuadrada(numero)).toBe(valorEsperado);
+            {numero: 9                      , retornoEsperado: 3                 },
+            {numero: 225                    , retornoEsperado: 15                },
+            {numero: 225.2                  , retornoEsperado: 15.006665185843255},
+            {numero: Number.MAX_SAFE_INTEGER, retornoEsperado: 94906265.62425154 },
+            {numero: 22                     , retornoEsperado: 4.69041575982343  }
+        ])('%j', ({numero, retornoEsperado}) => {
+            expect(service.raizQuadrada(numero)).toBe(retornoEsperado);
         });
     });
 
@@ -122,11 +122,11 @@ describe('vogais', () => {
 
     describe('uma string é passada por parâmetro ==> retorna, em minúsculo, as vogais dessa string', () => {
         test.each([
-            {entrada: "aabaaea"      , valorEsperado: ['a','a','a','a','e','a']},
-            {entrada: "AAbaaEA"      , valorEsperado: ['a','a','a','a','e','a']},
-            {entrada: "aa baa ea"    , valorEsperado: ['a','a','a','a','e','a']}
-        ])('%j', ({entrada, valorEsperado}) => {
-            expect(service.vogais(entrada)).toEqual(valorEsperado);
+            {entrada: "aabaaea"      , retornoEsperado: ['a','a','a','a','e','a']},
+            {entrada: "AAbaaEA"      , retornoEsperado: ['a','a','a','a','e','a']},
+            {entrada: "aa baa ea"    , retornoEsperado: ['a','a','a','a','e','a']}
+        ])('%j', ({entrada, retornoEsperado}) => {
+            expect(service.vogais(entrada)).toEqual(retornoEsperado);
         });
     });
 
@@ -153,56 +153,56 @@ describe ('idsComMesmoNome', () => {
     test(
         'o método é executado ==> busca todos os usuários',
         async () => {
-            var userFindAll = jest.spyOn(User,'findAll');
+            var userFindAllSpy = jest.spyOn(User,'findAll');
             
             await service.idsComMesmoNome();
 
-            expect(userFindAll).toHaveBeenCalledTimes(1);
+            expect(userFindAllSpy).toHaveBeenCalledTimes(1);
         }   
     );
     
     describe('a busca de usuários é feita ==> retorna uma lista de listas do id dos usuários com o mesmo nome', () => {
         test.each([
             {
-                users: [
+                usuarios: [
                 {id: 1, name: 'jorge'},
                 {id: 2, name: 'gabi'}
                 ],
-                valorEsperado:[
+                retornoEsperado:[
                     [1], [2]
                 ]
             },
             {
-                users:[
+                usuarios:[
                     {id: 1, name: 'manuel'},
                     {id: 2, name: 'jao'},
                     {id: 3, name: 'manuel'}
                 ],
-                valorEsperado:[
+                retornoEsperado:[
                     [1,3], [1,3], [2]
                 ]
             },
             {   
-                users:[
+                usuarios:[
                     {id: 1, name: 'manuel'},
                     {id: 2, name: 'jao'},
                     {id: 3, name: 'manuel'},
                     {id: 4, name: 'jao'},
                     {id: 5, name: 'bandeira'}
                 ],
-                valorEsperado:[
+                retornoEsperado:[
                     [1,3], [2, 4], [5], [2, 4], [1,3]
                 ]
             },
             { 
-                users:[], 
-                valorEsperado:[] 
+                usuarios:[], 
+                retornoEsperado:[] 
             }
         ])
-        ('%j', ({users, valorEsperado}) => {
-            jest.spyOn(User,'findAll').mockReturnValue(users);
+        ('%j', ({usuarios, retornoEsperado}) => {
+            jest.spyOn(User,'findAll').mockReturnValue(usuarios);
 
-            return expect(service.idsComMesmoNome()).resolves.toEqual(expect.arrayContaining(valorEsperado));
+            return expect(service.idsComMesmoNome()).resolves.toEqual(expect.arrayContaining(retornoEsperado));
         });
     });    
 });
@@ -220,11 +220,11 @@ describe('usersComSenhaFraca', () => {
     test(
         'o método é executado ==> busca todos os usuários no banco de dados',
         async () => {
-            var userFindAll = jest.spyOn(User,'findAll');
+            var userFindAllSpy = jest.spyOn(User,'findAll');
             
             await service.usersComSenhaFraca();
 
-            expect(userFindAll).toHaveBeenCalledTimes(1);
+            expect(userFindAllSpy).toHaveBeenCalledTimes(1);
         }   
     );
 
@@ -253,11 +253,11 @@ describe('usersComSenhaFraca', () => {
             '%j',
             async ({usuarios}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuarios);
-                var spySenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
+                var senhaServiceSenhaFracaSpy = jest.spyOn(SenhaService,'senhaFraca');
 
                 await service.usersComSenhaFraca();
 
-                expect(spySenhaFraca).toHaveBeenCalledTimes(usuarios.length);
+                expect(senhaServiceSenhaFracaSpy).toHaveBeenCalledTimes(usuarios.length);
             }
         );
     });
@@ -282,9 +282,9 @@ describe('usersComSenhaFraca', () => {
             '%j',
             async ({usuariosComSenhaFraca}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuariosComSenhaFraca);
-                var spySenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
+                var senhaServiceSenhaFracaSpy = jest.spyOn(SenhaService,'senhaFraca');
                 for (let i = 0; i < usuariosComSenhaFraca.length; i++){
-                    spySenhaFraca.mockReturnValue(true);
+                    senhaServiceSenhaFracaSpy.mockReturnValue(true);
                 }
 
                 var retorno = await service.usersComSenhaFraca();
@@ -340,8 +340,8 @@ describe('usersComSenhaFraca', () => {
             '%j',
             async ({usuarios,usuariosEsperados}) => {
                 jest.spyOn(User,'findAll').mockReturnValue(usuarios);
-                var spySenhaFraca = jest.spyOn(SenhaService,'senhaFraca');
-                spySenhaFraca.mockReturnValue(() => usuarios.password.length < 8)
+                var senhaServiceSenhaFracaSpy = jest.spyOn(SenhaService,'senhaFraca');
+                senhaServiceSenhaFracaSpy.mockReturnValue(() => usuarios.password.length < 8)
                 
                 var retorno = await service.usersComSenhaFraca();
 
@@ -363,15 +363,15 @@ describe ('updateClassificacaoEtariaById', () => {
     test(
         'o método é executado ==> busca o usuário com o id informado',
         async () => {
-            const userId = 1;
+            const idUsuario = 1;
 
             var spyUserEncontrado = jest.spyOn(User,'findByPk').mockReturnValue({
-                id: userId,
+                id: idUsuario,
                 age: 12,
                 update: () => {}
             });
 
-            await service.updateClassificacaoEtariaById(userId);
+            await service.updateClassificacaoEtariaById(idUsuario);
 
             expect(spyUserEncontrado).toHaveBeenCalledTimes(1);
         }
@@ -435,18 +435,18 @@ describe('noReturn', () => {
     test(
         'o método recebe o id de um usuário ==> busca o usuário com o id informado',
         async () => {
-            const userId = 1;
+            const idUsuario = 1;
 
-            var spyUserEncontrado = jest.spyOn(User,'findByPk');
+            var userFindByPkSpy = jest.spyOn(User,'findByPk');
 
-            await Service.noReturn(userId);
+            await Service.noReturn(idUsuario);
 
-            expect(spyUserEncontrado).toHaveBeenCalledTimes(1);
+            expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
         }
     );
 
     test('o método encontra um usuário ==> deleta esse usuário', async () => {
-        const user = {
+        const usuario = {
           id: 3,
           name: 'jorge',
           password: 'abcd',
@@ -456,13 +456,13 @@ describe('noReturn', () => {
         };
 
         jest.spyOn(User,'findByPk').mockImplementation(() => {
-          return user;
+          return usuario;
         });
-        var spyUserSendoDeletado = jest.spyOn(user,'delete');
+        var userDeleteSpy = jest.spyOn(usuario,'delete');
           
-        await Service.noReturn(user.id);
+        await Service.noReturn(usuario.id);
     
-        expect(spyUserSendoDeletado).toHaveBeenCalledTimes(1);
+        expect(userDeleteSpy).toHaveBeenCalledTimes(1);
       });
 });
 
@@ -477,76 +477,76 @@ describe('getNameById', () => {
     describe('um id de um usuário é passado como parâmetro ==> retorna strings diferentes dependendo da primeira letra da string', () => {
         test.each([
             {
-                user:{
+                usuario:{
                     id: 1,
                     name: 'joao'
                 }, 
-                valorEsperado:"O nome do usuário começa com consoante (joao)"
+                retornoEsperado:"O nome do usuário começa com consoante (joao)"
             },
             {
-                user:{
+                usuario:{
                     id: 2,
                     name: 'gabi'
                 }, 
-                valorEsperado:"O nome do usuário começa com consoante (gabi)"
+                retornoEsperado:"O nome do usuário começa com consoante (gabi)"
             },
             {
-                user:{
+                usuario:{
                     id: 3,
                     name: 'gabriel'
                 }, 
-                valorEsperado:"O nome do usuário começa com consoante (gabriel)"
+                retornoEsperado:"O nome do usuário começa com consoante (gabriel)"
             },
             {
-                user:{
+                usuario:{
                     id: 4,
                     name: 'iuri'
                 }, 
-                valorEsperado:"O nome do usuário começa com vogal (iuri)"
+                retornoEsperado:"O nome do usuário começa com vogal (iuri)"
             },
             {
-                user:{
+                usuario:{
                     id: 5,
                     name: 'amanda'
                 }, 
-                valorEsperado:"O nome do usuário começa com vogal (amanda)"
+                retornoEsperado:"O nome do usuário começa com vogal (amanda)"
             },
         ])
-        ('%j', ({user, valorEsperado}) => {
-            jest.spyOn(User,'findByPk').mockReturnValue(user);
+        ('%j', ({usuario, retornoEsperado}) => {
+            jest.spyOn(User,'findByPk').mockReturnValue(usuario);
 
-            return expect(Service.getNameById(user.id)).resolves.toEqual(valorEsperado);
+            return expect(Service.getNameById(usuario.id)).resolves.toEqual(retornoEsperado);
         });
     });
 
     describe('um id é passado como parâmetro ==> busca o usuário com este id', () => {
         test.each([
             {
-                user:{
+                usuario:{
                     id: 2644,
                     name: "picollo"
                 }
             },
             {
-                user:{
+                usuario:{
                     id: 1,
                     name: "babidi"
                 }
             },
             {
-                user:{
+                usuario:{
                     id: 658896,
                     name: "bulma"
                 }
             }
         ])
-        ('%j', async ({user}) => {
-            var spyFindByPk = jest.spyOn(User,'findByPk').mockReturnValue(user);
+        ('%j', async ({usuario}) => {
+            var userFindByPkSpy = jest.spyOn(User,'findByPk').mockReturnValue(usuario);
 
-            await Service.getNameById(user.id);
+            await Service.getNameById(usuario.id);
             
-            expect(spyFindByPk.mock.calls[0][0]).toBe(user.id);
-            expect(spyFindByPk).toHaveBeenCalledTimes(1);
+            expect(userFindByPkSpy.mock.calls[0][0]).toBe(usuario.id);
+            expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
         });
     });
   

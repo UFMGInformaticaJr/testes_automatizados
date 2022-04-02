@@ -515,7 +515,7 @@ describe('getNameById', () => {
         ('%j', ({user, valorEsperado}) => {
             jest.spyOn(User,'findByPk').mockReturnValue(user);
 
-            expect(Service.getNameById(user.id)).resolves.toEqual(valorEsperado);
+            return expect(Service.getNameById(user.id)).resolves.toEqual(valorEsperado);
         });
     });
 

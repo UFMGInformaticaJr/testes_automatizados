@@ -53,7 +53,7 @@ describe('getUserById', () => {
           return user;
           }
         );
-        expect(userService.getUserById(1)).resolves.toStrictEqual(valorEsperado);
+        return expect(userService.getUserById(1)).resolves.toStrictEqual(valorEsperado);
     });
   });
   
@@ -212,6 +212,7 @@ describe('getCurrentUser', () => {
     'Quando o método recebe o id de um usuário ==> busca o usuário com o id informado',
     async () => {
         const userId = 1;
+
         var spyUserEncontrado = jest.spyOn(User,'findByPk');
 
         await userService.getCurrentUser(userId);
@@ -248,7 +249,7 @@ describe('getCurrentUser', () => {
 
       var retorno = await userService.getCurrentUser(idUsuario);
       
-      return expect(retorno).toStrictEqual(usuarioEsperado);
+      expect(retorno).toStrictEqual(usuarioEsperado);
     }
   );
 
@@ -257,7 +258,7 @@ describe('getCurrentUser', () => {
     
     jest.spyOn(User,'findByPk').mockReturnValue(undefined);
 
-    expect(async () => {
+    return expect(async () => {
       await userService.getCurrentUser(id);
     }).rejects.toThrow(NotFoundError);
   });
@@ -383,7 +384,7 @@ describe('deleteUser', () => {
 
     jest.spyOn(UserModel,'findByPk').mockReturnValue(undefined);
 
-    expect(async () => {
+    return expect(async () => {
       await UserService.deleteUser(id);
     }).rejects.toThrow(NotFoundError);
   });
@@ -396,7 +397,7 @@ describe('deleteUser', () => {
       id: id
     });
 
-    expect(async () => {
+    return expect(async () => {
       await UserService.deleteUser(id, reqUserId);
     }).rejects.toThrow(NotAuthorizedError);
   });

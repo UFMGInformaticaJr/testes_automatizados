@@ -33,7 +33,7 @@ describe('senhaFraca', () => {
         ])
         ('%j', ({user, valorEsperado}) => {
             jest.spyOn(User,'findByPk').mockReturnValue(user);
-            expect(SenhaService.senhaFraca(1)).resolves.toBe(valorEsperado);
+            return expect(SenhaService.senhaFraca(1)).resolves.toBe(valorEsperado);
         });
     });
 
@@ -42,7 +42,7 @@ describe('senhaFraca', () => {
         
         jest.spyOn(User,'findByPk').mockReturnValue(undefined);
 
-        expect(async () => {
+        return expect(async () => {
           await SenhaService.senhaFraca(id);
         }).rejects.toThrow(NotFoundError);
     });
@@ -62,7 +62,7 @@ describe('senhaFraca', () => {
                 numero: () => {}
             },
         ])('%j', ({numero}) => {
-            expect(async () => {
+            return expect(async () => {
                 await SenhaService.senhaFraca(numero);
             }).rejects.toThrow(TypeError);
         });

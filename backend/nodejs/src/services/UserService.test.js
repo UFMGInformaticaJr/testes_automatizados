@@ -11,7 +11,7 @@ describe('getUserById', () => {
   });
 
   test(
-    'Quando o método recebe o id de um usuário ==> busca o usuário com o id informado',
+    'o método recebe o id de um usuário ==> busca o usuário com o id informado',
     async () => {
         const idUsuario = 1;
 
@@ -24,10 +24,11 @@ describe('getUserById', () => {
         await userService.getUserById(idUsuario);
 
         expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
+        expect(userFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
     }
 );
 
-  describe('Quando um id de um usuário é passado como parâmetro ==> retorna os dados não sensíveis do usuario', () => {
+  describe('o id de um usuário é passado como parâmetro ==> retorna os dados não sensíveis do usuario', () => {
     test.each([
         { 
           usuario:{name: 'jorge',password: 'abcd'}, 
@@ -61,7 +62,7 @@ describe('getUserById', () => {
     });
   });
   
-  test('Quando um usuário não é encontrado ==> lança exceção', async () => {
+  test('o usuário não é encontrado ==> lança exceção', async () => {
     const id = 1;
     
     jest.spyOn(User,'findByPk').mockReturnValue(undefined);
@@ -81,7 +82,7 @@ describe('updateUser', () => {
     jest.clearAllMocks();
   });
 
-  test('Quando um usuário não é encontrado ==> lança exceção', async () => {
+  test('o usuário não é encontrado ==> lança exceção', async () => {
     const id = 1,
     reqUserId = 2,
     reqUserRole = 'admin', 
@@ -96,7 +97,7 @@ describe('updateUser', () => {
     }).rejects.toThrow(NotFoundError);
   });
 
-  test('Quando um usuário não é admin porém quer mudar seu próprio role ==> lança exceção', async () => {
+  test('o usuário não é admin porém quer mudar seu próprio role ==> lança exceção', async () => {
     const id = 1, 
     reqUserId = 1,
     reqUserRole = 'user', 
@@ -116,7 +117,7 @@ describe('updateUser', () => {
     }).rejects.toThrow(NotAuthorizedError);
   });
 
-  test('Quando um usuário não é admin porém quer atualizar outro usuário ==> lança exceção', async () => {
+  test('o usuário não é admin porém quer atualizar outro usuário ==> lança exceção', async () => {
     const id = 1,
     reqUserId = 2,
     reqUserRole = 'user', 
@@ -136,7 +137,7 @@ describe('updateUser', () => {
     }).rejects.toThrow(NotAuthorizedError);
   });
 
-  test('Quando um usuário é admin ==> pode alterar outro usuario', async () => {
+  test('o usuário é admin ==> pode alterar outro usuario', async () => {
     var usuario = {
       id: 3,
       name: 'jorge',
@@ -162,7 +163,7 @@ describe('updateUser', () => {
     expect(usuario).toEqual(userEsperado);
   });
 
-  test('Quando um usuário é user ==> pode alterar a si mesmo', async () => {
+  test('o usuário é user ==> pode alterar a si mesmo', async () => {
     var usuario = {
       id: 3,
       name: 'jorge',
@@ -188,7 +189,7 @@ describe('updateUser', () => {
     expect(usuario).toEqual(usuarioEsperado);
   });
 
-  test('Quando um usuário é admin ==> pode alterar a si mesmo', async () => {
+  test('o usuário é admin ==> pode alterar a si mesmo', async () => {
     var usuario = {
       id: 3,
       name: 'jorge',
@@ -224,7 +225,7 @@ describe('getCurrentUser', () => {
   });
 
   test(
-    'Quando o método recebe o id de um usuário ==> busca o usuário com o id informado',
+    'o método recebe o id de um usuário ==> busca o usuário com o id informado',
     async () => {
         const idUsuario = 1;
 
@@ -243,7 +244,7 @@ describe('getCurrentUser', () => {
     }
 );
 
-  test('Quando um usuário é encontrado ==> retorna ele', async () => {
+  test('o usuário é encontrado ==> retorna ele', async () => {
       var idUsuario = 367;
       var usuario = {
         id: idUsuario,
@@ -265,7 +266,7 @@ describe('getCurrentUser', () => {
     }
   );
 
-  test('Quando um usuário não é encontrado ==> lança exceção', async () => {
+  test('o usuário não é encontrado ==> lança exceção', async () => {
     var id = 3425;
     
     jest.spyOn(User,'findByPk').mockReturnValue(undefined);
@@ -281,7 +282,7 @@ describe('createUser', () => {
   const userService = require('./UserService');
   const bcrypt = require('bcrypt');
 
-  test('Quando os dados de usuário são passados como entrada ==> criptografa a senha', async () => { 
+  test('os dados de usuário são passados como entrada ==> criptografa a senha', async () => { 
     const dadosUsuario = {
       id:20,
       name: "aureliano",
@@ -299,7 +300,7 @@ describe('createUser', () => {
     expect(primeiraChamadaBcrypt).toEqual(expect.arrayContaining([dadosUsuario.password, saltRounds]));
   });
 
-  test('Quando a senha é criptografada ==> atualiza senha do usuário a ser criado', async () => {
+  test('a senha é criptografada ==> atualiza senha do usuário a ser criado', async () => {
     const senhaCriptografada = "senha criptografada";
     const dadosUsuario = {
       id:20,
@@ -320,7 +321,7 @@ describe('createUser', () => {
     expect(dadosUsuarioDaChamada).toEqual(dadosUsuario);
   });
 
-  test('Quando os dados de usuário são passados como entrada ==> cria este usuário no banco de dados', async () => {
+  test('os dados de usuário são passados como entrada ==> cria este usuário no banco de dados', async () => {
     const dadosUsuario = {
       id:20,
       name: "aureliano",
@@ -370,7 +371,7 @@ describe('getAllUsers', () => {
       ];
 
       jest.spyOn(User,'findAll').mockReturnValue(usuarios);
-      
+
       return expect(UserService.getAllUsers()).resolves.toEqual(expect.arrayContaining(usuarios));
     }
   );

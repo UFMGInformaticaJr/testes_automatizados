@@ -369,7 +369,7 @@ describe ('updateClassificacaoEtariaById', () => {
         async () => {
             const idUsuario = 1;
 
-            var spyUserEncontrado = jest.spyOn(User,'findByPk').mockReturnValue({
+            var userFindByPkSpy = jest.spyOn(User,'findByPk').mockReturnValue({
                 id: idUsuario,
                 age: 12,
                 update: () => {}
@@ -377,7 +377,8 @@ describe ('updateClassificacaoEtariaById', () => {
 
             await service.updateClassificacaoEtariaById(idUsuario);
 
-            expect(spyUserEncontrado).toHaveBeenCalledTimes(1);
+            expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
+            expect(userFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
         }
     );
 
@@ -448,11 +449,12 @@ describe('noReturn', () => {
             await Service.noReturn(idUsuario);
 
             expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
+            expect(userFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
         }
     );
 
     test('o método encontra um usuário ==> deleta esse usuário', async () => {
-        const usuario = {
+        const user = {
           id: 3,
           name: 'jorge',
           password: 'abcd',
@@ -462,11 +464,11 @@ describe('noReturn', () => {
         };
 
         jest.spyOn(User,'findByPk').mockImplementation(() => {
-          return usuario;
+          return user;
         });
-        var userDeleteSpy = jest.spyOn(usuario,'delete');
+        var userDeleteSpy = jest.spyOn(user,'delete');
           
-        await Service.noReturn(usuario.id);
+        await Service.noReturn(user.id);
     
         expect(userDeleteSpy).toHaveBeenCalledTimes(1);
       });

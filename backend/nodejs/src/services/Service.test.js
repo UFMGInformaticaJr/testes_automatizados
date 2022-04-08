@@ -466,7 +466,9 @@ describe('noReturn', () => {
         jest.spyOn(User,'findByPk').mockImplementation(() => {
           return user;
         });
-        var userDeleteSpy = jest.spyOn(user,'delete');
+        var userDeleteSpy = jest.spyOn(user,'delete').mockImplementation(
+            () => {}
+        );
           
         await Service.noReturn(user.id);
     

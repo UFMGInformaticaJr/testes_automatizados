@@ -1,10 +1,8 @@
 const {NotFoundError, NotAuthorizedError} = require('../errors');
-const { password } = require('../models/User');
+const userModel = require('../models/User');
+const userService = require('./UserService');
 
 describe('getUserById', () => {
-  const User = require('../models/User');
-  const userService = require('./UserService');
-
   beforeEach(() => {
       jest.restoreAllMocks();
       jest.clearAllMocks();
@@ -15,7 +13,7 @@ describe('getUserById', () => {
     async () => {
         const idUsuario = 1;
 
-        var userFindByPkSpy = jest.spyOn(User,'findByPk').mockImplementation(
+        var userFindByPkSpy = jest.spyOn(userModel,'findByPk').mockImplementation(
           () => {
             return {id: idUsuario}
           }
@@ -53,7 +51,7 @@ describe('getUserById', () => {
       ])
     ('%j', ({usuario, retornoEsperado}) => {
     
-        jest.spyOn(User,'findByPk').mockImplementation( () => {
+        jest.spyOn(userModel,'findByPk').mockImplementation( () => {
           delete usuario["password"];  
           return usuario;
           }
@@ -65,7 +63,7 @@ describe('getUserById', () => {
   test('o usuário não é encontrado ==> lança exceção', async () => {
     const id = 1;
     
-    jest.spyOn(User,'findByPk').mockReturnValue(undefined);
+    jest.spyOn(userModel,'findByPk').mockReturnValue(undefined);
 
     return expect(async () => {
       await userService.getUserById(id);
@@ -74,8 +72,6 @@ describe('getUserById', () => {
 });
 
 describe('updateUser', () => {
-  const User = require('../models/User');
-  const userService = require('./UserService');
 
   beforeEach(() => {
     jest.restoreAllMocks();
@@ -90,7 +86,7 @@ describe('updateUser', () => {
       name: 'julio'
     }
     
-    jest.spyOn(User,'findByPk').mockReturnValue(undefined);
+    jest.spyOn(userModel,'findByPk').mockReturnValue(undefined);
 
     return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
@@ -105,7 +101,7 @@ describe('updateUser', () => {
       role: 'admin'
     }
 
-    jest.spyOn(User,'findByPk').mockImplementation(
+    jest.spyOn(userModel,'findByPk').mockImplementation(
       () => {return {
         id: reqUserId,
         role: reqUserRole
@@ -125,7 +121,7 @@ describe('updateUser', () => {
       role: 'admin'
     }
 
-    jest.spyOn(User,'findByPk').mockImplementation(
+    jest.spyOn(userModel,'findByPk').mockImplementation(
       () => {return {
         id: reqUserId,
         role: reqUserRole
@@ -156,7 +152,7 @@ describe('updateUser', () => {
     };
     userEsperado.name = nomeEsperado;
 
-    jest.spyOn(User,'findByPk').mockReturnValue(usuario);
+    jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
     
     await userService.updateUser(id, reqUserId, reqUserRole, body);
 
@@ -182,7 +178,7 @@ describe('updateUser', () => {
     };
     usuarioEsperado.name = nomeEsperado;
 
-    jest.spyOn(User,'findByPk').mockReturnValue(usuario);
+    jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
     
     await userService.updateUser(id, reqUserId, reqUserRole, body);
 
@@ -207,7 +203,7 @@ describe('updateUser', () => {
     };
     userEsperado.name = nomeEsperado;
 
-    jest.spyOn(User,'findByPk').mockReturnValue(usuario);
+    jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
     
     await userService.updateUser(id, reqUserId, reqUserRole, body);
 
@@ -216,9 +212,6 @@ describe('updateUser', () => {
 });
 
 describe('getCurrentUser', () => {
-  const User = require('../models/User');
-  const userService = require('./UserService');
-
   beforeEach(() => {
     jest.restoreAllMocks();
     jest.clearAllMocks();
@@ -229,7 +222,7 @@ describe('getCurrentUser', () => {
     async () => {
         const idUsuario = 1;
 
-        var userFindByPkSpy = jest.spyOn(User,'findByPk').mockImplementation(
+        var userFindByPkSpy = jest.spyOn(userModel,'findByPk').mockImplementation(
           () => {
             return {
               id: idUsuario
@@ -254,7 +247,7 @@ describe('getCurrentUser', () => {
         id: idUsuario
       };
 
-      jest.spyOn(User,'findByPk').mockImplementation(() => {
+      jest.spyOn(userModel,'findByPk').mockImplementation(() => {
         delete usuario["password"];  
         return usuario
         }
@@ -269,7 +262,7 @@ describe('getCurrentUser', () => {
   test('o usuário não é encontrado ==> lança exceção', async () => {
     var id = 3425;
     
-    jest.spyOn(User,'findByPk').mockReturnValue(undefined);
+    jest.spyOn(userModel,'findByPk').mockReturnValue(undefined);
 
     return expect(async () => {
       await userService.getCurrentUser(id);
@@ -278,8 +271,6 @@ describe('getCurrentUser', () => {
 });
 
 describe('createUser', () => {
-  const User = require('../models/User');
-  const userService = require('./UserService');
   const bcrypt = require('bcrypt');
 
   test('os dados de usuário são passados como entrada ==> criptografa a senha', async () => { 
@@ -309,7 +300,7 @@ describe('createUser', () => {
     }
     dadosUsuario.password = senhaCriptografada;
 
-    const userCriaNovaInstanciaSpy = jest.spyOn(User, 'criaNovaInstancia').mockImplementation(
+    const userCriaNovaInstanciaSpy = jest.spyOn(userModel, 'criaNovaInstancia').mockImplementation(
       () => {return {create: () => {}}}
     );
 
@@ -332,7 +323,7 @@ describe('createUser', () => {
       create: () => {}
     };
 
-    jest.spyOn(User, 'criaNovaInstancia').mockReturnValue(novoUsuario);
+    jest.spyOn(userModel, 'criaNovaInstancia').mockReturnValue(novoUsuario);
     const novoUsuarioCreateSpy = jest.spyOn(novoUsuario, 'create').mockImplementation(
       () => {}
     );
@@ -344,16 +335,13 @@ describe('createUser', () => {
 });
 
 describe('getAllUsers', () => {
-  const User = require('../models/User');
-  const UserService = require('./UserService');
-
   test('o método é executado ==> busca todos os usuários',
     async () => {
-      var userFindAllSpy = jest.spyOn(User,'findAll').mockImplementation(
+      var userFindAllSpy = jest.spyOn(userModel,'findAll').mockImplementation(
         () => {return []}
       );
       
-      await UserService.getAllUsers();
+      await userService.getAllUsers();
 
       expect(userFindAllSpy).toHaveBeenCalledTimes(1);
     }
@@ -370,17 +358,14 @@ describe('getAllUsers', () => {
         }  
       ];
 
-      jest.spyOn(User,'findAll').mockReturnValue(usuarios);
+      jest.spyOn(userModel,'findAll').mockReturnValue(usuarios);
 
-      return expect(UserService.getAllUsers()).resolves.toEqual(expect.arrayContaining(usuarios));
+      return expect(userService.getAllUsers()).resolves.toEqual(expect.arrayContaining(usuarios));
     }
   );
 });
 
 describe('deleteUser', () => {
-  const UserModel = require('../models/User');
-
-  const UserService = require('./UserService');
   test('o método recebe o id de um usuário ==> deleta esse usuário', async () => {
     const usuario = {
       id: 3,
@@ -390,14 +375,14 @@ describe('deleteUser', () => {
       id: 2
     };
 
-    jest.spyOn(UserModel,'findByPk').mockImplementation(() => {
+    jest.spyOn(userModel,'findByPk').mockImplementation(() => {
       return usuario;
     });
     var usuarioDeleteSpy = jest.spyOn(usuario, 'delete').mockImplementation(
       () => {}
     );
       
-    await UserService.deleteUser(usuario.id, usuarioDeletandoUser.id);
+    await userService.deleteUser(usuario.id, usuarioDeletandoUser.id);
 
     expect(usuarioDeleteSpy).toHaveBeenCalledTimes(1);
   });
@@ -405,10 +390,10 @@ describe('deleteUser', () => {
   test('um usuário não é encontrado ==> lança exceção', async () => {
     const id = 1;
 
-    jest.spyOn(UserModel,'findByPk').mockReturnValue(undefined);
+    jest.spyOn(userModel,'findByPk').mockReturnValue(undefined);
 
     return expect(async () => {
-      await UserService.deleteUser(id);
+      await userService.deleteUser(id);
     }).rejects.toThrow(NotFoundError);
   });
 
@@ -416,12 +401,12 @@ describe('deleteUser', () => {
     const id = 1;
     const reqUserId = 1;
 
-    jest.spyOn(UserModel,'findByPk').mockReturnValue({
+    jest.spyOn(userModel,'findByPk').mockReturnValue({
       id: id
     });
 
     return expect(async () => {
-      await UserService.deleteUser(id, reqUserId);
+      await userService.deleteUser(id, reqUserId);
     }).rejects.toThrow(NotAuthorizedError);
   });
 

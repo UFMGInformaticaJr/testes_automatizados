@@ -1,6 +1,6 @@
+const {requestFilter} = require('./object-filter');
+
 describe('object-filter', () => {
-  const {requestFilter} = require('./object-filter');
-  
   describe('object-filter recebe o body de uma requisição ==> body é filtrado', () => {
     test.each([
       {

@@ -1,13 +1,14 @@
+const errorHandler = require('./error-handler');
+const {
+  NotAuthorizedError,
+  AccessDeniedError,
+  InternalError,
+  InvalidParamsError,
+  MediaTypeError,
+  NotFoundError,
+} = require('../errors');
+
 describe('error-handler', () => {
-  const errorHandler = require('./error-handler');
-  const {
-    NotAuthorizedError,
-    AccessDeniedError,
-    InternalError,
-    InvalidParamsError,
-    MediaTypeError,
-    NotFoundError,
-  } = require('../errors');
   describe('erro é recebido ==> lança um código e mensagem como resposta', () => {
     test.each([
       {

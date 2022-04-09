@@ -1,8 +1,9 @@
 const {NotFoundError, NotAuthorizedError} = require('../errors');
 
-describe('ASobreB', () => {
-    const service = require('./Service');
+const service = require('./Service');
+const userModel = require('../models/User');
 
+describe('ASobreB', () => {
     describe('2 números inteiros são passados como parâmetro ==> retorna a divisão de um pelo outro', () => {
         test.each([
             {numerador: 6,                       denominador: 3,                       retornoEsperado: 2},
@@ -76,8 +77,6 @@ describe('ASobreB', () => {
 });
 
 describe('raizQuadrada', () => {
-    const service = require('./Service');
-
     describe('um número é passado como parâmetro ==> retorna a raiz quadrada do número', () => {
         test.each([
             {numero: 9                      , retornoEsperado: 3                 },
@@ -118,8 +117,6 @@ describe('raizQuadrada', () => {
 });
 
 describe('vogais', () => {
-    const service = require('./Service');
-
     describe('uma string é passada por parâmetro ==> retorna, em minúsculo, as vogais dessa string', () => {
         test.each([
             {entrada: "aabaaea"      , retornoEsperado: ['a','a','a','a','e','a']},
@@ -143,8 +140,6 @@ describe('vogais', () => {
 });
 
 describe ('idsComMesmoNome', () => {
-    const User = require('../models/User');
-    const service = require('./Service');
     beforeEach(() => {
         jest.restoreAllMocks();
         jest.clearAllMocks();
@@ -153,13 +148,13 @@ describe ('idsComMesmoNome', () => {
     test(
         'o método é executado ==> busca todos os usuários',
         async () => {
-            var userFindAllSpy = jest.spyOn(User,'findAll').mockImplementation(
+            var userModelFindAllSpy = jest.spyOn(userModel,'findAll').mockImplementation(
                 () => []
             );
             
             await service.idsComMesmoNome();
 
-            expect(userFindAllSpy).toHaveBeenCalledTimes(1);
+            expect(userModelFindAllSpy).toHaveBeenCalledTimes(1);
         }   
     );
     
@@ -202,7 +197,7 @@ describe ('idsComMesmoNome', () => {
             }
         ])
         ('%j', ({usuarios, retornoEsperado}) => {
-            jest.spyOn(User,'findAll').mockReturnValue(usuarios);
+            jest.spyOn(userModel,'findAll').mockReturnValue(usuarios);
 
             return expect(service.idsComMesmoNome()).resolves.toEqual(expect.arrayContaining(retornoEsperado));
         });
@@ -210,8 +205,6 @@ describe ('idsComMesmoNome', () => {
 });
 
 describe('usersComSenhaFraca', () => {
-    const service = require('./Service');
-    const User = require('../models/User');
     const SenhaService = require('./SenhaService');
     
     beforeEach(() => {
@@ -222,13 +215,13 @@ describe('usersComSenhaFraca', () => {
     test(
         'o método é executado ==> busca todos os usuários no banco de dados',
         async () => {
-            var userFindAllSpy = jest.spyOn(User,'findAll').mockImplementation(
+            var userModelFindAllSpy = jest.spyOn(userModel,'findAll').mockImplementation(
                 () => []
             );
             
             await service.usersComSenhaFraca();
 
-            expect(userFindAllSpy).toHaveBeenCalledTimes(1);
+            expect(userModelFindAllSpy).toHaveBeenCalledTimes(1);
         }   
     );
 
@@ -256,7 +249,7 @@ describe('usersComSenhaFraca', () => {
         ])(
             '%j',
             async ({usuarios}) => {
-                jest.spyOn(User,'findAll').mockReturnValue(usuarios);
+                jest.spyOn(userModel,'findAll').mockReturnValue(usuarios);
                 var senhaServiceSenhaFracaSpy = jest.spyOn(SenhaService,'senhaFraca').mockImplementation(
                     () => true
                 );
@@ -287,7 +280,7 @@ describe('usersComSenhaFraca', () => {
         ])(
             '%j',
             async ({usuariosComSenhaFraca}) => {
-                jest.spyOn(User,'findAll').mockReturnValue(usuariosComSenhaFraca);
+                jest.spyOn(userModel,'findAll').mockReturnValue(usuariosComSenhaFraca);
                 jest.spyOn(SenhaService,'senhaFraca').mockImplementation(
                     () => true
                 );
@@ -344,7 +337,7 @@ describe('usersComSenhaFraca', () => {
         ])(
             '%j',
             async ({usuarios,usuariosEsperados}) => {
-                jest.spyOn(User,'findAll').mockReturnValue(usuarios);
+                jest.spyOn(userModel,'findAll').mockReturnValue(usuarios);
                 jest.spyOn(SenhaService,'senhaFraca').mockReturnValue(() => usuarios.password.length < 8);
                 
                 var retorno = await service.usersComSenhaFraca();
@@ -356,9 +349,6 @@ describe('usersComSenhaFraca', () => {
 });
 
 describe ('updateClassificacaoEtariaById', () => {
-    const User = require('../models/User');
-    const service = require('./Service');
-
     beforeEach(() => {
         jest.restoreAllMocks();
         jest.clearAllMocks();
@@ -369,7 +359,7 @@ describe ('updateClassificacaoEtariaById', () => {
         async () => {
             const idUsuario = 1;
 
-            var userFindByPkSpy = jest.spyOn(User,'findByPk').mockReturnValue({
+            var userModelFindByPkSpy = jest.spyOn(userModel,'findByPk').mockReturnValue({
                 id: idUsuario,
                 age: 12,
                 update: () => {}
@@ -377,15 +367,15 @@ describe ('updateClassificacaoEtariaById', () => {
 
             await service.updateClassificacaoEtariaById(idUsuario);
 
-            expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
-            expect(userFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
+            expect(userModelFindByPkSpy).toHaveBeenCalledTimes(1);
+            expect(userModelFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
         }
     );
 
     test('um usuário não é encontrado ==> lança exceção', async () => {
         var id = 3425;
 
-        jest.spyOn(User,'findByPk').mockReturnValue(undefined);
+        jest.spyOn(userModel,'findByPk').mockReturnValue(undefined);
 
         return expect(async () => {
           await service.updateClassificacaoEtariaById(id);
@@ -419,7 +409,7 @@ describe ('updateClassificacaoEtariaById', () => {
                 };
                 userEsperado.classificacao_etaria = classificacao_etaria_esperada;
 
-                jest.spyOn(User,'findByPk').mockReturnValue(user);
+                jest.spyOn(userModel,'findByPk').mockReturnValue(user);
 
                 var retorno = await service.updateClassificacaoEtariaById(user.id);
                 
@@ -431,8 +421,6 @@ describe ('updateClassificacaoEtariaById', () => {
 }); 
 
 describe('noReturn', () => {
-    const User = require('../models/User');
-    const Service = require('./Service');
     beforeEach(() => {
         jest.restoreAllMocks();
         jest.clearAllMocks();
@@ -442,14 +430,14 @@ describe('noReturn', () => {
         async () => {
             const idUsuario = 1;
 
-            var userFindByPkSpy = jest.spyOn(User,'findByPk').mockImplementation(
+            var userModelFindByPkSpy = jest.spyOn(userModel,'findByPk').mockImplementation(
                 () => {return {delete: () => {}}}
             );
 
-            await Service.noReturn(idUsuario);
+            await service.noReturn(idUsuario);
 
-            expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
-            expect(userFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
+            expect(userModelFindByPkSpy).toHaveBeenCalledTimes(1);
+            expect(userModelFindByPkSpy.mock.calls[0][0]).toBe(idUsuario);
         }
     );
 
@@ -463,22 +451,20 @@ describe('noReturn', () => {
           delete: () => {}
         };
 
-        jest.spyOn(User,'findByPk').mockImplementation(() => {
+        jest.spyOn(userModel,'findByPk').mockImplementation(() => {
           return user;
         });
         var userDeleteSpy = jest.spyOn(user,'delete').mockImplementation(
             () => {}
         );
           
-        await Service.noReturn(user.id);
+        await service.noReturn(user.id);
     
         expect(userDeleteSpy).toHaveBeenCalledTimes(1);
       });
 });
 
 describe('getNameById', () => {
-    const User = require('../models/User');
-    const Service = require('./Service');
     beforeEach(() => {
         jest.restoreAllMocks();
         jest.clearAllMocks();
@@ -508,9 +494,9 @@ describe('getNameById', () => {
             },
         ])
         ('%j', ({usuario, retornoEsperado}) => {
-            jest.spyOn(User,'findByPk').mockReturnValue(usuario);
+            jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
 
-            return expect(Service.getNameById(usuario.id)).resolves.toEqual(retornoEsperado);
+            return expect(service.getNameById(usuario.id)).resolves.toEqual(retornoEsperado);
         });
     });
 
@@ -527,12 +513,12 @@ describe('getNameById', () => {
             }
         ])
         ('%j', async ({usuario}) => {
-            var userFindByPkSpy = jest.spyOn(User,'findByPk').mockReturnValue(usuario);
+            var userModelFindByPkSpy = jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
 
-            await Service.getNameById(usuario.id);
+            await service.getNameById(usuario.id);
             
-            expect(userFindByPkSpy.mock.calls[0][0]).toBe(usuario.id);
-            expect(userFindByPkSpy).toHaveBeenCalledTimes(1);
+            expect(userModelFindByPkSpy.mock.calls[0][0]).toBe(usuario.id);
+            expect(userModelFindByPkSpy).toHaveBeenCalledTimes(1);
         });
     });
   

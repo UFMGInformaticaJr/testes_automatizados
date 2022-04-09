@@ -1,8 +1,8 @@
 const {NotFoundError} = require('../errors');
+const userModel = require('../models/User');
+const senhaService = require('./SenhaService');
 
 describe('senhaFraca', () => {
-    const User = require('../models/User');
-    const SenhaService = require('./SenhaService');
     beforeEach(() => {
         jest.restoreAllMocks();
         jest.clearAllMocks();
@@ -32,18 +32,18 @@ describe('senhaFraca', () => {
             },
         ])
         ('%j', ({usuario, retornoEsperado}) => {
-            jest.spyOn(User,'findByPk').mockReturnValue(usuario);
-            return expect(SenhaService.senhaFraca(1)).resolves.toBe(retornoEsperado);
+            jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
+            return expect(senhaService.senhaFraca(1)).resolves.toBe(retornoEsperado);
         });
     });
 
     test('um usuário não é encontrado ==> lança exceção', async () => {
         const id = 1;
         
-        jest.spyOn(User,'findByPk').mockReturnValue(undefined);
+        jest.spyOn(userModel,'findByPk').mockReturnValue(undefined);
 
         return expect(async () => {
-          await SenhaService.senhaFraca(id);
+          await senhaService.senhaFraca(id);
         }).rejects.toThrow(NotFoundError);
     });
 
@@ -63,7 +63,7 @@ describe('senhaFraca', () => {
             },
         ])('%j', ({numero}) => {
             return expect(async () => {
-                await SenhaService.senhaFraca(numero);
+                await senhaService.senhaFraca(numero);
             }).rejects.toThrow(TypeError);
         });
     });  

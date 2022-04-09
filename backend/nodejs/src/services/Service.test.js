@@ -1,7 +1,8 @@
-const {NotFoundError, NotAuthorizedError} = require('../errors');
+const {NotFoundError} = require('../errors');
 
 const service = require('./Service');
 const userModel = require('../models/User');
+const senhaService = require('./SenhaService');
 
 describe('ASobreB', () => {
     describe('2 números inteiros são passados como parâmetro ==> retorna a divisão de um pelo outro', () => {
@@ -148,7 +149,7 @@ describe ('idsComMesmoNome', () => {
     test(
         'o método é executado ==> busca todos os usuários',
         async () => {
-            var userModelFindAllSpy = jest.spyOn(userModel,'findAll').mockImplementation(
+            const userModelFindAllSpy = jest.spyOn(userModel,'findAll').mockImplementation(
                 () => []
             );
             
@@ -205,8 +206,6 @@ describe ('idsComMesmoNome', () => {
 });
 
 describe('usersComSenhaFraca', () => {
-    const SenhaService = require('./SenhaService');
-    
     beforeEach(() => {
         jest.restoreAllMocks();
         jest.clearAllMocks();
@@ -215,7 +214,7 @@ describe('usersComSenhaFraca', () => {
     test(
         'o método é executado ==> busca todos os usuários no banco de dados',
         async () => {
-            var userModelFindAllSpy = jest.spyOn(userModel,'findAll').mockImplementation(
+            const userModelFindAllSpy = jest.spyOn(userModel,'findAll').mockImplementation(
                 () => []
             );
             
@@ -250,7 +249,7 @@ describe('usersComSenhaFraca', () => {
             '%j',
             async ({usuarios}) => {
                 jest.spyOn(userModel,'findAll').mockReturnValue(usuarios);
-                var senhaServiceSenhaFracaSpy = jest.spyOn(SenhaService,'senhaFraca').mockImplementation(
+                const senhaServiceSenhaFracaSpy = jest.spyOn(senhaService,'senhaFraca').mockImplementation(
                     () => true
                 );
 
@@ -281,11 +280,11 @@ describe('usersComSenhaFraca', () => {
             '%j',
             async ({usuariosComSenhaFraca}) => {
                 jest.spyOn(userModel,'findAll').mockReturnValue(usuariosComSenhaFraca);
-                jest.spyOn(SenhaService,'senhaFraca').mockImplementation(
+                jest.spyOn(senhaService,'senhaFraca').mockImplementation(
                     () => true
                 );
 
-                var retorno = await service.usersComSenhaFraca();
+                const retorno = await service.usersComSenhaFraca();
 
                 expect(retorno).toEqual(expect.arrayContaining(usuariosComSenhaFraca));
                 expect(retorno.length).toBe(usuariosComSenhaFraca.length);
@@ -338,9 +337,9 @@ describe('usersComSenhaFraca', () => {
             '%j',
             async ({usuarios,usuariosEsperados}) => {
                 jest.spyOn(userModel,'findAll').mockReturnValue(usuarios);
-                jest.spyOn(SenhaService,'senhaFraca').mockReturnValue(() => usuarios.password.length < 8);
+                jest.spyOn(senhaService,'senhaFraca').mockReturnValue(() => usuarios.password.length < 8);
                 
-                var retorno = await service.usersComSenhaFraca();
+                const retorno = await service.usersComSenhaFraca();
 
                 expect(retorno).toEqual(expect.arrayContaining(usuariosEsperados));
             }
@@ -359,7 +358,7 @@ describe ('updateClassificacaoEtariaById', () => {
         async () => {
             const idUsuario = 1;
 
-            var userModelFindByPkSpy = jest.spyOn(userModel,'findByPk').mockReturnValue({
+            const userModelFindByPkSpy = jest.spyOn(userModel,'findByPk').mockReturnValue({
                 id: idUsuario,
                 age: 12,
                 update: () => {}
@@ -373,7 +372,7 @@ describe ('updateClassificacaoEtariaById', () => {
     );
 
     test('um usuário não é encontrado ==> lança exceção', async () => {
-        var id = 3425;
+        const id = 3425;
 
         jest.spyOn(userModel,'findByPk').mockReturnValue(undefined);
 
@@ -404,14 +403,14 @@ describe ('updateClassificacaoEtariaById', () => {
                 user.update = async (body) => {
                     user.classificacao_etaria = body.classificacao_etaria;
                 };
-                var userEsperado = {
+                const userEsperado = {
                     ...user
                 };
                 userEsperado.classificacao_etaria = classificacao_etaria_esperada;
 
                 jest.spyOn(userModel,'findByPk').mockReturnValue(user);
 
-                var retorno = await service.updateClassificacaoEtariaById(user.id);
+                const retorno = await service.updateClassificacaoEtariaById(user.id);
                 
                 expect(retorno).toEqual(userEsperado);
             }
@@ -430,7 +429,7 @@ describe('noReturn', () => {
         async () => {
             const idUsuario = 1;
 
-            var userModelFindByPkSpy = jest.spyOn(userModel,'findByPk').mockImplementation(
+            const userModelFindByPkSpy = jest.spyOn(userModel,'findByPk').mockImplementation(
                 () => {return {delete: () => {}}}
             );
 
@@ -454,7 +453,7 @@ describe('noReturn', () => {
         jest.spyOn(userModel,'findByPk').mockImplementation(() => {
           return user;
         });
-        var userDeleteSpy = jest.spyOn(user,'delete').mockImplementation(
+        const userDeleteSpy = jest.spyOn(user,'delete').mockImplementation(
             () => {}
         );
           
@@ -513,7 +512,7 @@ describe('getNameById', () => {
             }
         ])
         ('%j', async ({usuario}) => {
-            var userModelFindByPkSpy = jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
+            const userModelFindByPkSpy = jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
 
             await service.getNameById(usuario.id);
             

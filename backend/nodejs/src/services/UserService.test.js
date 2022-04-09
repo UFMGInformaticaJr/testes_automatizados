@@ -13,7 +13,7 @@ describe('getUserById', () => {
     async () => {
         const idUsuario = 1;
 
-        var userFindByPkSpy = jest.spyOn(userModel,'findByPk').mockImplementation(
+        const userFindByPkSpy = jest.spyOn(userModel,'findByPk').mockImplementation(
           () => {
             return {id: idUsuario}
           }
@@ -134,7 +134,7 @@ describe('updateUser', () => {
   });
 
   test('o usuário é admin ==> altera outro usuario', async () => {
-    var usuario = {
+    const usuario = {
       id: 3,
       name: 'jorge',
       role: 'user',
@@ -146,11 +146,10 @@ describe('updateUser', () => {
     reqUserRole = 'admin', 
     body = {name: 'gabriel'}
 
-    var nomeEsperado = 'gabriel'
-    var userEsperado = {
-      ...usuario
+    const  userEsperado = {
+      ...usuario,
+      name: 'gabriel'
     };
-    userEsperado.name = nomeEsperado;
 
     jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
     
@@ -160,7 +159,7 @@ describe('updateUser', () => {
   });
 
   test('o usuário é user ==> altera a si mesmo', async () => {
-    var usuario = {
+    const usuario = {
       id: 3,
       name: 'jorge',
       role: 'user',
@@ -172,11 +171,10 @@ describe('updateUser', () => {
     reqUserRole = 'user', 
     body = {name: 'gabriel'}
 
-    var nomeEsperado = 'gabriel'
-    var usuarioEsperado = {
-      ...usuario
+    const usuarioEsperado = {
+      ...usuario,
+      name: 'gabriel'
     };
-    usuarioEsperado.name = nomeEsperado;
 
     jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
     
@@ -186,7 +184,7 @@ describe('updateUser', () => {
   });
 
   test('o usuário é admin ==> pode alterar a si mesmo', async () => {
-    var usuario = {
+    const usuario = {
       id: 3,
       name: 'jorge',
       role: 'admin',
@@ -197,11 +195,10 @@ describe('updateUser', () => {
     reqUserRole = 'admin', 
     body = {name: 'gabriel'}
 
-    var nomeEsperado = 'gabriel'
-    var userEsperado = {
-      ...usuario
+    const userEsperado = {
+      ...usuario,
+      name: 'gabriel'
     };
-    userEsperado.name = nomeEsperado;
 
     jest.spyOn(userModel,'findByPk').mockReturnValue(usuario);
     
@@ -222,7 +219,7 @@ describe('getCurrentUser', () => {
     async () => {
         const idUsuario = 1;
 
-        var userFindByPkSpy = jest.spyOn(userModel,'findByPk').mockImplementation(
+        const userFindByPkSpy = jest.spyOn(userModel,'findByPk').mockImplementation(
           () => {
             return {
               id: idUsuario
@@ -238,12 +235,12 @@ describe('getCurrentUser', () => {
 );
 
   test('o usuário é encontrado ==> retorna ele', async () => {
-      var idUsuario = 367;
-      var usuario = {
+      const idUsuario = 367;
+      const usuario = {
         id: idUsuario,
         password: "1234"
       };
-      var usuarioEsperado = {
+      const usuarioEsperado = {
         id: idUsuario
       };
 
@@ -251,16 +248,16 @@ describe('getCurrentUser', () => {
         delete usuario["password"];  
         return usuario
         }
-    );
+      );
 
-      var retorno = await userService.getCurrentUser(idUsuario);
+      const retorno = await userService.getCurrentUser(idUsuario);
       
       expect(retorno).toStrictEqual(usuarioEsperado);
     }
   );
 
   test('o usuário não é encontrado ==> lança exceção', async () => {
-    var id = 3425;
+    const id = 3425;
     
     jest.spyOn(userModel,'findByPk').mockReturnValue(undefined);
 
@@ -337,7 +334,7 @@ describe('createUser', () => {
 describe('getAllUsers', () => {
   test('o método é executado ==> busca todos os usuários',
     async () => {
-      var userFindAllSpy = jest.spyOn(userModel,'findAll').mockImplementation(
+      const userFindAllSpy = jest.spyOn(userModel,'findAll').mockImplementation(
         () => {return []}
       );
       
@@ -378,7 +375,7 @@ describe('deleteUser', () => {
     jest.spyOn(userModel,'findByPk').mockImplementation(() => {
       return usuario;
     });
-    var usuarioDeleteSpy = jest.spyOn(usuario, 'delete').mockImplementation(
+    const usuarioDeleteSpy = jest.spyOn(usuario, 'delete').mockImplementation(
       () => {}
     );
       

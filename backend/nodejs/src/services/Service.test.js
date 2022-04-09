@@ -111,7 +111,7 @@ describe('raizQuadrada', () => {
         ])('%j', ({numero}) => {
             expect(() => {
                 service.raizQuadrada(numero);
-            }).toThrow(Error);
+            }).toThrow(new Error('Número menor que 0'));
         });
     });
 });
@@ -379,7 +379,7 @@ describe ('updateClassificacaoEtariaById', () => {
 
         return expect(async () => {
           await service.updateClassificacaoEtariaById(id);
-        }).rejects.toThrow(NotFoundError);
+        }).rejects.toThrow(new NotFoundError(`Nao foi encontrado um usuario com o ID: ${id}`));
       });
 
     describe('a busca retorna um usuário com a classificação etária errada ==> retorna esse usuário com a classificação atualizada corretamente', () => {

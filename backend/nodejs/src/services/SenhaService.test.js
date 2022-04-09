@@ -44,7 +44,7 @@ describe('senhaFraca', () => {
 
         return expect(async () => {
           await senhaService.senhaFraca(id);
-        }).rejects.toThrow(NotFoundError);
+        }).rejects.toThrow(new NotFoundError('Usuário não encontrado'));
     });
 
     describe('o parâmetro não é um número ==> lança exceção', () => {
@@ -64,7 +64,7 @@ describe('senhaFraca', () => {
         ])('%j', ({numero}) => {
             return expect(async () => {
                 await senhaService.senhaFraca(numero);
-            }).rejects.toThrow(TypeError);
+            }).rejects.toThrow(new TypeError('Id inválido'));
         });
     });  
 });

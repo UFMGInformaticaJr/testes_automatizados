@@ -67,7 +67,7 @@ describe('getUserById', () => {
 
     return expect(async () => {
       await userService.getUserById(id);
-    }).rejects.toThrow(NotFoundError);
+    }).rejects.toThrow(new NotFoundError(`Nao foi encontrado um usuario com o ID: ${id}`));
   });
 });
 
@@ -90,7 +90,7 @@ describe('updateUser', () => {
 
     return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
-    }).rejects.toThrow(NotFoundError);
+    }).rejects.toThrow(new NotFoundError(`Nao foi encontrado um usuario com o ID: ${id}`));
   });
 
   test('o usuário não é admin porém quer mudar seu próprio role ==> lança exceção', async () => {
@@ -110,7 +110,7 @@ describe('updateUser', () => {
 
     return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
-    }).rejects.toThrow(NotAuthorizedError);
+    }).rejects.toThrow(new NotAuthorizedError('Você não tem permissão para mudar seu papel de usuário'));
   });
 
   test('o usuário não é admin porém quer atualizar outro usuário ==> lança exceção', async () => {
@@ -130,10 +130,10 @@ describe('updateUser', () => {
 
     return expect(async () => {
       await userService.updateUser(id, reqUserId, reqUserRole, body);
-    }).rejects.toThrow(NotAuthorizedError);
+    }).rejects.toThrow(new NotAuthorizedError('Você não tem permissão para atualizar esse usuário'));
   });
 
-  test('o usuário é admin ==> pode alterar outro usuario', async () => {
+  test('o usuário é admin ==> altera outro usuario', async () => {
     var usuario = {
       id: 3,
       name: 'jorge',
@@ -159,7 +159,7 @@ describe('updateUser', () => {
     expect(usuario).toEqual(userEsperado);
   });
 
-  test('o usuário é user ==> pode alterar a si mesmo', async () => {
+  test('o usuário é user ==> altera a si mesmo', async () => {
     var usuario = {
       id: 3,
       name: 'jorge',
@@ -266,7 +266,7 @@ describe('getCurrentUser', () => {
 
     return expect(async () => {
       await userService.getCurrentUser(id);
-    }).rejects.toThrow(NotFoundError);
+    }).rejects.toThrow(new NotFoundError(`Nao foi encontrado um usuario com o ID: ${id}`));
   });
 });
 
@@ -394,7 +394,7 @@ describe('deleteUser', () => {
 
     return expect(async () => {
       await userService.deleteUser(id);
-    }).rejects.toThrow(NotFoundError);
+    }).rejects.toThrow(new NotFoundError(`Nao foi encontrado um usuario com o ID: ${id}`));
   });
 
   test('o ID passado é igual ao ID do usuário requisitando ==> lança exceção', async () => {
@@ -407,7 +407,7 @@ describe('deleteUser', () => {
 
     return expect(async () => {
       await userService.deleteUser(id, reqUserId);
-    }).rejects.toThrow(NotAuthorizedError);
+    }).rejects.toThrow(new NotAuthorizedError('Você não tem permissão para se deletar!'));
   });
 
 });

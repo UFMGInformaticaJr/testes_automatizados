@@ -9,7 +9,7 @@ const {
 } = require('../errors');
 
 describe('error-handler', () => {
-  describe('erro é recebido ==> lança um código e mensagem como resposta', () => {
+  describe('erro é recebido ==> escreve um código e mensagem na resposta', () => {
     test.each([
       {
         erroLancado:new NotAuthorizedError('Teste'), 

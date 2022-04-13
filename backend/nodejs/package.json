@@ -23,9 +23,10 @@
     "eslint-plugin-import": "^2.26.0",
     "jest": "^27.5.1"
   },
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-    },
-    "eslint.validate": ["javascript"]
-
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": [
+    "javascript"
+  ]
 }

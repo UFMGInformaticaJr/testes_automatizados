@@ -11,6 +11,11 @@
         "ecmaVersion": "latest"
     },
     "rules": {
-        "indent": "warn"
+        "indent": ["warn", 4],
+        "linebreak-style":"off",
+        "no-undef":"off",
+        "no-multi-spaces":"off",
+        "comma-dangle":"off",
+        "max-len": ["warn", 120]
     }
 }

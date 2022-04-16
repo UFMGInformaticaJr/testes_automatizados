@@ -286,7 +286,7 @@ describe('createUser', () => {
     await userService.createUser(dadosUsuario);
 
     const primeiraChamadaBcrypt = bcryptHashSpy.mock.calls[0];
-    expect(primeiraChamadaBcrypt).toEqual(expect.arrayContaining([dadosUsuario.password, saltRounds]));
+    expect(primeiraChamadaBcrypt).toEqual([dadosUsuario.password, saltRounds]);
   });
 
   test('a senha é criptografada ==> atualiza senha do usuário a ser criado', async () => {
@@ -358,7 +358,7 @@ describe('getAllUsers', () => {
 
       jest.spyOn(userModel,'findAll').mockReturnValue(usuarios);
 
-      return expect(userService.getAllUsers()).resolves.toEqual(expect.arrayContaining(usuarios));
+      return expect((await userService.getAllUsers()).sort()).toEqual(usuarios.sort());
     }
   );
 });
@@ -511,9 +511,9 @@ describe('deleteUser', () => {
             },
             {
                 usuarios:[
-                    {   id: 1, password: "123456789" },
-                    {   id: 2, password: "abcdefghi" },
-                    {   id: 3, password: "a2c4e6g8i" }
+                    {   id: 1, password: "12345678" },
+                    {   id: 2, password: "abcdefgf" },
+                    {   id: 3, password: "a2c4e6gl" }
                 ],
                 usuariosEsperados:[]
             },
@@ -538,13 +538,17 @@ describe('deleteUser', () => {
             }                                   
         ])(
             '%j',
-            async ({ usuarios,usuariosEsperados }) => {
+            async ({ usuarios, usuariosEsperados }) => {
                 jest.spyOn(userModel,'findAll').mockReturnValue(usuarios);
-                jest.spyOn(senhaService,'senhaFraca').mockReturnValue(() => usuarios.password.length < 8);
-                
+
+                jest.spyOn(senhaService,'senhaFraca').mockImplementation(
+                  (id) => usuarios.find(usuario => usuario.id == id).password.length < 5
+                );
+
                 const retorno = await userService.usersComSenhaFraca();
 
                 expect(retorno).toEqual(expect.arrayContaining(usuariosEsperados));
+                expect(retorno.length).toBe(usuariosEsperados.length);
             }
         );
     });
@@ -609,10 +613,12 @@ describe ('idsComMesmoNome', () => {
               retornoEsperado:[] 
           }
       ])
-      ('%j', ({ usuarios, retornoEsperado }) => {
+      ('%j', async ({ usuarios, retornoEsperado }) => {
           jest.spyOn(userModel,'findAll').mockReturnValue(usuarios);
 
-          return expect(userService.idsComMesmoNome()).resolves.toEqual(expect.arrayContaining(retornoEsperado));
+          const retorno = await userService.idsComMesmoNome();
+          expect(retorno).toEqual(expect.arrayContaining(retornoEsperado));
+          expect(retorno.length).toBe(retornoEsperado.length);
       });
   });    
 });

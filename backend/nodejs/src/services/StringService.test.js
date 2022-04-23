@@ -1,8 +1,6 @@
 const { NotFoundError } = require('../errors');
 
 const stringService = require('./StringService');
-const userModel = require('../models/User');
-const senhaService = require('./SenhaService');
 
 describe('vogais', () => {
     describe('uma string é passada por parâmetro ==> retorna, em minúsculo, as vogais dessa string', () => {

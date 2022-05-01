@@ -447,9 +447,6 @@ describe('deleteUser', () => {
 				'%j',
 				async ({ usuarios }) => {
 					userModel.findAll.mockReturnValue(usuarios);
-					senhaService.senhaFraca.mockImplementation(
-						() => true
-					);
 
 					await userService.usersComSenhaFraca();
 

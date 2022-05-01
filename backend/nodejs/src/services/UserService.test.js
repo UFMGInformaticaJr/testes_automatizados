@@ -177,7 +177,7 @@ describe('updateUser', () => {
 
 		await userService.updateUser(id, reqUserId, reqUserRole, body);
 
-		expect(usuario).toEqual(usuarioEsperado);
+		expect(usuario).toStrictEqual(usuarioEsperado);
 	});
 
 	test('o usuário é admin ==> pode alterar a si mesmo', async () => {

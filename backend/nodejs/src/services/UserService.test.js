@@ -31,33 +31,27 @@ describe('getUserById', () => {
 		}
 	);
 
-	describe('o id de um usuário é passado como parâmetro ==> retorna os dados não sensíveis do usuario', () => {
+	describe('o id de um usuário é passado como parâmetro ==> retorna o usuário buscado', () => {
 		test.each([
 			{
-				usuario: { name: 'jorge', password: 'abcd' },
 				retornoEsperado: { name: 'jorge' }
 			},
 			{
-				usuario: { name: 'gabi', password: 'abcdefghashud' },
 				retornoEsperado: { name: 'gabi' }
 			},
 			{
-				usuario: { name: 'gabriel', password: 'abcdefghijk' },
 				retornoEsperado: { name: 'gabriel' }
 			},
 			{
-				usuario: { name: 'bernardo', password: 'abc' },
 				retornoEsperado: { name: 'bernardo' }
 			},
 			{
-				usuario: { name: 'vinicius', password: 'a' },
 				retornoEsperado: { name: 'vinicius' }
 			},
 		])
-			('%j', ({ usuario, retornoEsperado }) => {
+			('%j', ({retornoEsperado }) => {
 				userModel.findByPk.mockImplementation(() => {
-					delete usuario["password"];
-					return usuario;
+					return retornoEsperado;
 				}
 				);
 				return expect(userService.getUserById(1)).resolves.toStrictEqual(retornoEsperado);

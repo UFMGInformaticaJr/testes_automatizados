@@ -7,33 +7,33 @@ describe('object-filter', () => {
         reqObj:{body: {a: 1, b: 3, c: 3, d: 7}},
         reqKey: 'body',
         filter: ['a', 'b', 'd'],
-        valorEsperado: {body: {a: 1, b: 3, d: 7}},
+        reqObjFiltrado: {body: {a: 1, b: 3, d: 7}},
       },
       {
         reqObj:{body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1, b: 1}},
         reqKey: 'body',
         filter: ['a', 'b', 'd'],
-        valorEsperado: {body: {a: 1, b: 3, d: 7}, query: {a: 1, b: 1}},
+        reqObjFiltrado: {body: {a: 1, b: 3, d: 7}, query: {a: 1, b: 1}},
       },
       {
         reqObj:{body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1, b: 1}},
         reqKey: 'body',
         filter: ['a', 'b', 'e'],
-        valorEsperado: {body: {a: 1, b: 3}, query: {a: 1, b: 1}},
+        reqObjFiltrado: {body: {a: 1, b: 3}, query: {a: 1, b: 1}},
       },
       {
         reqObj:{body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1, b: 1}},
         reqKey: 'query',
         filter: ['a'],
-        valorEsperado: {body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1}},
+        reqObjFiltrado: {body: {a: 1, b: 3, c: 3, d: 7}, query: {a: 1}},
       },
       {
         reqObj:{query: {a: 1, b: 1}},
         reqKey: 'query',
         filter: ['a'],
-        valorEsperado: {query: {a: 1}},
+        reqObjFiltrado: {query: {a: 1}},
       },
-    ])('%j', ({reqObj, reqKey, filter, valorEsperado}) => {
+    ])('%j', ({reqObj, reqKey, filter, reqObjFiltrado}) => {
       const mockedNext = jest.fn();
       const reqFilterCallback = requestFilter(reqKey, filter);
   
@@ -41,7 +41,7 @@ describe('object-filter', () => {
       reqFilterCallback(reqObj, null, mockedNext);
   
       expect(mockedNext).toBeCalledWith();
-      expect(reqObj).toEqual(valorEsperado);
+      expect(reqObj).toEqual(reqObjFiltrado);
     });
   });
 });

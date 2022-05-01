@@ -35,10 +35,10 @@ describe('object-filter', () => {
       },
     ])('%j', ({reqObj, reqKey, filter, valorEsperado}) => {
       const mockedNext = jest.fn();
-      const reqFilter = requestFilter(reqKey, filter);
+      const reqFilterCallback = requestFilter(reqKey, filter);
   
       // O atributo res é nulo pois não importa para o objetivo deste teste
-      reqFilter(reqObj, null, mockedNext);
+      reqFilterCallback(reqObj, null, mockedNext);
   
       expect(mockedNext).toBeCalledWith();
       expect(reqObj).toEqual(valorEsperado);

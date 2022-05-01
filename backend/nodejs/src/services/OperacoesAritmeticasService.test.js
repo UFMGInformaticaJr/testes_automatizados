@@ -1,6 +1,6 @@
 const operacoesAritmeticasService = require("./OperacoesAritmeticasService");
 
-describe('ASobreB', () => {
+describe('divisao', () => {
     describe('2 números inteiros são passados como parâmetro ==> retorna a divisão de um pelo outro', () => {
         test.each([
             { numerador: 6,                       denominador: 3,                       retornoEsperado: 2 },

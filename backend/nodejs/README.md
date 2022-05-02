@@ -4,6 +4,8 @@
 ## Sumário
 
 - [Introdução](#introdução)
+- [Documentação no notion](#documentação-no-notion)
+- [Onde se encontram os testes de unidade](#onde-se-encontram-os-testes-de-unidade)
 - [Como rodar o projeto](#como-rodar-o-projeto)
 - [Dependências do projeto](#dependências-do-projeto)
 - [Decisões de projeto](#decisões-de-projeto)
@@ -12,10 +14,10 @@
 - [Funcionalidades implementadas](#funcionalidades-implementadas)
   - [Tratamento de erros nos endpoints](#tratamento-de-erros-nos-endpoints)
   - [Filtro de requisição](#filtro-de-requisição)
-  - [Service com funções diversas](#service-com-funções-diversas)
+  - [OperacoesAritmeticasService](#operacoesaritmeticasservice)
+  - [StringService](#stringservice)
   - [SenhaService](#senhaservice)
   - [UserService com funções de CRUD](#userservice-com-funções-de-crud)
-- [Testes unitários](#testes-unitários)
 
 ## Introdução
 
@@ -25,9 +27,29 @@ O tema do projeto é usuário e as funcionalidades serão detalhadas em um tópi
 
 Atualmente, estamos abordando apenas testes unitários, e não testes de integração ou de sistema. (para mais informações sobre teste acesse [este](https://engsoftmoderna.info/cap8.html) link)
 
+## Documentação no notion
+
+Aqui está o link da documentação de testes de unidade, no notion: [link](https://www.notion.so/ijunior/Testes-de-unidade-em-nodeJS-51f0181cf35e4882b1efb1d84ec3de68) 
+
+## Onde se encontram os testes de unidade
+
+Os testes de unidade se encontrar em arquivos com extensão ``.test.js`` e estão na mesma pasta que o arquivo da classe que estão testando.
+
 ## Como rodar o projeto
 
+- Instale o nodeJS no seu computador.
+- Rode o comando `npm install`.
+- Rode o comando `npm start`.
 ## Dependências do projeto
+
+- ``jest``: Nosso framework de teste
+- ``bcrypt``: Biblioteca de criptografia.
+- ``cookie-parser``
+- ``dotenv``: Biblioteca para permitir o uso de um .env para configurar o projeto
+- ``express``: Framework express
+- ``nodemon``: Framework para dinâmicamente aplicar alterações ao sistema sem precisar manualmente reiniciá-lo.
+- ``eslint``: Um linter de nodeJS.
+- ``eslint-config-airbnb-base``: Configuração automática do eslint usando a base de configuração do airbnb.
 
 ## Decisões de projeto
 
@@ -74,13 +96,26 @@ E o `object-filter.js` especifica apenas os campos id e nome, então o que vai s
 
 **Objetivo relacionado aos testes**: Ser também um exemplo de funcionalidade integrada ao express (ou seja, que é usada apenas com o express) que tem teste unitário. Isto cai no caso onde os desenvolvedores vão ter dificuldades de fazer testes unitários.
 
-### Service com funções diversas
+### OperacoesAritmeticasService
+
+Esta feature, no arquivo ``OperacoesAritmeticasService.js`` localizado [aqui](/src/services/OperacoesAritmeticasService.js), contêm algumas operações aritméticas de divisão e raiz quadrada.
+
+**Objetivo relacionado aos testes**: Ser um exemplo de como testar métodos que executam operações envolvendo números.
+
+### StringService
+
+Esta feature, no arquivo ``StringService.js`` localizado [aqui](src/services/StringService.js), contêm operações relacionadas a manipulação de strings.
+
+**Objetivo relacionado aos testes**: Ser um exemplo de como testar um método que retorna uma lista.
 
 ### SenhaService
 
+Esta feature, no arquivo ``SenhaService.js`` localizado [aqui](src/services/SenhaService.js), contêm operações relacionadas a senha.
+
+**Objetivo relacionado aos testes**: Ser um exemplo de como é um teste de um método com muitas linhas de código (poucas linhas em termos de clean code, que prega um limite pequeno como 5 a 7 linhas, que, inclusive, seria mais simples de testar)
+
 ### UserService com funções de CRUD
 
-Esta feature, no arquivo `UserService.js` localizado [aqui](/backend/nodejs/src/services/UserService.js), usa o models `User` para exemplificar um CRUD de usuários, com operações de criação, edição, deleção e busca de um usuário.
+Esta feature, no arquivo `UserService.js` localizado [aqui](/src/services/UserService.js), usa o models `User` para exemplificar um CRUD de usuários, com operações de criação, edição, deleção e busca de um usuário.
 
-**Objetivo relacionado aos testes**: Ser um exemplo de testes unitários em um CRUD, parte comum em todos os projetos loops da Ijunior.
-## Testes unitários
+**Objetivo relacionado aos testes**: Ser um exemplo de CRUD, parte comum em todos os projetos loops da Ijunior, que tem testes de unidade.
